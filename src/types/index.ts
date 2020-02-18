@@ -1,13 +1,11 @@
-export interface TransformClass {
-  new (value: any): any;
-}
+export type TransformerFn = (value: any) => any | Promise<any>;
 
 export interface ActMasterAction {
   new (): void;
   name: string;
-  exec(...args: any[]): any;
-  history?: boolean;
-  transform?: TransformClass;
+  exec(...args: any[]): Promise<any>;
+  // history?: boolean;
+  transform?: TransformerFn;
 }
 
 export interface VueActMasterOptions {

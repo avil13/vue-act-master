@@ -1,16 +1,18 @@
 import Vue from 'vue';
 import { ActMasterAction, VueActMasterOptions } from './types';
 
+type listenerFunction = (...args: any[]) => any;
+
 export class VueActMasterInstance {
-  private actions: {
+  private readonly actions: {
     [eventType: string]: ActMasterAction;
   } = {};
 
-  private listeners: {
-    [eventType: string]: ((...args: any[]) => any)[];
+  private readonly listeners: {
+    [eventType: string]: listenerFunction[];
   } = {};
 
-  private vueInstance: Vue;
+  private readonly vueInstance: Vue;
 
   constructor(vue: Vue, options: VueActMasterOptions) {
     this.vueInstance = vue;
@@ -21,7 +23,6 @@ export class VueActMasterInstance {
     for (const k in actions) {
       if (Object.prototype.hasOwnProperty.call(actions, k)) {
         item = new actions[k]();
-
         this.actions[item.name] = item;
       }
     }
@@ -34,32 +35,19 @@ export class VueActMasterInstance {
       throw new Error(`Can't find "${eventType}" action`);
     }
 
-    let value = action.exec.call(this.vueInstance, ...args);
-
-    if (value instanceof Promise) {
-      value = await value;
-    }
-
-    let data = action.transform ? new action.transform(value) : value;
-
-    if (data instanceof Promise) {
-      data = await data;
-    }
+    const value = await action.exec.call(this.vueInstance, ...args);
+    const data = action.transform ? await action.transform(value) : value;
 
     if (this.listeners[eventType]) {
       this.listeners[eventType].forEach(func => {
-        func({
-          eventType,
-          value,
-          data,
-        });
+        func({ eventType, value, data });
       });
     }
 
     return value;
   }
 
-  subscribe(eventType: string, listener: (...args: any[]) => any) {
+  subscribe(eventType: string, listener: listenerFunction) {
     if (!this.listeners[eventType]) {
       this.listeners[eventType] = [];
     }
@@ -68,15 +56,13 @@ export class VueActMasterInstance {
     return () => this.unsubscribe(eventType, listener);
   }
 
-  unsubscribe(eventType: string, listener: (...args: any[]) => any) {
+  unsubscribe(eventType: string, listener: listenerFunction) {
     const listeners = this.listeners[eventType];
-
     if (!listeners) {
       return -1;
     }
 
     const index = listeners.indexOf(listener);
-
     if (index > -1) {
       listeners.splice(index, 1);
     }
