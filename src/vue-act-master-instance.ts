@@ -1,15 +1,18 @@
 import Vue from 'vue';
-import { ActMasterAction, VueActMasterOptions } from './types';
-
-type listenerFunction = (...args: any[]) => any;
+import {
+  ActMasterAction,
+  VueActMasterOptions,
+  ActMasterActions,
+  listenerFunction,
+} from './types';
 
 export class VueActMasterInstance {
   private readonly actions: {
-    [eventType: string]: ActMasterAction;
+    [eventName: string]: ActMasterAction;
   } = {};
 
   private readonly listeners: {
-    [eventType: string]: listenerFunction[];
+    [eventName: string]: listenerFunction[];
   } = {};
 
   private readonly vueInstance: Vue;
@@ -18,46 +21,63 @@ export class VueActMasterInstance {
     this.vueInstance = vue;
 
     const { actions } = options;
-    let item: any;
 
-    for (const k in actions) {
-      if (Object.prototype.hasOwnProperty.call(actions, k)) {
-        item = new actions[k]();
-        this.actions[item.name] = item;
-      }
-    }
+    this.addActions(actions);
   }
 
-  async exec(eventType: string, ...args: any[]) {
-    const action = this.actions[eventType];
+  async exec(eventName: string, ...args: any[]) {
+    const action = this.actions[eventName];
 
     if (!action) {
-      throw new Error(`Can't find "${eventType}" action`);
+      throw new Error(`Can't find "${eventName}" action`);
     }
 
     const value = await action.exec.call(this.vueInstance, ...args);
     const data = action.transform ? await action.transform(value) : value;
 
-    if (this.listeners[eventType]) {
-      this.listeners[eventType].forEach(func => {
-        func({ eventType, value, data });
+    if (this.listeners[eventName]) {
+      this.listeners[eventName].forEach(listenerCallback => {
+        listenerCallback({ eventName, value, data });
       });
     }
 
-    return value;
+    return data;
   }
 
-  subscribe(eventType: string, listener: listenerFunction) {
-    if (!this.listeners[eventType]) {
-      this.listeners[eventType] = [];
+  addActions(actions: ActMasterActions) {
+    for (const eventName in actions) {
+      if (Object.prototype.hasOwnProperty.call(actions, eventName)) {
+        this.addAction(eventName, actions[eventName]);
+      }
     }
-    this.listeners[eventType].push(listener);
-
-    return () => this.unsubscribe(eventType, listener);
   }
 
-  unsubscribe(eventType: string, listener: listenerFunction) {
-    const listeners = this.listeners[eventType];
+  addAction(eventName: string, action: ActMasterAction) {
+    if (this.actions[eventName]) {
+      throw new Error(`actiion "${eventName}" already existing`);
+    }
+    this.actions[eventName] = action;
+  }
+
+  removeAction(eventName: string) {
+    if (!this.actions[eventName]) {
+      throw new Error(`actiion "${eventName}" not found`);
+    }
+
+    delete this.actions[eventName];
+  }
+
+  subscribe(eventName: string, listener: listenerFunction) {
+    if (!this.listeners[eventName]) {
+      this.listeners[eventName] = [];
+    }
+    this.listeners[eventName].push(listener);
+
+    return () => this.unsubscribe(eventName, listener);
+  }
+
+  unsubscribe(eventName: string, listener: listenerFunction) {
+    const listeners = this.listeners[eventName];
     if (!listeners) {
       return -1;
     }
@@ -67,7 +87,7 @@ export class VueActMasterInstance {
       listeners.splice(index, 1);
     }
 
-    this.listeners[eventType] = listeners;
+    this.listeners[eventName] = listeners;
 
     return index;
   }
