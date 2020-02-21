@@ -16,6 +16,7 @@
     "build": "rm -rf ./dist && tsc -p ."
   },
   "dependencies": {
+    "husky": "^4.2.3",
     "vue": "2.*"
   },
   "devDependencies": {
@@ -36,5 +37,11 @@
     "ts-node": "^8.6.2",
     "tslint": "^5.20.1",
     "typescript": "^3.7.5"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run lint:fix && git update-index --again",
+      "pre-push": "npm test"
+    }
   }
 }
