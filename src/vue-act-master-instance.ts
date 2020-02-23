@@ -25,7 +25,7 @@ export class VueActMasterInstance {
     this.addActions(actions);
   }
 
-  async exec(eventName: string, ...args: any[]) {
+  async exec(eventName: keyof VueActMasterInstance['actions'], ...args: any[]) {
     const action = this.actions[eventName];
 
     if (!action) {
