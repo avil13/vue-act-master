@@ -1,5 +1,5 @@
 import Vue from 'vue';
-import { VueActMasterInstance } from '@/vue-act-master-instance';
+import { VueActMasterInstance } from '../src/vue-act-master-instance';
 
 describe('VueActMasterInstance', () => {
   const ACTION_KEY = 'ACTION_KEY';

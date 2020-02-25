@@ -14,7 +14,7 @@ export interface ActMasterActions {
 }
 
 export interface VueActMasterOptions {
-  actions: {
+  actions?: {
     [key: string]: ActMasterAction;
   };
 }
