@@ -21,7 +21,7 @@
     // "outFile": "./",                       /* Concatenate and emit output to single file. */
     "outDir": "dist",
     /* Redirect output structure to the directory. */
-    "rootDir": "./src",
+    // "rootDir": "./src",
     /* Specify the root directory of input files. Use to control the output directory structure with --outDir. */
     // "composite": true,                     /* Enable project compilation */
     // "removeComments": true,                /* Do not emit comments to output. */
@@ -52,11 +52,15 @@
         "src/*"
       ]
     },
-    // "rootDirs": [],                        /* List of root folders whose combined content represents the structure of the project at runtime. */
+    "rootDirs": [
+      "./src",
+      "../src"
+    ],                        /* List of root folders whose combined content represents the structure of the project at runtime. */
     // "typeRoots": [],                       /* List of folders to include type definitions from. */
     "types": [
       "node",
-      "jest"
+      "jest",
+      "../dist/types/"
     ],
     /* Type declaration files to be included in compilation. */
     "allowSyntheticDefaultImports": true,

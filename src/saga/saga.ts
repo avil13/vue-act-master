@@ -1,4 +1,5 @@
 import { ISagaQueue, BaseSaga, SagaState } from '@/types/saga';
+import { ActMasterAction } from '@/types';
 
 /**
  * TODO:
@@ -8,7 +9,7 @@ import { ISagaQueue, BaseSaga, SagaState } from '@/types/saga';
 export class Saga {
   private sagaQueue: ISagaQueue[] = [];
 
-  addSaga(eventName: string, sagaItem: BaseSaga) {
+  addSaga(eventName: string, sagaItem: BaseSaga | ActMasterAction) {
     if (!sagaItem.saga) {
       return;
     }

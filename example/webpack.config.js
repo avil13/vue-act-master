@@ -1,6 +1,8 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 const path = require('path');
 const webpack = require('webpack');
 const VueLoaderPlugin = require('vue-loader/lib/plugin');
+/* eslint-enable @typescript-eslint/no-var-requires */
 
 module.exports = {
   mode: 'development',
@@ -34,7 +36,7 @@ module.exports = {
         loader: 'ts-loader',
         options: {
           appendTsSuffixTo: [/\.vue$/],
-          configFile: path.join(__dirname, 'tsconfig.json'),
+          configFile: path.join(__dirname, 'tsconfig.demo.json'),
         },
       },
     ],

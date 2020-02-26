@@ -1,5 +1,5 @@
 <template>
-    <div id="app" class="container">
+    <div class="container">
         <h1 class="h1">{{ msg }}</h1>
 
         <div class="row">
@@ -11,10 +11,15 @@
 import Vue from 'vue';
 
 export default Vue.extend({
+  name: 'app-component',
   data() {
     return {
       msg: 'Vue art-master',
-    }
+    };
+  },
+
+  mounted() {
+    // this.$act.addActions()
   }
 });
 </script>
