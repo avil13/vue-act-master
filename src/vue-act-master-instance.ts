@@ -7,16 +7,6 @@ import {
 } from './types';
 import { Saga } from './saga/saga';
 
-declare module 'vue/types/vue' {
-  interface Vue {
-    $act: VueActMasterInstance;
-  }
-
-  interface VueConstructor<V extends Vue = Vue> {
-    act: VueActMasterInstance;
-  }
-}
-
 type ActEventName = string;
 
 export class VueActMasterInstance {
@@ -30,9 +20,9 @@ export class VueActMasterInstance {
 
   private readonly sagaInstance: Saga;
 
-  private readonly vueInstance: Vue;
+  private readonly vueInstance: typeof Vue;
 
-  constructor(vue: Vue, options: VueActMasterOptions = {}) {
+  constructor(vue: typeof Vue, options: VueActMasterOptions = {}) {
     this.vueInstance = vue;
     this.sagaInstance = new Saga();
 

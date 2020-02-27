@@ -19,7 +19,18 @@ export default Vue.extend({
   },
 
   mounted() {
-    // this.$act.addActions()
+    // this.$act.addAction('some.exec', {
+    //   exec() {
+    //     console.log('=>', 'exec');
+    //   }
+    // });
+  },
+
+  methods: {
+    showMessage() {
+      // this.$act.exec('get.data');
+      console.log('=>', this.$act);
+    }
   }
 });
 </script>

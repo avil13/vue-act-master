@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "main": "dist/index.js",
-  "types": "dist/",
+  "types": "dist/index.d.ts",
   "files": [
     "README.md",
     "dist",
@@ -11,7 +11,6 @@
   ],
   "scripts": {
     "build": "rm -rf ./dist && tsc -p .",
-    "dev:node": "ts-node --project tsconfig.json src/index.ts",
     "dev:watch": "nodemon",
     "dev": "npm run build && npm run serve",
     "lint:fix": "eslint --fix --ext .ts .",
