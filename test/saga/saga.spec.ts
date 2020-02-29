@@ -4,6 +4,7 @@ import {
   sagasNames,
   listOfParallelSagas,
   sagasParallelNames,
+  getListOfSaga,
 } from './list-of-saga.mock';
 
 describe('Saga class', () => {
@@ -89,5 +90,27 @@ describe('Saga class', () => {
 
     expect(isEventCalled).toBe(true);
     expect(isParallelEventCalled).toBe(true);
+  });
+
+  it.skip('execSaga and reject', async () => {
+    const listOfSagas = getListOfSaga();
+    let lastCalledEventName = '';
+
+    // no reject
+    // prepare
+    listOfSagas.forEach(s => saga.addSaga(s.name, s));
+    // test
+    await saga.execSaga(sagasNames[0], eventName => {
+      lastCalledEventName = eventName;
+    });
+    expect(sagasNames[3]).toBe(lastCalledEventName);
+
+    // with reject
+    // prepare
+    const removeEventSaga = listOfSagas[2];
+    removeEventSaga.saga.rejectEvents = [listOfSagas[1].name];
+    saga.removeSaga(removeEventSaga.name);
+    saga.addSaga(removeEventSaga.name, removeEventSaga);
+    // test
   });
 });

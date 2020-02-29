@@ -49,3 +49,25 @@ export const listOfParallelSagas: BaseSaga[] = [
     exec: () => null,
   },
 ];
+
+function dup(o) {
+  // "string", number, boolean
+  if (typeof o !== 'object') {
+    return o;
+  }
+
+  // null
+  if (!o) {
+    return o; // null
+  }
+
+  const r = o instanceof Array ? [] : {};
+  for (const i in o) {
+    if (o.hasOwnProperty(i)) {
+      r[i] = dup(o[i]);
+    }
+  }
+  return r;
+}
+
+export const getListOfSaga = () => dup(listOfSagas);
