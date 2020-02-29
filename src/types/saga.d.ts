@@ -9,10 +9,12 @@ export interface BaseSaga extends ActMasterAction {
 }
 
 export interface ISagaParams {
-  afterEvent?: string[];
-  rejectEvent?: string[];
+  afterEvents?: string[];
+  rejectEvents?: string[];
 }
 
 export interface ISagaQueue extends ISagaParams {
   name: string;
 }
+
+export type execSagaCallback = (eventName: string, sagaState: SagaState) => any;

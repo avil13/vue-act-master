@@ -25,7 +25,7 @@ describe('Saga Base tests', () => {
 
     const mySaga2: BaseSaga = {
       saga: {
-        afterEvent: ['get.data'],
+        afterEvents: ['get.data'],
       },
       exec(sagaState) {
         sagaState.value = 2 * sagaState.value;
@@ -33,7 +33,7 @@ describe('Saga Base tests', () => {
     };
     const mySaga3: BaseSaga = {
       saga: {
-        afterEvent: ['get.data', 'set.data'],
+        afterEvents: ['get.data', 'set.data'],
       },
       exec(sagaState) {
         return sagaState.value;

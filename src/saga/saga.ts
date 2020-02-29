@@ -1,4 +1,9 @@
-import { ISagaQueue, BaseSaga, SagaState } from '@/types/saga';
+import {
+  ISagaQueue,
+  BaseSaga,
+  SagaState,
+  execSagaCallback,
+} from '@/types/saga';
 import { ActMasterAction } from '@/types';
 
 /**
@@ -22,6 +27,14 @@ export class Saga {
       name: eventName,
     };
 
+    if (sagaItem.saga.afterEvents) {
+      newSaga.afterEvents = sagaItem.saga.afterEvents;
+    }
+
+    if (sagaItem.saga.rejectEvents) {
+      newSaga.rejectEvents = sagaItem.saga.rejectEvents;
+    }
+
     this.sagaQueue.push(newSaga);
   }
 
@@ -37,32 +50,29 @@ export class Saga {
       return true;
     }
 
-    if (list.some(v => v.afterEvent && v.afterEvent.includes(eventName))) {
+    if (list.some(v => v.afterEvents && v.afterEvents.includes(eventName))) {
       return true;
     }
 
     return false;
   }
 
-  async execSaga(
-    eventName: string,
-    callback: (eventName: string, sagaState: SagaState) => any
-  ) {
+  async execSaga(eventName: string, callback: execSagaCallback) {
     const sagaState = {};
-    const queues: string[] = this.makeQueue(eventName).filter(
-      (item, i, arr) => arr.indexOf(item) !== i
+    const queues = this.makeQueue(eventName).filter(
+      (name, i, arr) => arr.indexOf(name) === i
     );
 
-    for (const event of queues) {
-      await callback(event, sagaState);
+    for (const eventName of queues) {
+      await callback(eventName, sagaState);
     }
   }
 
   makeQueue(eventName: string, queues: string[] = []): string[] {
     queues.push(eventName);
+
     this.sagaQueue.forEach(item => {
-      if (item.afterEvent && item.afterEvent.includes(eventName)) {
-        queues.push(item.name);
+      if (item.afterEvents && item.afterEvents.includes(eventName)) {
         this.makeQueue(item.name, queues);
       }
     });

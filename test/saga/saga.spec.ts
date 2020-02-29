@@ -1,4 +1,10 @@
 import { Saga } from '../../src/saga/saga';
+import {
+  listOfSagas,
+  sagasNames,
+  listOfParallelSagas,
+  sagasParallelNames,
+} from './list-of-saga.mock';
 
 describe('Saga class', () => {
   let saga: Saga;
@@ -40,7 +46,48 @@ describe('Saga class', () => {
     expect(saga.isPartOfSaga(MockEventName)).toBe(true);
   });
 
-  it.skip('execSaga', () => null);
+  it('makeQueue', () => {
+    listOfSagas.forEach(s => saga.addSaga(s.name, s));
+    expect(saga.makeQueue(sagasNames[0])).toEqual(sagasNames);
+  });
 
-  it.skip('makeQueue', () => null);
+  it('makeQueue parrallel', () => {
+    listOfSagas.forEach(s => saga.addSaga(s.name, s));
+    listOfParallelSagas.forEach(s => saga.addSaga(s.name, s));
+    expect(saga.makeQueue(sagasNames[0])).toEqual([
+      ...sagasNames,
+      ...sagasParallelNames,
+    ]);
+  });
+
+  it('execSaga', async () => {
+    listOfSagas.forEach(s => saga.addSaga(s.name, s));
+    let lastCalledEventName = '';
+
+    await saga.execSaga(sagasNames[0], eventName => {
+      lastCalledEventName = eventName;
+    });
+
+    expect(sagasNames[3]).toBe(lastCalledEventName);
+  });
+
+  it('execSaga parallel', async () => {
+    listOfSagas.forEach(s => saga.addSaga(s.name, s));
+    listOfParallelSagas.forEach(s => saga.addSaga(s.name, s));
+
+    let isEventCalled = false;
+    let isParallelEventCalled = false;
+
+    await saga.execSaga(sagasNames[0], eventName => {
+      if (sagasNames[3] === eventName) {
+        isEventCalled = true;
+      }
+      if (sagasParallelNames[1] === eventName) {
+        isParallelEventCalled = true;
+      }
+    });
+
+    expect(isEventCalled).toBe(true);
+    expect(isParallelEventCalled).toBe(true);
+  });
 });
