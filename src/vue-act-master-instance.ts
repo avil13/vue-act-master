@@ -50,7 +50,7 @@ export class VueActMasterInstance {
       throw new Error(`Can't find "${eventName}" action`);
     }
 
-    const value = await action.exec.call(this.vueInstance, ...args);
+    const value = await action.exec.apply(this.vueInstance, args);
     const data = action.transform ? await action.transform(value) : value;
 
     if (this.listeners[eventName]) {

@@ -3,13 +3,17 @@
         <h1 class="h1">{{ msg }}</h1>
 
         <div class="row">
-          <button>show</button>
+          <button @click="showMessage">show</button>
         </div>
     </div>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
+
+const eventNames = {
+  EVENT_ONE: 'EVENT_ONE'
+};
 
 export default Vue.extend({
   name: 'app-component',
@@ -20,17 +24,16 @@ export default Vue.extend({
   },
 
   mounted() {
-    // this.$act.addAction('some.exec', {
-    //   exec() {
-    //     console.log('=>', 'exec');
-    //   }
-    // });
+    this.$act.addAction(eventNames.EVENT_ONE, {
+      exec() {
+        console.log('=>', 'exec');
+      }
+    });
   },
 
   methods: {
     showMessage() {
-      // this.$act.exec('get.data');
-      // console.log('=>', this.$act);
+      this.$act.exec(eventNames.EVENT_ONE);
     }
   }
 });

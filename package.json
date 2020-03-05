@@ -15,7 +15,7 @@
     "dev": "npm run build && npm run serve",
     "lint:fix": "eslint --fix --ext .ts .",
     "serve": "webpack-dev-server --config ./example/webpack.config.js",
-    "start": "nodemon",
+    "start": "npm run dev",
     "test:watch": "jest --watch",
     "test": "jest",
     "type-check:watch": "npm run type-check -- --watch",
