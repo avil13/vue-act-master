@@ -3,6 +3,7 @@
         <h1 class="h1">{{ msg }}</h1>
 
         <div class="row">
+          <button>show</button>
         </div>
     </div>
 </template>
@@ -29,7 +30,7 @@ export default Vue.extend({
   methods: {
     showMessage() {
       // this.$act.exec('get.data');
-      console.log('=>', this.$act);
+      // console.log('=>', this.$act);
     }
   }
 });

@@ -2,17 +2,28 @@ import Vue, { PluginObject } from 'vue';
 import { VueActMasterOptions } from './types';
 import { VueActMasterInstance } from './vue-act-master-instance';
 
+/**
+ * Declaration
+ *
+ */
 declare module 'vue/types/vue' {
   interface Vue {
-    act: VueActMasterInstance;
+    $act: VueActMasterInstance;
   }
 
   interface VueConstructor<V extends Vue = Vue> {
-    $act: VueActMasterInstance;
+    act: VueActMasterInstance;
   }
 }
 
 class VueActMaster implements PluginObject<VueActMasterOptions> {
+  static install(vue: typeof Vue, options?: VueActMasterOptions): void {
+    const actMasterInstance = new VueActMasterInstance(vue, options);
+
+    vue.act = actMasterInstance;
+    vue.prototype.$act = actMasterInstance;
+  }
+
   install(vue: typeof Vue, options?: VueActMasterOptions): void {
     const actMasterInstance = new VueActMasterInstance(vue, options);
 
@@ -21,14 +32,4 @@ class VueActMaster implements PluginObject<VueActMasterOptions> {
   }
 }
 
-declare module 'vue/types/vue' {
-  interface Vue {
-    $act: VueActMasterInstance;
-  }
-
-  interface VueConstructor<V extends Vue = Vue> {
-    act: VueActMasterInstance;
-  }
-}
-
-export default new VueActMaster();
+export { VueActMaster, VueActMasterInstance, VueActMasterOptions };

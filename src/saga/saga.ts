@@ -1,9 +1,4 @@
-import {
-  ISagaQueue,
-  BaseSaga,
-  SagaState,
-  execSagaCallback,
-} from '@/types/saga';
+import { ISagaQueue, BaseSaga, execSagaCallback } from '@/types/saga';
 import { ActMasterAction } from '@/types';
 
 /**

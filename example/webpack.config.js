@@ -2,6 +2,7 @@
 const path = require('path');
 const webpack = require('webpack');
 const VueLoaderPlugin = require('vue-loader/lib/plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 /* eslint-enable @typescript-eslint/no-var-requires */
 
 module.exports = {
@@ -10,10 +11,11 @@ module.exports = {
   entry: path.join(__dirname, 'src/main.ts'),
 
   output: {
-    path: path.join(__dirname, '__build__'),
+    path: path.resolve(__dirname, 'dist'),
+    // path: path.join(__dirname, '__build__'),
     filename: '[name].js',
     chunkFilename: '[id].chunk.js',
-    publicPath: '/__build__/',
+    // publicPath: path.join(__dirname, '__build__'),
   },
 
   module: {
@@ -44,7 +46,7 @@ module.exports = {
 
   resolve: {
     alias: {
-      'vue-act-master': path.resolve(__dirname, '..'),
+      'vue-act-master': path.resolve(__dirname, '..', 'dist'),
     },
   },
 
@@ -60,9 +62,25 @@ module.exports = {
     },
   },
 
+  devtool: '#cheap-module-eval-source-map',
+
   plugins: [
     new VueLoaderPlugin(),
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NoEmitOnErrorsPlugin(),
+    new HtmlWebpackPlugin({
+      title: 'Development',
+      minify: false,
+      filename: 'index.html',
+      template: path.join(__dirname, 'index.html'),
+      inject: true,
+    }),
   ],
+
+  devServer: {
+    host: '0.0.0.0',
+    hot: true,
+    useLocalIp: true,
+    contentBase: path.join(__dirname),
+  },
 };

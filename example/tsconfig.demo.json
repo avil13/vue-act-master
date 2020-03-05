@@ -53,12 +53,11 @@
       ]
     },
     "rootDirs": [
-      "./src",
-      "../src"
+      "./src"
     ],                        /* List of root folders whose combined content represents the structure of the project at runtime. */
-    "typeRoots": [
-      "../dist/index.d.ts"
-    ],                       /* List of folders to include type definitions from. */
+    // "typeRoots": [
+    //   "./../dist/",
+    // ],                       /* List of folders to include type definitions from. */
     "types": [
       "node",
       "jest"

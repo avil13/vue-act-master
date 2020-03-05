@@ -11,18 +11,17 @@
   ],
   "scripts": {
     "build": "rm -rf ./dist && tsc -p .",
-    "dev:watch": "nodemon",
+    "dev:watch": "concurrently --kill-others 'nodemon' 'npm run serve'",
     "dev": "npm run build && npm run serve",
     "lint:fix": "eslint --fix --ext .ts .",
-    "__prepublish": "npm run test && npm run build",
-    "serve": "node example/server.js",
+    "serve": "webpack-dev-server --config ./example/webpack.config.js",
     "start": "nodemon",
     "test:watch": "jest --watch",
     "test": "jest",
     "type-check:watch": "npm run type-check -- --watch",
-    "type-check": "tsc -p . --noEmit"
+    "type-check": "tsc -p . --noEmit",
+    "__prepublish": "npm run test && npm run build"
   },
-  "dependencies": {},
   "devDependencies": {
     "@types/jest": "^25.1.3",
     "@types/node": "^13.7.4",
@@ -30,12 +29,13 @@
     "@typescript-eslint/parser": "^2.20.0",
     "babel-jest": "^25.1.0",
     "babel-loader": "^8.0.6",
+    "concurrently": "^5.1.0",
     "css-loader": "^3.4.2",
     "dotenv": "^8.2.0",
     "eslint": "^6.8.0",
     "eslint-config-prettier": "^6.10.0",
     "eslint-plugin-prettier": "^3.1.2",
-    "express": "^4.17.1",
+    "html-webpack-plugin": "^3.2.0",
     "husky": "^4.2.3",
     "jest": "^25.1.0",
     "jest-canvas-mock": "^2.2.0",
@@ -51,7 +51,9 @@
     "vue-loader": "^15.9.0",
     "vue-template-compiler": "^2.6.11",
     "webpack": "^4.41.6",
+    "webpack-cli": "^3.3.11",
     "webpack-dev-middleware": "^3.7.2",
+    "webpack-dev-server": "^3.10.3",
     "webpack-hot-middleware": "^2.25.0"
   },
   "husky": {
