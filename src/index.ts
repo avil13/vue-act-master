@@ -1,6 +1,7 @@
 import Vue, { PluginObject } from 'vue';
-import { VueActMasterOptions } from './types';
+import { VueActMasterOptions, ActMasterAction } from './types';
 import { VueActMasterInstance } from './vue-act-master-instance';
+import { BaseSaga } from '@/types/saga';
 
 /**
  * Declaration
@@ -32,4 +33,10 @@ class VueActMaster implements PluginObject<VueActMasterOptions> {
   }
 }
 
-export { VueActMaster, VueActMasterInstance, VueActMasterOptions };
+export {
+  VueActMaster,
+  VueActMasterInstance,
+  VueActMasterOptions,
+  ActMasterAction,
+  BaseSaga,
+};

@@ -5,7 +5,7 @@ export type SagaState = { [key: string]: any };
 export interface BaseSaga extends ActMasterAction {
   saga: ISagaParams;
   exec: (sagaState: SagaState, ...args: any[]) => any;
-  undo?: () => void;
+  onReject?: (sagaState: SagaState) => void;
 }
 
 export interface ISagaParams {

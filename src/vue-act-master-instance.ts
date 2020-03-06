@@ -97,10 +97,10 @@ export class VueActMasterInstance {
     return () => this.unsubscribe(eventName, listener);
   }
 
-  unsubscribe(eventName: ActEventName, listener: listenerFunction) {
+  unsubscribe(eventName: ActEventName, listener: listenerFunction): boolean {
     const listeners = this.listeners[eventName];
     if (!listeners) {
-      return -1;
+      return false;
     }
 
     const index = listeners.indexOf(listener);
@@ -110,6 +110,6 @@ export class VueActMasterInstance {
 
     this.listeners[eventName] = listeners;
 
-    return index;
+    return index > -1;
   }
 }
