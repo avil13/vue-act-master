@@ -5,6 +5,9 @@ import {
   ActMasterActions,
   listenerFunction,
 } from './types';
+import { Saga } from './saga/saga';
+
+type ActEventName = string;
 
 export class VueActMasterInstance {
   private readonly actions: {
@@ -15,24 +18,39 @@ export class VueActMasterInstance {
     [eventName: string]: listenerFunction[];
   } = {};
 
-  private readonly vueInstance: Vue;
+  private readonly sagaInstance: Saga;
 
-  constructor(vue: Vue, options: VueActMasterOptions) {
+  private readonly vueInstance: typeof Vue;
+
+  constructor(vue: typeof Vue, options: VueActMasterOptions = {}) {
     this.vueInstance = vue;
+    this.sagaInstance = new Saga();
 
     const { actions } = options;
 
-    this.addActions(actions);
+    if (actions) {
+      this.addActions(actions);
+    }
   }
 
-  async exec(eventName: string, ...args: any[]) {
+  async exec(eventName: ActEventName, ...args: any[]) {
+    if (this.sagaInstance.isPartOfSaga(eventName)) {
+      this.sagaInstance.execSaga(eventName, async (event, sagaState) => {
+        return await this.execute(event, sagaState, ...args);
+      });
+    } else {
+      return this.execute(eventName, ...args);
+    }
+  }
+
+  private async execute(eventName: ActEventName, ...args: any[]) {
     const action = this.actions[eventName];
 
     if (!action) {
       throw new Error(`Can't find "${eventName}" action`);
     }
 
-    const value = await action.exec.call(this.vueInstance, ...args);
+    const value = await action.exec.apply(this.vueInstance, args);
     const data = action.transform ? await action.transform(value) : value;
 
     if (this.listeners[eventName]) {
@@ -57,17 +75,20 @@ export class VueActMasterInstance {
       throw new Error(`actiion "${eventName}" already existing`);
     }
     this.actions[eventName] = action;
+
+    this.sagaInstance.addSaga(eventName, action);
   }
 
-  removeAction(eventName: string) {
+  removeAction(eventName: ActEventName) {
     if (!this.actions[eventName]) {
       throw new Error(`actiion "${eventName}" not found`);
     }
 
+    this.sagaInstance.removeSaga(eventName);
     delete this.actions[eventName];
   }
 
-  subscribe(eventName: string, listener: listenerFunction) {
+  subscribe(eventName: ActEventName, listener: listenerFunction) {
     if (!this.listeners[eventName]) {
       this.listeners[eventName] = [];
     }
@@ -76,10 +97,10 @@ export class VueActMasterInstance {
     return () => this.unsubscribe(eventName, listener);
   }
 
-  unsubscribe(eventName: string, listener: listenerFunction) {
+  unsubscribe(eventName: ActEventName, listener: listenerFunction): boolean {
     const listeners = this.listeners[eventName];
     if (!listeners) {
-      return -1;
+      return false;
     }
 
     const index = listeners.indexOf(listener);
@@ -89,6 +110,6 @@ export class VueActMasterInstance {
 
     this.listeners[eventName] = listeners;
 
-    return index;
+    return index > -1;
   }
 }
