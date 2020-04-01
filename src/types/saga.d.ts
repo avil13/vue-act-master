@@ -1,6 +1,10 @@
 import { ActMasterAction } from '.';
 
-export type SagaState = { [key: string]: any };
+export type SagaState = {
+  data: { [key: string]: any };
+  readonly error: Error | null;
+  readonly isFinished: boolean;
+};
 
 export interface BaseSaga extends ActMasterAction {
   saga: ISagaParams;

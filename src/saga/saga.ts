@@ -53,14 +53,35 @@ export class Saga {
   }
 
   async execSaga(eventName: string, callback: execSagaCallback) {
-    const sagaState = {};
+    const processState = {
+      error: null,
+      isFinished: false,
+    };
+
+    const sagaState = {
+      data: {},
+      get error() {
+        return processState.error;
+      },
+      get isFinished() {
+        return processState.isFinished;
+      },
+    };
+
     const queues = this.makeQueue(eventName).filter(
       (name, i, arr) => arr.indexOf(name) === i
     );
 
     for (const eventName of queues) {
-      await callback(eventName, sagaState);
+      try {
+        await callback(eventName, sagaState);
+      } catch (error) {
+        processState.error = error;
+        processState.isFinished = true;
+        break;
+      }
     }
+    processState.isFinished = true;
   }
 
   makeQueue(eventName: string, queues: string[] = []): string[] {

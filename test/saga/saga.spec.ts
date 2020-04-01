@@ -1,17 +1,21 @@
 import { Saga } from '../../src/saga/saga';
 import {
-  listOfSagas,
   sagasNames,
-  listOfParallelSagas,
   sagasParallelNames,
-  getListOfSaga,
+  getSimpleSagas,
+  geParallelSagas,
 } from './list-of-saga.mock';
+import { BaseSaga } from '../../src/types/saga';
 
 describe('Saga class', () => {
   let saga: Saga;
+  let listOfSagas: BaseSaga[] = [];
+  let listOfParallelSagas: BaseSaga[] = [];
   const MockEventName = 'EventName';
 
   beforeEach(() => {
+    listOfSagas = getSimpleSagas();
+    listOfParallelSagas = geParallelSagas();
     saga = new Saga();
 
     saga.addSaga(MockEventName, {
@@ -52,7 +56,7 @@ describe('Saga class', () => {
     expect(saga.makeQueue(sagasNames[0])).toEqual(sagasNames);
   });
 
-  it('makeQueue parrallel', () => {
+  it('makeQueue parallel', () => {
     listOfSagas.forEach(s => saga.addSaga(s.name, s));
     listOfParallelSagas.forEach(s => saga.addSaga(s.name, s));
     expect(saga.makeQueue(sagasNames[0])).toEqual([
@@ -92,25 +96,31 @@ describe('Saga class', () => {
     expect(isParallelEventCalled).toBe(true);
   });
 
-  it.skip('execSaga and reject', async () => {
-    const listOfSagas = getListOfSaga();
-    let lastCalledEventName = '';
+  describe('reject', () => {
+    it('execSaga and no reject', async () => {
+      const listOfSagas = getSimpleSagas();
+      let lastCalledEventName = '';
 
-    // no reject
-    // prepare
-    listOfSagas.forEach(s => saga.addSaga(s.name, s));
-    // test
-    await saga.execSaga(sagasNames[0], eventName => {
-      lastCalledEventName = eventName;
+      // prepare
+      listOfSagas.forEach(s => saga.addSaga(s.name, s));
+      // test
+      await saga.execSaga(sagasNames[0], eventName => {
+        lastCalledEventName = eventName;
+      });
+      expect(sagasNames[3]).toBe(lastCalledEventName);
     });
-    expect(sagasNames[3]).toBe(lastCalledEventName);
 
-    // with reject
-    // prepare
-    const removeEventSaga = listOfSagas[2];
-    removeEventSaga.saga.rejectEvents = [listOfSagas[1].name];
-    saga.removeSaga(removeEventSaga.name);
-    saga.addSaga(removeEventSaga.name, removeEventSaga);
-    // test
+    it.skip('execSaga and reject', async () => {
+      const listOfSagas = getSimpleSagas();
+
+      // with reject
+      // prepare
+      const removeEventSaga = listOfSagas[2];
+      removeEventSaga.saga.rejectEvents = [listOfSagas[1].name];
+
+      saga.removeSaga(removeEventSaga.name);
+      saga.addSaga(removeEventSaga.name, removeEventSaga);
+      // test
+    });
   });
 });

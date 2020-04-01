@@ -3,7 +3,7 @@ import { BaseSaga } from './../../src/types/saga.d';
 export const sagasNames = ['saga_1.1', 'saga_1.2', 'saga_1.3', 'saga_1.4'];
 export const sagasParallelNames = ['saga_2.1', 'saga_2.2'];
 
-export const listOfSagas: BaseSaga[] = [
+const sagasList: BaseSaga[] = [
   {
     name: sagasNames[0],
     saga: {},
@@ -32,7 +32,7 @@ export const listOfSagas: BaseSaga[] = [
   },
 ];
 
-export const listOfParallelSagas: BaseSaga[] = [
+const parallelSagas: BaseSaga[] = [
   {
     name: sagasParallelNames[0],
     saga: {
@@ -70,4 +70,6 @@ function dup(o) {
   return r;
 }
 
-export const getListOfSaga = () => dup(listOfSagas);
+export const getSimpleSagas = (): BaseSaga[] => dup(sagasList);
+
+export const geParallelSagas = (): BaseSaga[] => dup(parallelSagas);
