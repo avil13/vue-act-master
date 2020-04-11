@@ -35,30 +35,59 @@ describe('VueActMasterInstance', () => {
     expect(result).toEqual(expectRandomValue);
   });
 
-  it('addAction', async () => {
+  it('addActionName', async () => {
     const ACTION_KEY_2 = 'ACTION_KEY_2';
     const funcMock = jest.fn();
     funcMock.mockReturnValue(expectRandomValue);
 
-    $act.addAction(ACTION_KEY_2, { exec: funcMock });
+    $act.addActionName(ACTION_KEY_2, { exec: funcMock });
 
     const result = await $act.exec(ACTION_KEY_2);
 
     expect(result).toEqual(expectRandomValue);
   });
 
-  it('addActions', async () => {
-    const ACTION_KEY_3 = 'ACTION_KEY_3';
+  it('addAction', async () => {
+    const ACTION_KEY_2 = 'ACTION_KEY_2';
     const funcMock = jest.fn();
     funcMock.mockReturnValue(expectRandomValue);
 
-    $act.addActions({
-      [ACTION_KEY_3]: { exec: funcMock },
+    $act.addAction({
+      name: ACTION_KEY_2,
+      exec: funcMock,
     });
 
-    const result = await $act.exec(ACTION_KEY_3);
+    const result = await $act.exec(ACTION_KEY_2);
 
     expect(result).toEqual(expectRandomValue);
+  });
+
+  describe('addActions', () => {
+    it('object actions', async () => {
+      const ACTION_KEY_3 = 'ACTION_KEY_3';
+      const funcMock = jest.fn();
+      funcMock.mockReturnValue(expectRandomValue);
+
+      $act.addActions({
+        [ACTION_KEY_3]: { exec: funcMock },
+      });
+
+      const result = await $act.exec(ACTION_KEY_3);
+
+      expect(result).toEqual(expectRandomValue);
+    });
+
+    it('array actions', async () => {
+      const ACTION_KEY_3 = 'ACTION_KEY_3';
+      const funcMock = jest.fn();
+      funcMock.mockReturnValue(expectRandomValue);
+
+      $act.addActions([{ name: ACTION_KEY_3, exec: funcMock }]);
+
+      const result = await $act.exec(ACTION_KEY_3);
+
+      expect(result).toEqual(expectRandomValue);
+    });
   });
 
   it('remove action', async () => {

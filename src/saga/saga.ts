@@ -1,5 +1,5 @@
-import { ISagaQueue, BaseSaga, execSagaCallback } from '@/types/saga';
-import { ActMasterAction } from '@/types';
+import { ISagaQueue, BaseSaga, execSagaCallback } from '../types/saga';
+import { ActMasterAction } from '../types';
 
 /**
  * TODO:

@@ -1,4 +1,4 @@
-import { BaseSaga } from './../../src/types/saga.d';
+import { BaseSaga } from '../../src/types/saga';
 
 export const sagasNames = ['saga_1.1', 'saga_1.2', 'saga_1.3', 'saga_1.4'];
 export const sagasParallelNames = ['saga_2.1', 'saga_2.2'];

@@ -1,6 +1,12 @@
 export type TransformerFn = (value: any) => any | Promise<any>;
 
-export type listenerFunction = (...args: any[]) => any;
+export interface IListenerArgs {
+  eventName: string;
+  value: any;
+  data: any;
+}
+
+export type listenerFunction = (arg: IListenerArgs) => any;
 
 export interface ActMasterAction {
   exec(...args: any[]): Promise<any> | any;
@@ -9,11 +15,16 @@ export interface ActMasterAction {
   [key: string]: any;
 }
 
+export interface ActMasterActionNamed extends ActMasterAction {
+  name: string;
+}
+
 export interface ActMasterActions {
   [eventName: string]: ActMasterAction;
 }
 
 export interface VueActMasterOptions {
+  errorOnReplaceAction?: boolean;
   actions?: {
     [key: string]: ActMasterAction;
   };

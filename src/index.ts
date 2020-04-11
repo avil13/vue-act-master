@@ -1,7 +1,12 @@
 import Vue, { PluginObject } from 'vue';
-import { VueActMasterOptions, ActMasterAction } from './types';
+import {
+  VueActMasterOptions,
+  ActMasterAction,
+  ActMasterActionNamed,
+  IListenerArgs,
+} from './types';
 import { VueActMasterInstance } from './vue-act-master-instance';
-import { BaseSaga } from '@/types/saga';
+import { BaseSaga } from './types/saga';
 
 /**
  * Declaration
@@ -26,10 +31,7 @@ class VueActMaster implements PluginObject<VueActMasterOptions> {
   }
 
   install(vue: typeof Vue, options?: VueActMasterOptions): void {
-    const actMasterInstance = new VueActMasterInstance(vue, options);
-
-    vue.act = actMasterInstance;
-    vue.prototype.$act = actMasterInstance;
+    VueActMaster.install(vue, options);
   }
 }
 
@@ -38,5 +40,7 @@ export {
   VueActMasterInstance,
   VueActMasterOptions,
   ActMasterAction,
+  ActMasterActionNamed,
   BaseSaga,
+  IListenerArgs,
 };
