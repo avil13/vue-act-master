@@ -135,4 +135,8 @@ export class VueActMasterInstance {
   clearStates() {
     this.globalStates = {};
   }
+
+  setState(key: string, state: any) {
+    this.globalStates[key] = state;
+  }
 }
