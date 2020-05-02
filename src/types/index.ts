@@ -20,6 +20,7 @@ export interface ActMasterAction {
   // history?: boolean;
   transform?: TransformerFn;
   useVue?: (vue: Vue) => void;
+  useStates?: (states: { [key: string]: any }) => void;
   [key: string]: any;
 }
 

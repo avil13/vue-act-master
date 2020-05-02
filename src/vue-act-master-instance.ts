@@ -22,6 +22,8 @@ export class VueActMasterInstance {
 
   private readonly vueInstance: typeof Vue;
 
+  private globalStates: { [key: string]: any } = {};
+
   private readonly config = {
     errorOnReplaceAction: true,
   };
@@ -87,6 +89,11 @@ export class VueActMasterInstance {
       action.useVue(this.vueInstance);
     }
 
+    if (action.useStates) {
+      //@ts-ignore
+      action.useStates(this.globalStates);
+    }
+
     this.actions[eventName] = action;
 
     return this;
@@ -123,5 +130,9 @@ export class VueActMasterInstance {
     this.listeners[eventName] = listeners;
 
     return index > -1;
+  }
+
+  clearStates() {
+    this.globalStates = {};
   }
 }
