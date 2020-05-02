@@ -61,3 +61,18 @@ export default {
 }
 ```
 
+# Nuxt.JS
+
+Install dependencies:
+
+```bash
+yarn add vue-act-master
+```
+
+Add `vue-act-master/nuxt` to modules section of `nuxt.config.js`
+
+```js
+{
+    modules: ['vue-act-master/nuxt'];
+}
+```

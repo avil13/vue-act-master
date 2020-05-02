@@ -1,6 +1,6 @@
 {
   "name": "vue-act-master",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "",
   "author": "avil13",
   "main": "dist/index.js",
@@ -8,7 +8,8 @@
   "files": [
     "README.md",
     "dist",
-    "src"
+    "src",
+    "nuxt"
   ],
   "scripts": {
     "build": "rm -rf ./dist && tsc -p .",
