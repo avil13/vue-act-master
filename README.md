@@ -19,8 +19,12 @@ import App from './App.vue'
 
 import { VueActMaster } from 'vue-act-master';
 
+// Actions
+import { actions } from '../you/actions/path';
+
 Vue.use(VueActMaster, {
-  errorOnReplaceAction: false
+  errorOnReplaceAction: false,
+  actions
 });
 
 Vue.config.productionTip = false

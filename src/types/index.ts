@@ -27,7 +27,5 @@ export interface ActMasterActions {
 
 export interface VueActMasterOptions {
   errorOnReplaceAction?: boolean;
-  actions?: {
-    [key: string]: ActMasterAction;
-  };
+  actions?: ActMasterActions | ActMasterActionNamed[];
 }
