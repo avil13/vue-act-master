@@ -5,11 +5,12 @@ import {
   ActMasterActions,
   listenerFunction,
   ActMasterActionNamed,
+  ActEventName,
 } from './types';
-import { Saga } from './saga/saga';
 
-type ActEventName = string;
-
+/**
+ *
+ */
 export class VueActMasterInstance {
   private readonly actions: {
     [eventName: string]: ActMasterAction;
@@ -19,8 +20,6 @@ export class VueActMasterInstance {
     [eventName: string]: listenerFunction[];
   } = {};
 
-  private readonly sagaInstance: Saga;
-
   private readonly vueInstance: typeof Vue;
 
   private readonly config = {
@@ -29,7 +28,6 @@ export class VueActMasterInstance {
 
   constructor(vue: typeof Vue, options: VueActMasterOptions = {}) {
     this.vueInstance = vue;
-    this.sagaInstance = new Saga();
 
     const { actions, errorOnReplaceAction } = options;
 
@@ -43,13 +41,7 @@ export class VueActMasterInstance {
   }
 
   async exec(eventName: ActEventName, ...args: any[]) {
-    if (this.sagaInstance.isPartOfSaga(eventName)) {
-      this.sagaInstance.execSaga(eventName, async (event, sagaState) => {
-        return await this.execute(event, sagaState, ...args);
-      });
-    } else {
-      return this.execute(eventName, ...args);
-    }
+    return this.execute(eventName, ...args);
   }
 
   private async execute(eventName: ActEventName, ...args: any[]) {
@@ -73,7 +65,7 @@ export class VueActMasterInstance {
 
   addActions(actions: ActMasterActions | ActMasterActionNamed[]) {
     if (Array.isArray(actions)) {
-      actions.forEach(action => {
+      actions.forEach((action: ActMasterActionNamed) => {
         this.addAction(action);
       });
     } else {
@@ -85,19 +77,17 @@ export class VueActMasterInstance {
     }
   }
 
+  addAction(action: ActMasterActionNamed) {
+    return this.addActionName(action.name, action);
+  }
+
   addActionName(eventName: string, action: ActMasterAction) {
     if (this.config.errorOnReplaceAction && this.actions[eventName]) {
       throw new Error(`actiion "${eventName}" already existing`);
     }
     this.actions[eventName] = action;
 
-    this.sagaInstance.addSaga(eventName, action);
-
     return this;
-  }
-
-  addAction(action: ActMasterActionNamed) {
-    return this.addActionName(action.name, action);
   }
 
   removeAction(eventName: ActEventName) {
@@ -105,7 +95,6 @@ export class VueActMasterInstance {
       throw new Error(`actiion "${eventName}" not found`);
     }
 
-    this.sagaInstance.removeSaga(eventName);
     delete this.actions[eventName];
   }
 

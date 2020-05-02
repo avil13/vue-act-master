@@ -1,5 +1,5 @@
 import Vue from 'vue';
-import { VueActMasterInstance } from '../src/vue-act-master-instance';
+import { VueActMasterInstance } from '../vue-act-master-instance';
 
 describe('VueActMasterInstance', () => {
   const ACTION_KEY = 'ACTION_KEY';
@@ -14,14 +14,16 @@ describe('VueActMasterInstance', () => {
     execMethodMock = jest.fn();
     execMethodMock.mockReturnValue(expectRandomValue);
 
-    $act = new VueActMasterInstance({} as Vue, {
+    const vueInstance = {} as typeof Vue;
+
+    $act = new VueActMasterInstance(vueInstance, {
       actions: {
         [ACTION_KEY]: {
           exec: execMethodMock,
         },
         [ACTION_TRANSFORMED_KEY]: {
           exec: execMethodMock,
-          transform(v) {
+          transform(v: any) {
             transformedValue += v;
             return transformedValue;
           },

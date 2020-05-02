@@ -6,7 +6,6 @@ import {
   IListenerArgs,
 } from './types';
 import { VueActMasterInstance } from './vue-act-master-instance';
-import { BaseSaga } from './types/saga';
 
 /**
  * Declaration
@@ -41,6 +40,5 @@ export {
   VueActMasterOptions,
   ActMasterAction,
   ActMasterActionNamed,
-  BaseSaga,
   IListenerArgs,
 };

@@ -1,5 +1,7 @@
 export type TransformerFn = (value: any) => any | Promise<any>;
 
+export type ActEventName = string;
+
 export interface IListenerArgs {
   eventName: string;
   value: any;
