@@ -41,10 +41,6 @@ export class VueActMasterInstance {
   }
 
   async exec(eventName: ActEventName, ...args: any[]) {
-    return this.execute(eventName, ...args);
-  }
-
-  private async execute(eventName: ActEventName, ...args: any[]) {
     const action = this.actions[eventName];
 
     if (!action) {
@@ -85,6 +81,12 @@ export class VueActMasterInstance {
     if (this.config.errorOnReplaceAction && this.actions[eventName]) {
       throw new Error(`actiion "${eventName}" already existing`);
     }
+
+    if (action.useVue) {
+      //@ts-ignore
+      action.useVue(this.vueInstance);
+    }
+
     this.actions[eventName] = action;
 
     return this;
