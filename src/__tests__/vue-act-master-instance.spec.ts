@@ -107,19 +107,15 @@ describe('VueActMasterInstance', () => {
   });
 
   it('subscribe', async () => {
-    let subscribedValue: any;
     let subscribedData: any;
 
-    $act.subscribe(ACTION_TRANSFORMED_KEY, ({ value, data }) => {
-      subscribedValue = value;
+    $act.subscribe(ACTION_TRANSFORMED_KEY, data => {
       subscribedData = data;
     });
 
     const result = await $act.exec(ACTION_TRANSFORMED_KEY);
 
-    expect(result).toEqual(transformedValue);
-    expect(subscribedData).toEqual(transformedValue);
-    expect(subscribedValue).toEqual(expectRandomValue);
+    expect(result).toEqual(subscribedData);
   });
 
   it('unsubscribe', async () => {

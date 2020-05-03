@@ -53,7 +53,7 @@ export default {
   },
 
   mounted() {
-    this.unsubscribe = this.$act.subscribe('get.data', ({ data }) => {
+    this.unsubscribe = this.$act.subscribe('get.data', (data) => {
       this.result = data; // transformed data
     });
   },

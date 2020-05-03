@@ -42,7 +42,10 @@ export class VueActMasterInstance {
     }
   }
 
-  async exec(eventName: ActEventName, ...args: any[]) {
+  async exec<T extends any>(
+    eventName: ActEventName,
+    ...args: any[]
+  ): Promise<T> {
     const action = this.actions[eventName];
 
     if (!action) {
@@ -52,11 +55,7 @@ export class VueActMasterInstance {
     const value = await action.exec(...args);
     const data = action.transform ? await action.transform(value) : value;
 
-    if (this.listeners[eventName]) {
-      this.listeners[eventName].forEach(listenerCallback => {
-        listenerCallback({ eventName, value, data });
-      });
-    }
+    this.emit(eventName, data);
 
     return data;
   }
@@ -92,6 +91,11 @@ export class VueActMasterInstance {
     if (action.useStates) {
       //@ts-ignore
       action.useStates(this.globalStates);
+    }
+
+    if (action.useEmit && action.name) {
+      //@ts-ignore
+      action.useEmit(this.emit.bind(action.name));
     }
 
     this.actions[eventName] = action;
@@ -130,6 +134,14 @@ export class VueActMasterInstance {
     this.listeners[eventName] = listeners;
 
     return index > -1;
+  }
+
+  async emit(eventName: string, value: any) {
+    if (this.listeners[eventName]) {
+      this.listeners[eventName].forEach(listenerCallback => {
+        listenerCallback(value);
+      });
+    }
   }
 
   clearStates() {

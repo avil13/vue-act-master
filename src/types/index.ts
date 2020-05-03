@@ -7,20 +7,17 @@ export type TransformerFn = (value: any) => any | Promise<any>;
 
 export type ActEventName = string;
 
-export interface IListenerArgs {
-  eventName: string;
-  value: any;
-  data: any;
-}
+export type listenerFunction = (arg: any) => any;
 
-export type listenerFunction = (arg: IListenerArgs) => any;
+export type emitAction = (data: any | any[]) => void;
 
-export interface ActMasterAction {
-  exec(...args: any[]): Promise<any> | any;
-  // history?: boolean;
+export abstract class ActMasterAction {
+  abstract exec(...args: any[]): Promise<any> | any;
   transform?: TransformerFn;
   useVue?: (vue: Vue) => void;
   useStates?: (states: { [key: string]: any }) => void;
+  useEmit?: (emit: emitAction) => void;
+  emit?: (value: any | any[]) => void;
   [key: string]: any;
 }
 
