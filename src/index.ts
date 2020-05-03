@@ -3,6 +3,7 @@ import {
   VueActMasterOptions,
   ActMasterAction,
   ActMasterActionNamed,
+  emitAction,
 } from './types';
 import { VueActMasterInstance } from './vue-act-master-instance';
 
@@ -39,4 +40,5 @@ export {
   VueActMasterOptions,
   ActMasterAction,
   ActMasterActionNamed,
+  emitAction,
 };
