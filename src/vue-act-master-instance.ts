@@ -2,17 +2,16 @@ import Vue from 'vue';
 import {
   ActMasterAction,
   VueActMasterOptions,
-  ActMasterActions,
   listenerFunction,
-  ActMasterActionNamed,
   ActEventName,
 } from './types';
+import { debounce } from './utils/debounce';
 
 /**
  *
  */
 export class VueActMasterInstance {
-  private readonly actions: {
+  private readonly _actions: {
     [eventName: string]: ActMasterAction;
   } = {};
 
@@ -22,14 +21,20 @@ export class VueActMasterInstance {
 
   private readonly vueInstance: typeof Vue;
 
-  private globalStates: { [key: string]: any } = {};
+  private DIContainer: { [key: string]: any } = {};
 
   private readonly config = {
     errorOnReplaceAction: true,
   };
 
+  private static instance: VueActMasterInstance;
+
   constructor(vue: typeof Vue, options: VueActMasterOptions = {}) {
     this.vueInstance = vue;
+
+    if (VueActMasterInstance.instance) {
+      return VueActMasterInstance.instance;
+    }
 
     const { actions, errorOnReplaceAction } = options;
 
@@ -40,82 +45,72 @@ export class VueActMasterInstance {
     if (typeof errorOnReplaceAction === 'boolean') {
       this.config.errorOnReplaceAction = errorOnReplaceAction;
     }
+
+    VueActMasterInstance.instance = this;
   }
 
   async exec<T extends any>(
     eventName: ActEventName,
     ...args: any[]
   ): Promise<T> {
-    const action = this.actions[eventName];
+    const action = this.getActionOrFail(eventName);
 
-    if (!action) {
-      throw new Error(`Can't find "${eventName}" action`);
-    }
-
-    const value = await action.exec(...args);
-    const data = action.transform ? await action.transform(value) : value;
+    const data = await action.exec(...args);
 
     this.emit(eventName, data);
 
-    return data;
+    return data as T;
   }
 
-  addActions(actions: ActMasterActions | ActMasterActionNamed[]) {
+  addActions(actions: ActMasterAction[]) {
     if (Array.isArray(actions)) {
-      actions.forEach((action: ActMasterActionNamed) => {
-        this.addAction(action);
+      actions.forEach((action: ActMasterAction) => {
+        this.addAction(action.name, action);
       });
-    } else {
-      for (const eventName in actions) {
-        if (Object.prototype.hasOwnProperty.call(actions, eventName)) {
-          this.addActionName(eventName, actions[eventName]);
-        }
-      }
     }
   }
 
-  addAction(action: ActMasterActionNamed) {
-    return this.addActionName(action.name, action);
-  }
-
-  addActionName(eventName: string, action: ActMasterAction) {
-    if (this.config.errorOnReplaceAction && this.actions[eventName]) {
+  addAction(eventName: string, action: ActMasterAction) {
+    if (this.config.errorOnReplaceAction && this._actions[eventName]) {
       throw new Error(`actiion "${eventName}" already existing`);
     }
 
-    if (action.useVue) {
-      //@ts-ignore
-      action.useVue(this.vueInstance);
-    }
-
-    if (action.useStates) {
-      //@ts-ignore
-      action.useStates(this.globalStates);
+    if (action.useDI) {
+      action.useDI(this.DIContainer);
     }
 
     if (action.useEmit && action.name) {
-      //@ts-ignore
-      action.useEmit(this.emit.bind(action.name));
+      action.useEmit(this.emit.bind(this));
     }
 
-    this.actions[eventName] = action;
+    this._actions[eventName] = action;
 
     return this;
   }
 
   removeAction(eventName: ActEventName) {
-    if (!this.actions[eventName]) {
+    if (!this._actions[eventName]) {
       throw new Error(`actiion "${eventName}" not found`);
     }
 
-    delete this.actions[eventName];
+    delete this._actions[eventName];
   }
 
-  subscribe(eventName: ActEventName, listener: listenerFunction) {
+  subscribe(
+    eventName: ActEventName,
+    listener: listenerFunction,
+    vueContext?: Vue
+  ) {
     if (!this.listeners[eventName]) {
       this.listeners[eventName] = [];
     }
     this.listeners[eventName].push(listener);
+
+    if (vueContext) {
+      vueContext.$once('hook:beforeDestroy', () => {
+        this.unsubscribe(eventName, listener);
+      });
+    }
 
     return () => this.unsubscribe(eventName, listener);
   }
@@ -136,19 +131,55 @@ export class VueActMasterInstance {
     return index > -1;
   }
 
-  async emit(eventName: string, value: any) {
-    if (this.listeners[eventName]) {
-      this.listeners[eventName].forEach(listenerCallback => {
-        listenerCallback(value);
-      });
+  emit(eventName: string, value: any) {
+    const action = this.getActionOrFail(eventName);
+
+    debounce(
+      () => {
+        const data = action.transform ? action.transform(value) : value;
+        const listeners = this.listeners[eventName];
+
+        if (listeners) {
+          listeners.forEach(listenerCallback => {
+            listenerCallback(data);
+          });
+        }
+      },
+      action.debounceOfEmit,
+      value,
+      action.name
+    );
+  }
+
+  private getActionOrFail(eventName: ActEventName) {
+    const action = this._actions[eventName];
+
+    if (!action) {
+      throw new Error(`Can't find "${eventName}" action`);
     }
+
+    return action;
   }
 
-  clearStates() {
-    this.globalStates = {};
+  clearDI() {
+    this.DIContainer = {};
   }
 
-  setState(key: string, state: any) {
-    this.globalStates[key] = state;
+  setDI(key: string, ctx: any) {
+    this.DIContainer[key] = ctx;
+    this.freshEmitDI();
+  }
+
+  private freshEmitDI() {
+    let action: any;
+    for (const k in this._actions) {
+      if (Object.prototype.hasOwnProperty.call(this._actions, k)) {
+        action = this._actions[k];
+
+        if (action.useDI) {
+          action.useDI(this.DIContainer);
+        }
+      }
+    }
   }
 }

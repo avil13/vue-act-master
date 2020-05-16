@@ -1,10 +1,5 @@
 import Vue, { PluginObject } from 'vue';
-import {
-  VueActMasterOptions,
-  ActMasterAction,
-  ActMasterActionNamed,
-  emitAction,
-} from './types';
+import { VueActMasterOptions, ActMasterAction, emitAction } from './types';
 import { VueActMasterInstance } from './vue-act-master-instance';
 
 /**
@@ -39,6 +34,5 @@ export {
   VueActMasterInstance,
   VueActMasterOptions,
   ActMasterAction,
-  ActMasterActionNamed,
   emitAction,
 };
