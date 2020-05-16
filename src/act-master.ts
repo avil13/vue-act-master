@@ -10,12 +10,12 @@ import { debounce } from './utils/debounce';
 /**
  *
  */
-export class VueActMasterInstance {
+export class ActMaster {
   private readonly _actions: {
     [eventName: string]: ActMasterAction;
   } = {};
 
-  private readonly listeners: {
+  private readonly _listeners: {
     [eventName: string]: listenerFunction[];
   } = {};
 
@@ -27,13 +27,13 @@ export class VueActMasterInstance {
     errorOnReplaceAction: true,
   };
 
-  private static instance: VueActMasterInstance;
+  private static instance: ActMaster;
 
   constructor(vue: typeof Vue, options: VueActMasterOptions = {}) {
     this.vueInstance = vue;
 
-    if (VueActMasterInstance.instance) {
-      return VueActMasterInstance.instance;
+    if (ActMaster.instance) {
+      return ActMaster.instance;
     }
 
     const { actions, errorOnReplaceAction } = options;
@@ -46,22 +46,10 @@ export class VueActMasterInstance {
       this.config.errorOnReplaceAction = errorOnReplaceAction;
     }
 
-    VueActMasterInstance.instance = this;
+    ActMaster.instance = this;
   }
 
-  async exec<T extends any>(
-    eventName: ActEventName,
-    ...args: any[]
-  ): Promise<T> {
-    const action = this.getActionOrFail(eventName);
-
-    const data = await action.exec(...args);
-
-    this.emit(eventName, data);
-
-    return data as T;
-  }
-
+  //#region [ Actions ]
   addActions(actions: ActMasterAction[]) {
     if (Array.isArray(actions)) {
       actions.forEach((action: ActMasterAction) => {
@@ -96,15 +84,68 @@ export class VueActMasterInstance {
     delete this._actions[eventName];
   }
 
+  clearActions() {
+    for (const eventName in this._actions) {
+      if (Object.prototype.hasOwnProperty.call(this._actions, eventName)) {
+        delete this._actions[eventName];
+      }
+    }
+  }
+
+  clearListeners() {
+    for (const eventName in this._listeners) {
+      if (Object.prototype.hasOwnProperty.call(this._listeners, eventName)) {
+        delete this._listeners[eventName];
+      }
+    }
+  }
+  //#endregion
+
+  //#region [ Executions ]
+  async exec<T extends any>(
+    eventName: ActEventName,
+    ...args: any[]
+  ): Promise<T> {
+    const action = this.getActionOrFail(eventName);
+
+    const execResult = await action.exec(...args);
+    const data = action.transform ? action.transform(execResult) : execResult;
+
+    this.emit(eventName, data);
+
+    return data as T;
+  }
+
+  emit(eventName: string, value: any) {
+    const action = this.getActionOrFail(eventName);
+
+    debounce(
+      () => {
+        const listeners = this._listeners[eventName];
+
+        if (listeners) {
+          listeners.forEach(listenerCallback => {
+            listenerCallback(value);
+          });
+        }
+      },
+      action.debounceOfEmit,
+      value,
+      action.name
+    );
+  }
+  //#endregion
+
+  //#region [ Subscribtions ]
   subscribe(
     eventName: ActEventName,
     listener: listenerFunction,
     vueContext?: Vue
   ) {
-    if (!this.listeners[eventName]) {
-      this.listeners[eventName] = [];
+    if (!this._listeners[eventName]) {
+      this._listeners[eventName] = [];
     }
-    this.listeners[eventName].push(listener);
+    this._listeners[eventName].push(listener);
 
     if (vueContext) {
       vueContext.$once('hook:beforeDestroy', () => {
@@ -116,7 +157,7 @@ export class VueActMasterInstance {
   }
 
   unsubscribe(eventName: ActEventName, listener: listenerFunction): boolean {
-    const listeners = this.listeners[eventName];
+    const listeners = this._listeners[eventName];
     if (!listeners) {
       return false;
     }
@@ -126,41 +167,13 @@ export class VueActMasterInstance {
       listeners.splice(index, 1);
     }
 
-    this.listeners[eventName] = listeners;
+    this._listeners[eventName] = listeners;
 
     return index > -1;
   }
+  //#endregion
 
-  emit(eventName: string, value: any) {
-    const action = this.getActionOrFail(eventName);
-
-    debounce(
-      () => {
-        const data = action.transform ? action.transform(value) : value;
-        const listeners = this.listeners[eventName];
-
-        if (listeners) {
-          listeners.forEach(listenerCallback => {
-            listenerCallback(data);
-          });
-        }
-      },
-      action.debounceOfEmit,
-      value,
-      action.name
-    );
-  }
-
-  private getActionOrFail(eventName: ActEventName) {
-    const action = this._actions[eventName];
-
-    if (!action) {
-      throw new Error(`Can't find "${eventName}" action`);
-    }
-
-    return action;
-  }
-
+  //#region [ DI ]
   clearDI() {
     this.DIContainer = {};
   }
@@ -182,4 +195,17 @@ export class VueActMasterInstance {
       }
     }
   }
+  //#endregion
+
+  //#region [ helpers ]
+  private getActionOrFail(eventName: ActEventName) {
+    const action = this._actions[eventName];
+
+    if (!action) {
+      throw new Error(`Can't find "${eventName}" action`);
+    }
+
+    return action;
+  }
+  //#endregion
 }

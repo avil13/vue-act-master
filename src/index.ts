@@ -1,6 +1,6 @@
 import Vue, { PluginObject } from 'vue';
 import { VueActMasterOptions, ActMasterAction, emitAction } from './types';
-import { VueActMasterInstance } from './vue-act-master-instance';
+import { ActMaster } from './act-master';
 
 /**
  * Declaration
@@ -8,20 +8,20 @@ import { VueActMasterInstance } from './vue-act-master-instance';
  */
 declare module 'vue/types/vue' {
   interface Vue {
-    $act: VueActMasterInstance;
+    $act: ActMaster;
   }
 
   interface VueConstructor<V extends Vue = Vue> {
-    act: VueActMasterInstance;
+    act: ActMaster;
   }
 }
 
 class VueActMaster implements PluginObject<VueActMasterOptions> {
   static install(vue: typeof Vue, options?: VueActMasterOptions): void {
-    const actMasterInstance = new VueActMasterInstance(vue, options);
+    const actMaster = new ActMaster(vue, options);
 
-    vue.act = actMasterInstance;
-    vue.prototype.$act = actMasterInstance;
+    vue.act = actMaster;
+    vue.prototype.$act = actMaster;
   }
 
   install(vue: typeof Vue, options?: VueActMasterOptions): void {
@@ -31,7 +31,7 @@ class VueActMaster implements PluginObject<VueActMasterOptions> {
 
 export {
   VueActMaster,
-  VueActMasterInstance,
+  ActMaster,
   VueActMasterOptions,
   ActMasterAction,
   emitAction,
