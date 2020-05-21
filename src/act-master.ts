@@ -109,15 +109,18 @@ export class ActMaster {
     const action = this.getActionOrFail(eventName);
 
     const execResult = await action.exec(...args);
+
+    if (!action.useEmit) {
+      this.emit(eventName, execResult);
+    }
+
     const data = action.transform ? action.transform(execResult) : execResult;
-
-    this.emit(eventName, data);
-
     return data as T;
   }
 
-  emit(eventName: string, value: any) {
+  emit(eventName: string, execResult: any) {
     const action = this.getActionOrFail(eventName);
+    const value = action.transform ? action.transform(execResult) : execResult;
 
     debounce(
       () => {
