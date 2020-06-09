@@ -19,7 +19,7 @@
     "serve": "webpack-dev-server --config ./example/webpack.config.js",
     "start": "npm run dev",
     "test:watch": "jest --watch",
-    "test": "jest",
+    "test": "jest --collect-coverage",
     "type-check:watch": "npm run type-check -- --watch",
     "type-check": "tsc -p . --noEmit",
     "prepublish": "npm run test && npm run build"
