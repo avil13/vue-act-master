@@ -50,7 +50,7 @@ export class ActMaster {
   }
 
   //#region [ Actions ]
-  addActions(actions: ActMasterAction[]) {
+  addActions(actions: ActMasterAction[]): void {
     if (Array.isArray(actions)) {
       actions.forEach((action: ActMasterAction) => {
         this.addAction(action.name, action);
@@ -58,7 +58,7 @@ export class ActMaster {
     }
   }
 
-  addAction(eventName: string, action: ActMasterAction) {
+  addAction(eventName: string, action: ActMasterAction): ActMaster {
     if (this.config.errorOnReplaceAction && this._actions[eventName]) {
       throw new Error(`actiion "${eventName}" already existing`);
     }
@@ -76,7 +76,7 @@ export class ActMaster {
     return this;
   }
 
-  removeAction(eventName: ActEventName) {
+  removeAction(eventName: ActEventName): void {
     if (!this._actions[eventName]) {
       throw new Error(`actiion "${eventName}" not found`);
     }
@@ -84,7 +84,7 @@ export class ActMaster {
     delete this._actions[eventName];
   }
 
-  clearActions() {
+  clearActions(): void {
     for (const eventName in this._actions) {
       if (Object.prototype.hasOwnProperty.call(this._actions, eventName)) {
         delete this._actions[eventName];
@@ -92,7 +92,7 @@ export class ActMaster {
     }
   }
 
-  clearListeners() {
+  clearListeners(): void {
     for (const eventName in this._listeners) {
       if (Object.prototype.hasOwnProperty.call(this._listeners, eventName)) {
         delete this._listeners[eventName];
@@ -118,7 +118,7 @@ export class ActMaster {
     return data as T;
   }
 
-  emit(eventName: string, execResult: any) {
+  emit(eventName: string, execResult: any): void {
     const action = this.getActionOrFail(eventName);
     const value = action.transform ? action.transform(execResult) : execResult;
 
@@ -127,7 +127,7 @@ export class ActMaster {
         const listeners = this._listeners[eventName];
 
         if (listeners) {
-          listeners.forEach(listenerCallback => {
+          listeners.forEach((listenerCallback) => {
             listenerCallback(value);
           });
         }
@@ -144,7 +144,7 @@ export class ActMaster {
     eventName: ActEventName,
     listener: listenerFunction,
     vueContext?: Vue
-  ) {
+  ): () => boolean {
     if (!this._listeners[eventName]) {
       this._listeners[eventName] = [];
     }
@@ -177,13 +177,14 @@ export class ActMaster {
   //#endregion
 
   //#region [ DI ]
-  clearDI() {
+  clearDI(): void {
     this._DIContainer = {};
   }
 
-  setDI(key: string, ctx: any) {
+  setDI(key: string, ctx: any): ActMaster {
     this._DIContainer[key] = ctx;
     this.freshEmitDI();
+    return this;
   }
 
   private freshEmitDI() {

@@ -68,7 +68,7 @@ describe('VueActMaster', () => {
       ACTION_NAME = 'ACTION_NAME_EX';
 
       addTestAction(ACTION_NAME, {
-        transform: v => `${v}_SUFFIX`,
+        transform: (v) => `${v}_SUFFIX`,
       });
 
       const result = await $act.exec(ACTION_NAME);
@@ -85,7 +85,7 @@ describe('VueActMaster', () => {
 
       let subscribedData: any;
 
-      $act.subscribe(ACTION_NAME, data => {
+      $act.subscribe(ACTION_NAME, (data) => {
         subscribedData = data;
       });
 
@@ -100,7 +100,7 @@ describe('VueActMaster', () => {
       //
       let subscribedData: any;
 
-      const unsubscribe = $act.subscribe(ACTION_NAME, data => {
+      const unsubscribe = $act.subscribe(ACTION_NAME, (data) => {
         subscribedData = data;
       });
 
