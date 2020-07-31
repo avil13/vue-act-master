@@ -11,11 +11,11 @@ let debounceTimer: any = {};
  *  }, val);
  */
 export function debounce(
-  func: Function,
+  func: (...args: any[]) => void,
   wait?: number,
   args?: any,
   _prefix = '__'
-) {
+): void {
   if (!wait) {
     func(args);
     return;
@@ -30,7 +30,7 @@ export function debounce(
   }
 
   debounceTimer[key] = setTimeout(
-    argsLast => {
+    (argsLast) => {
       func(argsLast);
       debounceTimer[key] = null;
     },
