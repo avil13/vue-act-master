@@ -21,7 +21,7 @@ export class ActMaster {
 
   private readonly vueInstance: typeof Vue;
 
-  private DIContainer: { [key: string]: any } = {};
+  private _DIContainer: { [key: string]: any } = {};
 
   private readonly config = {
     errorOnReplaceAction: true,
@@ -64,7 +64,7 @@ export class ActMaster {
     }
 
     if (action.useDI) {
-      action.useDI(this.DIContainer);
+      action.useDI(this._DIContainer);
     }
 
     if (action.useEmit && action.name) {
@@ -178,11 +178,11 @@ export class ActMaster {
 
   //#region [ DI ]
   clearDI() {
-    this.DIContainer = {};
+    this._DIContainer = {};
   }
 
   setDI(key: string, ctx: any) {
-    this.DIContainer[key] = ctx;
+    this._DIContainer[key] = ctx;
     this.freshEmitDI();
   }
 
@@ -193,7 +193,7 @@ export class ActMaster {
         action = this._actions[k];
 
         if (action.useDI) {
-          action.useDI(this.DIContainer);
+          action.useDI(this._DIContainer);
         }
       }
     }

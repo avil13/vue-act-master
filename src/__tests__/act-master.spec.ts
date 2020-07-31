@@ -20,6 +20,7 @@ describe('VueActMaster', () => {
     if ($act) {
       $act.clearActions();
       $act.clearListeners();
+      $act.clearDI();
     }
 
     expectRandomValue = `${Math.random() * 1000}`;
@@ -65,14 +66,13 @@ describe('VueActMaster', () => {
 
     it('transform', async () => {
       ACTION_NAME = 'ACTION_NAME_EX';
-      const transformedValue = `${Math.random() * 1000}`;
 
       addTestAction(ACTION_NAME, {
-        transform: v => `${v}_${transformedValue}`,
+        transform: v => `${v}_SUFFIX`,
       });
 
       const result = await $act.exec(ACTION_NAME);
-      expect(result).toBe(`${expectRandomValue}_${transformedValue}`);
+      expect(result).toBe(`${expectRandomValue}_SUFFIX`);
     });
   });
 
@@ -129,6 +129,30 @@ describe('VueActMaster', () => {
       // ...destroy component
       expect(mockCallback.mock.calls.length).toBe(1);
       expect(mockCallback.mock.calls[0][0]).toBe('hook:beforeDestroy');
+    });
+  });
+
+  describe('DI', () => {
+    it('DI same entity', async () => {
+      ACTION_NAME = 'ACTION_NAME_DI';
+      const DATA = Math.random();
+      const mockCallback = jest.fn();
+
+      $act.setDI('api', mockCallback);
+
+      addTestAction(ACTION_NAME, {
+        exec(data) {
+          this.api(data);
+        },
+        useDI({ api }) {
+          this.api = api;
+        },
+      });
+
+      await $act.exec(ACTION_NAME, DATA);
+
+      expect(mockCallback.mock.calls.length).toBe(1);
+      expect(mockCallback.mock.calls[0][0]).toBe(DATA);
     });
   });
 });
