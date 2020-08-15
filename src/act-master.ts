@@ -1,10 +1,13 @@
 import Vue from 'vue';
+
 import {
   ActMasterAction,
   VueActMasterOptions,
   listenerFunction,
   ActEventName,
+  ActMasterActionDevDI,
 } from './types';
+
 import { debounce } from './utils/debounce';
 
 /**
@@ -63,15 +66,13 @@ export class ActMaster {
       throw new Error(`actiion "${eventName}" already existing`);
     }
 
-    if (action.useDI) {
-      action.useDI(this._DIContainer);
-    }
-
     if (action.useEmit && action.name) {
       action.useEmit(this.emit.bind(this));
     }
 
     this._actions[eventName] = action;
+
+    this.emitDIProps(action);
 
     return this;
   }
@@ -193,10 +194,18 @@ export class ActMaster {
       if (Object.prototype.hasOwnProperty.call(this._actions, k)) {
         action = this._actions[k];
 
-        if (action.useDI) {
-          action.useDI(this._DIContainer);
-        }
+        this.emitDIProps(action);
       }
+    }
+  }
+
+  private emitDIProps(action: ActMasterActionDevDI) {
+    if (action.__UseDI__) {
+      action.__UseDI__(this._DIContainer);
+    }
+
+    if (action.UseDI) {
+      action.UseDI(this._DIContainer);
     }
   }
   //#endregion

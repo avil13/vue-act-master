@@ -200,7 +200,29 @@ import { SuperAPI } from '../you/api';
 
 ```ts
 // with-di-action.ts
+// with decorator
+import { ActMasterAction } from 'vue-act-master';
+import { UseDI } from 'vue-act-master/decorators';
 
+
+import { SuperAPI } from '../you/api';
+
+export class WithDiAction implements ActMasterAction = {
+  name = 'login';
+
+  @UseDI('api')
+  private api!: SuperAPI; // SuperAPI as interface
+
+  exec(loginData) {
+    return this.api.login(loginData);
+  }
+};
+``
+```
+OR
+```ts
+// with-di-action.ts
+// without decorator
 import { ActMasterAction } from 'vue-act-master';
 import { SuperAPI } from '../you/api';
 
@@ -213,7 +235,7 @@ export class WithDiAction implements ActMasterAction = {
     return this.api.login(loginData);
   }
 
-  useDI({ api }) {
+  UseDI({ api }) {
     this.api = api;
   }
 };

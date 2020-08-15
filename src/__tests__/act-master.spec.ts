@@ -131,28 +131,4 @@ describe('VueActMaster', () => {
       expect(mockCallback.mock.calls[0][0]).toBe('hook:beforeDestroy');
     });
   });
-
-  describe('DI', () => {
-    it('DI same entity', async () => {
-      ACTION_NAME = 'ACTION_NAME_DI';
-      const DATA = Math.random();
-      const mockCallback = jest.fn();
-
-      $act.setDI('api', mockCallback);
-
-      addTestAction(ACTION_NAME, {
-        exec(data) {
-          this.api(data);
-        },
-        useDI({ api }) {
-          this.api = api;
-        },
-      });
-
-      await $act.exec(ACTION_NAME, DATA);
-
-      expect(mockCallback.mock.calls.length).toBe(1);
-      expect(mockCallback.mock.calls[0][0]).toBe(DATA);
-    });
-  });
 });

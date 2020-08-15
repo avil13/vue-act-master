@@ -12,7 +12,7 @@
     "nuxt"
   ],
   "scripts": {
-    "build": "rm -rf ./dist && tsc -p .",
+    "build": "rm -rf ./dist && tsc -p ./tsconfig.prod.json",
     "dev:watch": "concurrently --kill-others 'nodemon' 'npm run serve'",
     "dev": "npm run build && npm run serve",
     "lint:fix": "eslint --fix --ext .ts .",
@@ -21,7 +21,7 @@
     "test:watch": "jest --watch",
     "test": "jest --collect-coverage",
     "type-check:watch": "npm run type-check -- --watch",
-    "type-check": "tsc -p . --noEmit",
+    "type-check": "tsc -p ./tsconfig.prod.json --noEmit",
     "prepublish": "npm run test && npm run build"
   },
   "devDependencies": {

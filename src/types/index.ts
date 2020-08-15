@@ -15,8 +15,18 @@ export interface ActMasterAction {
   exec(...args: any[]): Promise<any> | any;
   name: string;
   transform?: TransformerFn;
-  useDI?: (contexts: { [key: string]: any }) => void;
+  UseDI?: (contexts: { [key: string]: any }) => void;
   useEmit?: (emit: emitAction) => void;
   debounceOfEmit?: number;
   [key: string]: any;
+}
+
+export interface ActMasterActionDevDI extends ActMasterAction {
+  _DI_?: {
+    [DIName: string]: {
+      name: string;
+      value: null | any;
+    };
+  };
+  __UseDI__?: (contexts: { [key: string]: any }) => void;
 }
