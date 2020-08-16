@@ -12,13 +12,13 @@
     "nuxt"
   ],
   "scripts": {
-    "build": "rm -rf ./dist && tsc -p ./tsconfig.prod.json",
+    "build": "yarn test && rm -rf ./dist && tsc -p ./tsconfig.prod.json",
     "lint:fix": "eslint --fix --ext .ts .",
     "test:watch": "jest --watch",
     "test": "jest --collect-coverage",
     "type-check:watch": "npm run type-check -- --watch",
     "type-check": "tsc -p ./tsconfig.prod.json --noEmit",
-    "prepublish": "npm run test && npm run build"
+    "prepublish": "npm run test && npm run build && auto-changelog"
   },
   "husky": {
     "hooks": {
@@ -40,6 +40,7 @@
     "@types/node": "^14.0.27",
     "@typescript-eslint/eslint-plugin": "^3.9.0",
     "@typescript-eslint/parser": "^3.9.0",
+    "auto-changelog": "^2.2.0",
     "babel-jest": "^26.3.0",
     "eslint": "^7.7.0",
     "eslint-config-prettier": "^6.11.0",
