@@ -1,6 +1,10 @@
 import Vue, { PluginObject } from 'vue';
-import { VueActMasterOptions, ActMasterAction, emitAction } from './types';
+
 import { ActMaster } from './act-master';
+import { UseDI } from './decorators';
+import { VueActMasterOptions, ActMasterAction, emitAction } from './types';
+
+export { ActMaster, ActMasterAction, emitAction, UseDI, VueActMasterOptions };
 
 /**
  * Declaration
@@ -16,7 +20,7 @@ declare module 'vue/types/vue' {
   }
 }
 
-class VueActMaster implements PluginObject<VueActMasterOptions> {
+export class VueActMaster implements PluginObject<VueActMasterOptions> {
   static install(vue: typeof Vue, options?: VueActMasterOptions): void {
     const actMaster = new ActMaster(vue, options);
 
@@ -28,11 +32,3 @@ class VueActMaster implements PluginObject<VueActMasterOptions> {
     VueActMaster.install(vue, options);
   }
 }
-
-export {
-  VueActMaster,
-  ActMaster,
-  VueActMasterOptions,
-  ActMasterAction,
-  emitAction,
-};

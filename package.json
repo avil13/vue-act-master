@@ -13,50 +13,12 @@
   ],
   "scripts": {
     "build": "rm -rf ./dist && tsc -p ./tsconfig.prod.json",
-    "dev:watch": "concurrently --kill-others 'nodemon' 'npm run serve'",
-    "dev": "npm run build && npm run serve",
     "lint:fix": "eslint --fix --ext .ts .",
-    "serve": "webpack-dev-server --config ./example/webpack.config.js",
-    "start": "npm run dev",
     "test:watch": "jest --watch",
     "test": "jest --collect-coverage",
     "type-check:watch": "npm run type-check -- --watch",
     "type-check": "tsc -p ./tsconfig.prod.json --noEmit",
     "prepublish": "npm run test && npm run build"
-  },
-  "devDependencies": {
-    "@types/jest": "^26.0.8",
-    "@types/node": "^14.0.27",
-    "@typescript-eslint/eslint-plugin": "^3.7.1",
-    "@typescript-eslint/parser": "^3.7.1",
-    "babel-jest": "^26.2.2",
-    "babel-loader": "^8.1.0",
-    "concurrently": "^5.2.0",
-    "css-loader": "^4.1.1",
-    "dotenv": "^8.2.0",
-    "eslint": "^7.5.0",
-    "eslint-config-prettier": "^6.11.0",
-    "eslint-plugin-prettier": "^3.1.4",
-    "html-webpack-plugin": "^4.3.0",
-    "husky": "^4.2.5",
-    "jest": "^26.2.2",
-    "jest-canvas-mock": "^2.2.0",
-    "nodemon": "^2.0.4",
-    "prettier": "^2.0.5",
-    "style-loader": "^1.2.1",
-    "ts-jest": "^26.1.4",
-    "ts-loader": "^8.0.1",
-    "ts-node": "^8.10.2",
-    "tslint": "^6.1.2",
-    "typescript": "^3.9.7",
-    "vue": "^2.*",
-    "vue-loader": "^15.9.3",
-    "vue-template-compiler": "^2.6.11",
-    "webpack": "^4.44.1",
-    "webpack-cli": "^3.3.12",
-    "webpack-dev-middleware": "^3.7.2",
-    "webpack-dev-server": "^3.11.0",
-    "webpack-hot-middleware": "^2.25.0"
   },
   "husky": {
     "hooks": {
@@ -68,5 +30,26 @@
     "type": "git",
     "url": "git@github.com:avil13/vue-act-master.git"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "vue": "^2.*"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.11.1",
+    "@types/jest": "^26.0.10",
+    "@types/node": "^14.0.27",
+    "@typescript-eslint/eslint-plugin": "^3.9.0",
+    "@typescript-eslint/parser": "^3.9.0",
+    "babel-jest": "^26.3.0",
+    "eslint": "^7.7.0",
+    "eslint-config-prettier": "^6.11.0",
+    "eslint-plugin-prettier": "^3.1.4",
+    "husky": "^4.2.5",
+    "jest": "^26.4.0",
+    "jest-canvas-mock": "^2.2.0",
+    "prettier": "^2.0.5",
+    "ts-jest": "^26.2.0",
+    "ts-node": "^8.10.2",
+    "typescript": "^3.9.7"
+  }
 }
