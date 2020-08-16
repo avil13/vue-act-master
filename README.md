@@ -235,7 +235,7 @@ export class WithDiAction implements ActMasterAction = {
     return this.api.login(loginData);
   }
 
-  UseDI({ api }) {
+  useDI({ api }) {
     this.api = api;
   }
 };

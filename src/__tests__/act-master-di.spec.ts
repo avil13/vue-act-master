@@ -1,8 +1,8 @@
 import Vue from 'vue';
 
 import { ActMaster } from '../act-master';
-import { ActMasterAction } from '../types';
 import { UseDI } from '../decorators';
+import { ActMasterAction } from '../types';
 
 describe('DI', () => {
   const ACTION_NAME = 'ACTION_NAME_DI';
@@ -32,7 +32,7 @@ describe('DI', () => {
         exec(data) {
           this.api(data);
         },
-        UseDI({ api }) {
+        useDI({ api }: any) {
           this.api = api;
         },
       },

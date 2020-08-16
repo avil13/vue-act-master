@@ -200,12 +200,12 @@ export class ActMaster {
   }
 
   private emitDIProps(action: ActMasterActionDevDI) {
-    if (action.__UseDI__) {
-      action.__UseDI__(this._DIContainer);
+    if (action.__useDI__) {
+      action.__useDI__(this._DIContainer);
     }
 
-    if (action.UseDI) {
-      action.UseDI(this._DIContainer);
+    if (action.useDI) {
+      action.useDI(this._DIContainer);
     }
   }
   //#endregion

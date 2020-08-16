@@ -42,11 +42,11 @@ export function UseDI(diName: string) {
     });
 
     //
-    if ('__UseDI__' in target) {
+    if ('__useDI__' in target) {
       return;
     }
 
-    Object.defineProperty(target, '__UseDI__', {
+    Object.defineProperty(target, '__useDI__', {
       value(diItems: { [key: string]: any }) {
         const DI = this._DI_;
 
