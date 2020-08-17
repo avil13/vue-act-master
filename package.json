@@ -13,6 +13,7 @@
   ],
   "scripts": {
     "build": "yarn test && rm -rf ./dist && tsc -p ./tsconfig.prod.json",
+    "changelog": "auto-changelog",
     "lint:fix": "eslint --fix --ext .ts .",
     "test:watch": "jest --watch",
     "test": "jest --collect-coverage",
@@ -22,7 +23,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "npm run lint:fix && git update-index --again",
+      "pre-commit": "npm run lint:fix && git update-index --again && npm run changelog",
       "pre-push": "npm test"
     }
   },
