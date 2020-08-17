@@ -1,10 +1,17 @@
 import Vue, { PluginObject } from 'vue';
 
 import { ActMaster } from './act-master';
-import { UseDI } from './decorators';
-import { VueActMasterOptions, ActMasterAction, emitAction } from './types';
+import { Emit, UseDI } from './decorators';
+import { ActMasterAction, emitAction, VueActMasterOptions } from './types';
 
-export { ActMaster, ActMasterAction, emitAction, UseDI, VueActMasterOptions };
+export {
+  ActMaster,
+  ActMasterAction,
+  Emit,
+  emitAction,
+  UseDI,
+  VueActMasterOptions,
+};
 
 /**
  * Declaration

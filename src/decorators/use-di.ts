@@ -61,7 +61,5 @@ export function UseDI(diName: string) {
       writable: false,
       configurable: false,
     });
-
-    // console.log('--=>', target.UseDI?.toString());
   };
 }

@@ -1,4 +1,5 @@
 import Vue from 'vue';
+
 import { ActMaster } from '../act-master';
 
 describe('VueActMaster', () => {
@@ -68,7 +69,7 @@ describe('VueActMaster', () => {
       ACTION_NAME = 'ACTION_NAME_EX';
 
       addTestAction(ACTION_NAME, {
-        transform: (v) => `${v}_SUFFIX`,
+        transform: (v: string) => `${v}_SUFFIX`,
       });
 
       const result = await $act.exec(ACTION_NAME);

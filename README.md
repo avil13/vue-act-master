@@ -201,9 +201,8 @@ import { SuperAPI } from '../you/api';
 ```ts
 // with-di-action.ts
 // with decorator
-import { ActMasterAction } from 'vue-act-master';
-import { UseDI } from 'vue-act-master/decorators';
 
+import { UseDI, ActMasterAction } from 'vue-act-master';
 
 import { SuperAPI } from '../you/api';
 
@@ -223,6 +222,7 @@ OR
 ```ts
 // with-di-action.ts
 // without decorator
+
 import { ActMasterAction } from 'vue-act-master';
 import { SuperAPI } from '../you/api';
 
@@ -235,6 +235,7 @@ export class WithDiAction implements ActMasterAction = {
     return this.api.login(loginData);
   }
 
+  // get DI scope
   useDI({ api }) {
     this.api = api;
   }
@@ -245,6 +246,30 @@ export class WithDiAction implements ActMasterAction = {
 
 ```ts
 // with-emit-action.ts
+// with decorator
+
+import { Emit, ActMasterAction, emitAction } from 'vue-act-master';
+
+export class WithEmitAction implements ActMasterAction = {
+  name = 'login';
+
+  @Emit();
+  private emit!: emitAction;
+
+  exec(loginData) {
+    const result = api.login(loginData);
+
+    // use another action
+    this.emit('set.authorized', true)
+  }
+};
+```
+
+OR
+
+```ts
+// with-emit-action.ts
+// without decorator
 
 import { ActMasterAction, emitAction } from 'vue-act-master';
 
@@ -254,12 +279,13 @@ export class WithEmitAction implements ActMasterAction = {
   private emit: emitAction;
 
   exec(loginData) {
-    const result = this.api.login(loginData);
+    const result = api.login(loginData);
 
     // use another action
     this.emit('set.authorized', true)
   }
 
+  // set Emitter
   useEmit(emit: emitAction) {
     this.emit = emit;
   }

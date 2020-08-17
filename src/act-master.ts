@@ -8,8 +8,6 @@ import {
   ActMasterActionDevDI,
 } from './types';
 
-import { debounce } from './utils/debounce';
-
 /**
  *
  */
@@ -70,6 +68,10 @@ export class ActMaster {
       action.useEmit(this.emit.bind(this));
     }
 
+    if (action._EMITTER_ === null) {
+      action._EMITTER_ = this.emit.bind(this);
+    }
+
     this._actions[eventName] = action;
 
     this.emitDIProps(action);
@@ -103,40 +105,25 @@ export class ActMaster {
   //#endregion
 
   //#region [ Executions ]
-  async exec<T extends any>(
-    eventName: ActEventName,
-    ...args: any[]
-  ): Promise<T> {
-    const action = this.getActionOrFail(eventName);
-
-    const execResult = await action.exec(...args);
-
-    if (!action.useEmit) {
-      this.emit(eventName, execResult);
-    }
-
-    const data = action.transform ? action.transform(execResult) : execResult;
-    return data as T;
+  async exec<T = any>(eventName: ActEventName, ...args: any[]): Promise<T> {
+    return await this.emit<T>(eventName, ...args);
   }
 
-  emit(eventName: string, execResult: any): void {
+  async emit<T2>(eventName: string, ...args: any[]): Promise<T2> {
     const action = this.getActionOrFail(eventName);
-    const value = action.transform ? action.transform(execResult) : execResult;
+    const execResult = await action.exec(...args);
+    const value: T2 = action.transform
+      ? action.transform(execResult)
+      : execResult;
+    const listeners = this._listeners[eventName];
 
-    debounce(
-      () => {
-        const listeners = this._listeners[eventName];
+    if (listeners) {
+      listeners.forEach((listenerCallback) => {
+        listenerCallback(value);
+      });
+    }
 
-        if (listeners) {
-          listeners.forEach((listenerCallback) => {
-            listenerCallback(value);
-          });
-        }
-      },
-      action.debounceOfEmit,
-      value,
-      action.name
-    );
+    return value;
   }
   //#endregion
 

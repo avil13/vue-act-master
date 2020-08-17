@@ -9,7 +9,10 @@ export type ActEventName = string;
 
 export type listenerFunction = (arg: any) => any;
 
-export type emitAction = (name: ActEventName, data: any | any[]) => void;
+export type emitAction<T = any> = (
+  name: ActEventName,
+  data: any | any[]
+) => Promise<T>;
 
 export interface ActMasterAction {
   exec(...args: any[]): Promise<any> | any;
@@ -28,5 +31,6 @@ export interface ActMasterActionDevDI extends ActMasterAction {
       value: null | any;
     };
   };
+  _EMITTER_?: emitAction;
   __UseDI__?: (contexts: { [key: string]: any }) => void;
 }
