@@ -1,4 +1,4 @@
-import { ActMasterActionDevDI } from './../types';
+import { ActMasterActionDevDI } from '../types';
 
 const isNotProd = process.env.NODE_ENV !== 'production';
 
