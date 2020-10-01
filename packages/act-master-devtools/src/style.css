@@ -1,0 +1,119 @@
+ul,
+li {
+  margin: 0;
+  padding: 0;
+}
+ul {
+  list-style: none;
+}
+*,
+*::before,
+*::after {
+  box-sizing: inherit;
+}
+.content li + li {
+  margin-top: 0.25em;
+}
+.content ul {
+  list-style: disc outside;
+  margin-left: 2em;
+  margin-top: 1em;
+}
+.content ul.block-list {
+  list-style: none;
+  margin-left: 0;
+}
+.block-list {
+  list-style: none;
+}
+.block-list li {
+  padding: 16px;
+  background: #f5f5f5;
+  margin-bottom: 0.25rem;
+}
+.block-list.is-small > li {
+  font-size: 0.875em;
+  padding: 10.6666666667px;
+}
+/*  */
+/*! CSS Used from: https://bulma.io/css/bulma-docs.min.css?v=202008270947 */
+p {
+  margin: 0;
+  padding: 0;
+}
+*,
+::after,
+::before {
+  box-sizing: inherit;
+}
+code {
+  -moz-osx-font-smoothing: auto;
+  -webkit-font-smoothing: auto;
+  font-family: monospace;
+}
+code {
+  background-color: #f5f5f5;
+  color: #f14668;
+  font-size: 0.875em;
+  font-weight: 400;
+  padding: 0.25em 0.5em 0.25em;
+}
+.column {
+  display: block;
+  flex-basis: 0;
+  flex-grow: 1;
+  flex-shrink: 1;
+  padding: 0.75rem;
+}
+.columns.is-mobile > .column.is-half {
+  flex: none;
+  width: 50%;
+}
+@media screen and (min-width: 769px), print {
+  .column.is-half {
+    flex: none;
+    width: 50%;
+  }
+}
+.columns {
+  margin-left: -0.75rem;
+  margin-right: -0.75rem;
+  margin-top: -0.75rem;
+}
+.columns:not(:last-child) {
+  margin-bottom: calc(1.5rem - 0.75rem);
+}
+.columns.is-mobile {
+  display: flex;
+}
+@media screen and (min-width: 769px), print {
+  .columns:not(.is-desktop) {
+    display: flex;
+  }
+}
+::-moz-selection {
+  background-color: #00d1b2;
+  color: #fff;
+}
+::selection {
+  background-color: #00d1b2;
+  color: #fff;
+}
+.bd-notification {
+  background-color: #f5f5f5;
+  border-radius: 4px;
+  color: #7a7a7a;
+  font-weight: 600;
+  padding: 1.25rem 0;
+  position: relative;
+  text-align: center;
+}
+.bd-notification code {
+  background-color: rgba(10, 10, 10, 0.2);
+  border-radius: 4px;
+  color: #fff;
+}
+.bd-notification.is-primary {
+  background-color: #00d1b2;
+  color: #fff;
+}
