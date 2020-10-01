@@ -1,5 +1,3 @@
-import Vue from 'vue';
-
 import { ActMaster } from '../act-master';
 
 describe('VueActMaster', () => {
@@ -26,9 +24,7 @@ describe('VueActMaster', () => {
 
     expectRandomValue = `${Math.random() * 1000}`;
 
-    const vueInstance = {} as typeof Vue;
-
-    $act = new ActMaster(vueInstance);
+    $act = new ActMaster();
   });
 
   // tests

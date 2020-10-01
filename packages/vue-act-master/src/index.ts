@@ -22,14 +22,14 @@ declare module 'vue/types/vue' {
     $act: ActMaster;
   }
 
-  interface VueConstructor<V extends Vue = Vue> {
+  interface VueConstructor {
     act: ActMaster;
   }
 }
 
 export class VueActMaster implements PluginObject<VueActMasterOptions> {
   static install(vue: typeof Vue, options?: VueActMasterOptions): void {
-    const actMaster = new ActMaster(vue, options);
+    const actMaster = new ActMaster(options);
 
     vue.act = actMaster;
     vue.prototype.$act = actMaster;

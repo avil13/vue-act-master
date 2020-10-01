@@ -1,5 +1,3 @@
-import Vue from 'vue';
-
 import { ActMaster } from '../act-master';
 import { UseDI } from '../decorators';
 import { ActMasterAction } from '../types';
@@ -15,9 +13,7 @@ describe('DI', () => {
       $act.clearDI();
     }
 
-    const vueInstance = {} as typeof Vue;
-
-    $act = new ActMaster(vueInstance);
+    $act = new ActMaster();
   });
 
   it('DI same entity', async () => {

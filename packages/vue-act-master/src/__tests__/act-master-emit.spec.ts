@@ -1,10 +1,7 @@
-import Vue from 'vue';
-
+import { emitAction } from '../';
 import { ActMaster } from '../act-master';
 import { Emit } from '../decorators';
 import { ActMasterAction } from '../types';
-
-import { emitAction } from '..';
 
 describe('EMIT', () => {
   const ACTION_NAME_1 = 'ACTION_NAME_DEFAULT';
@@ -18,9 +15,7 @@ describe('EMIT', () => {
       $act.clearDI();
     }
 
-    const vueInstance = {} as typeof Vue;
-
-    $act = new ActMaster(vueInstance);
+    $act = new ActMaster();
   });
 
   it('js emitter', async () => {

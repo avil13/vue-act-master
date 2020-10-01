@@ -20,8 +20,6 @@ export class ActMaster {
     [eventName: string]: listenerFunction[];
   } = {};
 
-  private readonly vueInstance: typeof Vue;
-
   private _DIContainer: { [key: string]: any } = {};
 
   private readonly config = {
@@ -30,9 +28,7 @@ export class ActMaster {
 
   private static instance: ActMaster;
 
-  constructor(vue: typeof Vue, options: VueActMasterOptions = {}) {
-    this.vueInstance = vue;
-
+  constructor(options: VueActMasterOptions = {}) {
     if (ActMaster.instance) {
       return ActMaster.instance;
     }
