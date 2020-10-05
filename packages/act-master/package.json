@@ -1,0 +1,23 @@
+{
+  "name": "act-master",
+  "version": "1.0.0",
+  "author": "avil13",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "README.md",
+    "dist",
+    "src"
+  ],
+  "license": "MIT",
+  "scripts": {
+    "build": "npm test && rm -rf ./dist && tsc -p ./tsconfig.prod.json",
+    "changelog": "auto-changelog",
+    "lint:fix": "eslint --fix --ext .ts .",
+    "test:watch": "jest --watch",
+    "test": "jest --collect-coverage",
+    "type-check:watch": "npm run type-check -- --watch",
+    "type-check": "tsc -p ./tsconfig.prod.json --noEmit",
+    "_prepublish": "npm run test && npm run build && auto-changelog"
+  }
+}
