@@ -2,20 +2,16 @@ import { emitAction } from '../types';
 import { ActMaster } from '../act-master';
 import { Emit } from '../decorators';
 import { ActMasterAction } from '../types';
+import { clearActMaster } from './test-helpers';
+
+const $act = new ActMaster();
 
 describe('EMIT', () => {
   const ACTION_NAME_1 = 'ACTION_NAME_DEFAULT';
   const ACTION_NAME_2 = 'ACTION_NAME_CHILD';
-  let $act: ActMaster;
 
   beforeEach(() => {
-    if ($act) {
-      $act.clearActions();
-      $act.clearListeners();
-      $act.clearDI();
-    }
-
-    $act = new ActMaster();
+    clearActMaster($act)
   });
 
   it('js emitter', async () => {

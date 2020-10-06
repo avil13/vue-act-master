@@ -1,4 +1,4 @@
 
 export class CancelledAct {
-  constructor(readonly reason?: string) { }
+  constructor(readonly reason?: string, readonly data?: any) { }
 }
