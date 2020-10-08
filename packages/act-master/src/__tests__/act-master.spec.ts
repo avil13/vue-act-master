@@ -19,10 +19,10 @@ describe('ActMaster', () => {
     });
 
     it('remove action', async () => {
-      const { eventName, expectRandomValue } = addTestAction();
+      const { eventName, expectMockResult } = addTestAction();
 
       const result = await $act.exec(eventName);
-      expect(result).toBe(expectRandomValue);
+      expect(result).toBe(expectMockResult);
 
       $act.removeAction(eventName);
       expect($act.exec(eventName)).rejects.toThrow();
@@ -31,19 +31,19 @@ describe('ActMaster', () => {
 
   describe('Executions', () => {
     it('exec', async () => {
-      const { eventName, expectRandomValue } = addTestAction();
+      const { eventName, expectMockResult } = addTestAction();
 
       const result = await $act.exec(eventName);
-      expect(result).toBe(expectRandomValue);
+      expect(result).toBe(expectMockResult);
     });
 
     it('transform', async () => {
-      const { eventName, expectRandomValue } = addTestAction({
+      const { eventName, expectMockResult } = addTestAction({
         transform: (v: string) => `${v}_SUFFIX`,
       });
 
       const result = await $act.exec(eventName);
-      expect(result).toBe(`${expectRandomValue}_SUFFIX`);
+      expect(result).toBe(`${expectMockResult}_SUFFIX`);
     });
   });
 

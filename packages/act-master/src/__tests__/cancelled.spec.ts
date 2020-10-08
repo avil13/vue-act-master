@@ -1,11 +1,11 @@
 import { ActMaster } from '../act-master';
 import { CancelledAct } from '../canselled';
 import { ActMasterAction, emitAction } from '../types';
-import { clearActMaster, createTestActionFactory } from './test-helpers';
+import { clearActMaster, addTestActionFactory } from './test-helpers';
 
 
 const $act = new ActMaster();
-const createTestAction = createTestActionFactory($act);
+const addTestAction = addTestActionFactory($act);
 
 describe('CancelledAct', () => {
   beforeEach(() => {
@@ -14,9 +14,9 @@ describe('CancelledAct', () => {
 
   // tests
   it('cancel action', async () => {
-    const { eventName } = createTestAction({
+    const { eventName } = addTestAction({
       exec() {
-        throw new CancelledAct();
+        return new CancelledAct();
       }
     });
 
@@ -27,14 +27,14 @@ describe('CancelledAct', () => {
 
   it('cancel action after second emit', async () => {
     // first action
-    const { eventName: name1 } = createTestAction({
+    const { eventName: name1 } = addTestAction({
       exec() {
-        throw new CancelledAct();
+        return new CancelledAct();
       }
     });
 
     // second action
-    const { eventName } = createTestAction({
+    const { eventName } = addTestAction({
       exec() {
         return (this.emit as emitAction)(name1, null);
       },

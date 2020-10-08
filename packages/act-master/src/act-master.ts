@@ -1,11 +1,16 @@
-import {
-  ActMasterAction,
-  VueActMasterOptions,
-  listenerFunction,
-  ActEventName,
-  ActMasterActionDevDI,
-} from './types';
 import { CancelledAct } from './canselled';
+import {
+  ActEventName,
+  ActMasterAction,
+  ActMasterActionDevDI,
+  listenerFunction,
+  listenersMap,
+  VueActMasterOptions,
+  waiterMap,
+} from './types';
+
+export * from './types';
+export { CancelledAct };
 
 /**
  *
@@ -15,15 +20,15 @@ export class ActMaster {
     [eventName: string]: ActMasterAction;
   } = {};
 
-  private readonly _listeners: {
-    [eventName: string]: listenerFunction[];
-  } = {};
+  private readonly _waiters: waiterMap = {};
+
+  private readonly _listeners: listenersMap = {};
 
   private _DIContainer: { [key: string]: any } = {};
 
   private readonly config = {
     errorOnReplaceAction: true,
-    errorOnEmptyAction: true,
+    errorOnEmptyAction: false,
   };
 
   private static instance: ActMaster;
@@ -76,6 +81,21 @@ export class ActMaster {
 
     this.emitDIProps(action);
 
+    if (action.wait) {
+      action.wait.forEach(waitEventName => {
+        if (!this._waiters[waitEventName]) {
+          this._waiters[waitEventName] = [];
+        }
+        this._waiters[waitEventName].push(eventName);
+      })
+    }
+
+    // if (Array.isArray(action.waitOnce)) {
+    //   action.waitOnce.forEach(eventName => {
+    //     this.once(eventName, action.exec.bind(action));
+    //   })
+    // }
+
     return this;
   }
 
@@ -105,13 +125,18 @@ export class ActMaster {
   //#endregion
 
   //#region [ Executions ]
-  async exec<T = any>(eventName: ActEventName, ...args: any[]): Promise<T> {
+  async exec<T = any>(eventName: ActEventName, ...args: any[]): Promise<T | CancelledAct> {
     return await this.emit<T>(eventName, ...args);
   }
 
-  async emit<T2>(eventName: string, ...args: any[]): Promise<T2> {
+  async emit<T2>(eventName: string, ...args: any[]): Promise<T2 | CancelledAct> {
     const action = this.getActionOrFail(eventName);
     const execResult = await action.exec(...args);
+
+    if (execResult instanceof CancelledAct) {
+      return execResult;
+    }
+
     const value: T2 = action.transform
       ? action.transform(execResult)
       : execResult;
@@ -121,6 +146,13 @@ export class ActMaster {
       listeners.forEach((listenerCallback) => {
         listenerCallback(value);
       });
+    }
+
+
+    if (!(value instanceof CancelledAct) && this._waiters[eventName]) {
+      for (const waitingEventName of this._waiters[eventName]) {
+        await this.emit(waitingEventName, value);
+      }
     }
 
     return value;
@@ -155,6 +187,25 @@ export class ActMaster {
 
     return index > -1;
   }
+
+  once(eventName: ActEventName, listener: listenerFunction): () => boolean {
+    const unsubscribe = this.subscribe(eventName, (...args) => {
+      unsubscribe();
+      listener(...args);
+    });
+    return unsubscribe;
+  }
+
+  on(
+    eventName: ActEventName,
+    listener: listenerFunction
+  ): () => boolean {
+    return this.subscribe(eventName, listener);
+  }
+
+  off(eventName: ActEventName, listener: listenerFunction): boolean {
+    return this.unsubscribe(eventName, listener);
+  }
   //#endregion
 
   //#region [ DI ]
@@ -163,6 +214,9 @@ export class ActMaster {
   }
 
   setDI(key: string, ctx: any): ActMaster {
+    if (this._DIContainer[key]) {
+      throw new Error(`"${key}" already exists in DI`)
+    }
     this._DIContainer[key] = ctx;
     this.freshEmitDI();
     return this;
