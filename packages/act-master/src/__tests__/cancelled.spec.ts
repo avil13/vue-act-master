@@ -1,5 +1,5 @@
 import { ActMaster } from '../act-master';
-import { CancelledAct } from '../canselled';
+import { CancelledAct } from '../cancelled';
 import { ActMasterAction, emitAction } from '../types';
 import { clearActMaster, addTestActionFactory } from './test-helpers';
 

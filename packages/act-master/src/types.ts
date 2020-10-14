@@ -3,7 +3,7 @@ ActEventName
 listenersMap
 waiterMap
 
-import { CancelledAct } from './canselled';
+import { CancelledAct } from './cancelled';
 
 export type ActEventName = string;
 

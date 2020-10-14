@@ -1,4 +1,4 @@
-import { CancelledAct } from './canselled';
+import { CancelledAct } from './cancelled';
 import {
   ActEventName,
   ActMasterAction,
