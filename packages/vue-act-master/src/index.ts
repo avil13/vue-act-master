@@ -1,17 +1,7 @@
+import { ActEventName, ActMaster, listenerFunction, ActMasterOptions } from 'act-master';
 import Vue, { PluginObject } from 'vue';
 
-import { ActMaster } from './act-master';
-import { Emit, UseDI } from './decorators';
-import { ActMasterAction, emitAction, VueActMasterOptions } from './types';
-
-export {
-  ActMaster,
-  ActMasterAction,
-  Emit,
-  emitAction,
-  UseDI,
-  VueActMasterOptions,
-};
+export * from 'act-master';
 
 /**
  * Declaration
@@ -27,15 +17,24 @@ declare module 'vue/types/vue' {
   }
 }
 
-export class VueActMaster implements PluginObject<VueActMasterOptions> {
-  static install(vue: typeof Vue, options?: VueActMasterOptions): void {
-    const actMaster = new ActMaster(options);
+export class VueActMaster implements PluginObject<ActMasterOptions> {
+  static install(vue: typeof Vue, options?: ActMasterOptions): void {
+    const actMaster = new ActMaster({
+      autoUnsubscribeCallback({ context, eventName, listener }) {
+        if (context) {
+          context.$once('hook:beforeDestroy', () => {
+            actMaster.unsubscribe(eventName, listener);
+          });
+        }
+      },
+      ...options
+    });
 
     vue.act = actMaster;
     vue.prototype.$act = actMaster;
   }
 
-  install(vue: typeof Vue, options?: VueActMasterOptions): void {
+  install(vue: typeof Vue, options?: ActMasterOptions): void {
     VueActMaster.install(vue, options);
   }
 }

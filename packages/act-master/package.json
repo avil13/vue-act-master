@@ -7,11 +7,12 @@
   "files": [
     "README.md",
     "dist",
-    "src"
+    "src",
+    "nuxt"
   ],
   "license": "MIT",
   "scripts": {
-    "build": "npm test && rm -rf ./dist && tsc -p ./tsconfig.prod.json",
+    "build": "npm test && rm -rf ./dist && tsc -p ./tsconfig.json",
     "changelog": "auto-changelog",
     "lint:fix": "eslint --fix --ext .ts .",
     "test:watch": "jest --watch",
@@ -19,5 +20,9 @@
     "type-check:watch": "npm run type-check -- --watch",
     "type-check": "tsc -p ./tsconfig.prod.json --noEmit",
     "_prepublish": "npm run test && npm run build && auto-changelog"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:avil13/vue-act-master.git"
   }
 }

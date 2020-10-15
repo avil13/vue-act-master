@@ -1,8 +1,19 @@
-import { ActMaster } from '../act-master';
+import { ActMaster } from 'act-master';
+import { VueActMaster } from '..';
+
+
+//#region [ emulate Vue install ]
+
+const vueMock = function () { };
+//@ts-ignore
+VueActMaster.install(vueMock);
+//@ts-ignore
+const $act: ActMaster = vueMock.act;
+//#endregion
+
 
 describe('VueActMaster', () => {
   let ACTION_NAME: string;
-  let $act: ActMaster;
   let expectRandomValue: string;
 
   const addTestAction = (name: string, extendObj = {}) => {
@@ -23,8 +34,6 @@ describe('VueActMaster', () => {
     }
 
     expectRandomValue = `${Math.random() * 1000}`;
-
-    $act = new ActMaster();
   });
 
   // tests

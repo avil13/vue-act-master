@@ -1,6 +1,8 @@
 // For a detailed explanation regarding each configuration property, visit:
 // https://jestjs.io/docs/en/configuration.html
 
+const path = require('path');
+
 module.exports = {
   globals: {
     __DEV__: true,
@@ -76,16 +78,18 @@ module.exports = {
   },
 
   // An array of directory names to be searched recursively up from the requiring module's location
-  // moduleDirectories: [
-  //   "node_modules"
-  // ],
+  moduleDirectories: [
+    "node_modules",
+    "src",
+  ],
 
   // An array of file extensions your modules use
   moduleFileExtensions: ['js', 'json', 'ts'],
 
   // A map from regular expressions to module names that allow to stub out resources with a single module
   moduleNameMapper: {
-    '^@/(.*)$': '<rootDir>/src/$1',
+    // '^@/(.*)$': '<rootDir>/src/$1',
+    '^act-master$': path.join(__dirname, 'packages/act-master/src'),
   },
 
   // An array of regexp pattern strings, matched against all module paths before considered 'visible' to the module loader

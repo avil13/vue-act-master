@@ -1,8 +1,3 @@
-listenerFunction
-ActEventName
-listenersMap
-waiterMap
-
 import { CancelledAct } from './cancelled';
 
 export type ActEventName = string;
@@ -16,6 +11,9 @@ export type listenerFunction = (arg: any) => any;
 
 export type TransformerFn = (value: any) => any | Promise<CancelledAct | any>;
 
+
+export type autoUnsubscribeArgs = { eventName: string, listener: listenerFunction, context?: any };
+
 export interface listenersMap {
   [eventName: string]: listenerFunction[];
 }
@@ -24,10 +22,18 @@ export interface waiterMap {
   [eventName: string]: string[]; // list of emitNames to be called after
 }
 
-export interface VueActMasterOptions {
+export interface ActMasterOptions {
   actions?: ActMasterAction[];
   errorOnReplaceAction?: boolean;
   errorOnEmptyAction?: boolean;
+  // method for calling auto unsubscribe
+  autoUnsubscribeCallback?: (args: autoUnsubscribeArgs) => void;
+}
+
+export type devActMasterConfig = {
+  errorOnReplaceAction: ActMasterOptions['errorOnReplaceAction'];
+  errorOnEmptyAction: ActMasterOptions['errorOnEmptyAction'];
+  autoUnsubscribeCallback: ActMasterOptions['autoUnsubscribeCallback'];
 }
 
 export interface ActMasterAction {

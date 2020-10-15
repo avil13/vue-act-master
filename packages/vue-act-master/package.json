@@ -32,6 +32,9 @@
     "url": "git@github.com:avil13/vue-act-master.git"
   },
   "license": "MIT",
+  "_moduleAliases": {
+    "act-master": "../act-master/dist"
+  },
   "dependencies": {
     "vue": "^2.*"
   },

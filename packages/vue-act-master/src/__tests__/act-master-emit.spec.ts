@@ -1,7 +1,4 @@
-import { emitAction } from '../';
-import { ActMaster } from '../act-master';
-import { Emit } from '../decorators';
-import { ActMasterAction } from '../types';
+import { ActMaster, ActMasterAction, Emit, emitAction } from 'act-master';
 
 describe('EMIT', () => {
   const ACTION_NAME_1 = 'ACTION_NAME_DEFAULT';

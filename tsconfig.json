@@ -42,7 +42,7 @@
     "baseUrl": "./packages",
     "paths": {
       "act-master": [
-        "act-master"
+        "act-master/src"
       ]
     },
     // "typeRoots": [],                       /* List of folders to include type definitions from. */

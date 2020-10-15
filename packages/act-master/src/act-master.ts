@@ -5,11 +5,13 @@ import {
   ActMasterActionDevDI,
   listenerFunction,
   listenersMap,
-  VueActMasterOptions,
+  ActMasterOptions,
   waiterMap,
+  devActMasterConfig,
 } from './types';
 
 export * from './types';
+export * from './decorators';
 export { CancelledAct };
 
 /**
@@ -26,22 +28,27 @@ export class ActMaster {
 
   private _DIContainer: { [key: string]: any } = {};
 
-  private readonly config = {
+  private readonly config: devActMasterConfig = {
     errorOnReplaceAction: true,
     errorOnEmptyAction: false,
+    autoUnsubscribeCallback: undefined,
   };
 
   private static instance: ActMaster;
 
-  constructor(options: VueActMasterOptions = {}) {
+  constructor(options: ActMasterOptions = {}) {
     if (ActMaster.instance) {
       return ActMaster.instance;
     }
 
-    const { actions, errorOnReplaceAction, errorOnEmptyAction } = options;
+    const { actions, errorOnReplaceAction, errorOnEmptyAction, autoUnsubscribeCallback } = options;
 
     if (actions) {
       this.addActions(actions);
+    }
+
+    if (typeof autoUnsubscribeCallback === 'function') {
+      this.config.autoUnsubscribeCallback = autoUnsubscribeCallback;
     }
 
     if (typeof errorOnReplaceAction === 'boolean') {
@@ -89,12 +96,6 @@ export class ActMaster {
         this._waiters[waitEventName].push(eventName);
       })
     }
-
-    // if (Array.isArray(action.waitOnce)) {
-    //   action.waitOnce.forEach(eventName => {
-    //     this.once(eventName, action.exec.bind(action));
-    //   })
-    // }
 
     return this;
   }
@@ -162,12 +163,21 @@ export class ActMaster {
   //#region [ Subscribtions ]
   subscribe(
     eventName: ActEventName,
-    listener: listenerFunction
+    listener: listenerFunction,
+    context?: any,
   ): () => boolean {
     if (!this._listeners[eventName]) {
       this._listeners[eventName] = [];
     }
     this._listeners[eventName].push(listener);
+
+    if (this.config.autoUnsubscribeCallback) {
+      this.config.autoUnsubscribeCallback({
+        context,
+        listener,
+        eventName,
+      });
+    }
 
     return () => this.unsubscribe(eventName, listener);
   }

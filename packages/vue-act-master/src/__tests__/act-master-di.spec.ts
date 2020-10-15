@@ -1,6 +1,4 @@
-import { ActMaster } from '../act-master';
-import { UseDI } from '../decorators';
-import { ActMasterAction } from '../types';
+import { ActMaster, ActMasterAction, UseDI } from 'act-master';
 
 describe('DI', () => {
   const ACTION_NAME = 'ACTION_NAME_DI';
