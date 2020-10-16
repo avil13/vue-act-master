@@ -1,4 +1,4 @@
-import { ActEventName, ActMaster, listenerFunction, ActMasterOptions } from 'act-master';
+import { ActMaster, ActMasterOptions } from 'act-master';
 import Vue, { PluginObject } from 'vue';
 
 export * from 'act-master';
@@ -27,7 +27,7 @@ export class VueActMaster implements PluginObject<ActMasterOptions> {
           });
         }
       },
-      ...options
+      ...options,
     });
 
     vue.act = actMaster;

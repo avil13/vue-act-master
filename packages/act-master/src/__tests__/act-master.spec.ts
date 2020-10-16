@@ -78,5 +78,18 @@ describe('ActMaster', () => {
       result = await $act.exec(eventName);
       expect(result).not.toBe(subscribedData);
     });
+
+    it('once method', async () => {
+      const { eventName } = addTestAction();
+      const mockCallback = jest.fn();
+
+      $act.once(eventName, mockCallback);
+
+      await $act.exec(eventName);
+      await $act.exec(eventName);
+      await $act.exec(eventName);
+
+      expect(mockCallback).toBeCalledTimes(1);
+    });
   });
 });

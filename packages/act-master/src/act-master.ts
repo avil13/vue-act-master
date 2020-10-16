@@ -208,9 +208,10 @@ export class ActMaster {
 
   on(
     eventName: ActEventName,
-    listener: listenerFunction
+    listener: listenerFunction,
+    context?: any
   ): () => boolean {
-    return this.subscribe(eventName, listener);
+    return this.subscribe(eventName, listener, context);
   }
 
   off(eventName: ActEventName, listener: listenerFunction): boolean {

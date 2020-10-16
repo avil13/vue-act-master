@@ -1,16 +1,16 @@
 import { ActMaster } from 'act-master';
 import { VueActMaster } from '..';
 
-
 //#region [ emulate Vue install ]
 
-const vueMock = function () { };
+const vueMock = function () {
+  return;
+};
 //@ts-ignore
 VueActMaster.install(vueMock);
 //@ts-ignore
 const $act: ActMaster = vueMock.act;
 //#endregion
-
 
 describe('VueActMaster', () => {
   let ACTION_NAME: string;

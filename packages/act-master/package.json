@@ -1,6 +1,6 @@
 {
   "name": "act-master",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "author": "avil13",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -12,7 +12,7 @@
   ],
   "license": "MIT",
   "scripts": {
-    "build": "npm test && rm -rf ./dist && tsc -p ./tsconfig.json",
+    "build": "npm test && rm -rf ./dist && tsc -p ./tsconfig.prod.json",
     "changelog": "auto-changelog",
     "lint:fix": "eslint --fix --ext .ts .",
     "test:watch": "jest --watch",
