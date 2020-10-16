@@ -1,8 +1,9 @@
 # vue-act-master
 
-Plugin for organizing events in Vue app;
+---
 
-Based on pattern Commander and Observer;
+The easiest library to create a flexible application architecture.
+A way to separate business logic from application view.
 
 ---
 - [Installation](#install)
@@ -10,7 +11,9 @@ Based on pattern Commander and Observer;
 - [Actions examples](#actions-examples)
   - [Simple](#simple)
   - [With transformation](#with-transformation)
+  - [Cancel Action](#cancel-action)
   - [Class Styled Action](#class-styled-action)
+  - [Wait](#wait)
   - [DI in Actions](#di-in-actions)
   - [Emit another Action in Action](#emit-another-action-in-action)
   - [Add Actions to Vue-act-master](#add-actions-to-vue-act-master)
@@ -124,6 +127,26 @@ export const dataAction: ActMasterAction = {
 };
 ```
 
+### Cancel Action
+
+Action can be interrupted by returning a special object "CancelledAct".
+This will stop the chain of events if you build it using `wait` or `emit`.
+
+```ts
+// cancel-action.ts
+
+import { ActMasterAction, CancelledAct } from 'vue-act-master';
+
+export const dataAction: ActMasterAction = {
+  name: 'get.data',
+
+  exec() {
+    // ...
+    return new CancelledAct('Some reason to stop action...');
+  }
+};
+```
+
 ### With transformation
 ```ts
 // transformed-action.ts
@@ -176,6 +199,36 @@ export class ClassAction implements ActMasterAction = {
       .then(response => response.json())
 
     return data;
+  }
+};
+```
+
+### Wait
+
+You can launch the action after another one through the "wait" property.
+
+```ts
+// Action queue
+import { ActMasterAction } from 'vue-act-master';
+
+export class FirstAction implements ActMasterAction = {
+  name = 'FirstAction';
+  exec() {
+    return {
+      name: 'Leo',
+    };
+  }
+};
+
+export class SecondAction implements ActMasterAction = {
+  // The name of the action, after which this action will automatically start.
+  wait: ['FirstAction'],
+  name = 'SecondAction';
+  exec(data) {
+    console.log(data); // { "Name": "Leo" }
+    return {
+      name: 'Mike',
+    };
   }
 };
 ```
