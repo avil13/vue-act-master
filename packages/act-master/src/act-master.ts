@@ -41,7 +41,12 @@ export class ActMaster {
       return ActMaster.instance;
     }
 
-    const { actions, errorOnReplaceAction, errorOnEmptyAction, autoUnsubscribeCallback } = options;
+    const {
+      actions,
+      errorOnReplaceAction,
+      errorOnEmptyAction,
+      autoUnsubscribeCallback,
+    } = options;
 
     if (actions) {
       this.addActions(actions);
@@ -89,12 +94,12 @@ export class ActMaster {
     this.emitDIProps(action);
 
     if (action.wait) {
-      action.wait.forEach(waitEventName => {
+      action.wait.forEach((waitEventName) => {
         if (!this._waiters[waitEventName]) {
           this._waiters[waitEventName] = [];
         }
         this._waiters[waitEventName].push(eventName);
-      })
+      });
     }
 
     return this;
@@ -126,11 +131,17 @@ export class ActMaster {
   //#endregion
 
   //#region [ Executions ]
-  async exec<T = any>(eventName: ActEventName, ...args: any[]): Promise<T | CancelledAct> {
+  async exec<T = any>(
+    eventName: ActEventName,
+    ...args: any[]
+  ): Promise<T | CancelledAct> {
     return await this.emit<T>(eventName, ...args);
   }
 
-  async emit<T2>(eventName: string, ...args: any[]): Promise<T2 | CancelledAct> {
+  async emit<T2>(
+    eventName: string,
+    ...args: any[]
+  ): Promise<T2 | CancelledAct> {
     const action = this.getActionOrFail(eventName);
     const execResult = await action.exec(...args);
 
@@ -149,7 +160,6 @@ export class ActMaster {
       });
     }
 
-
     if (!(value instanceof CancelledAct) && this._waiters[eventName]) {
       for (const waitingEventName of this._waiters[eventName]) {
         await this.emit(waitingEventName, value);
@@ -164,7 +174,7 @@ export class ActMaster {
   subscribe(
     eventName: ActEventName,
     listener: listenerFunction,
-    context?: any,
+    context?: any
   ): () => boolean {
     if (!this._listeners[eventName]) {
       this._listeners[eventName] = [];
@@ -226,7 +236,7 @@ export class ActMaster {
 
   setDI(key: string, ctx: any): ActMaster {
     if (this._DIContainer[key]) {
-      throw new Error(`"${key}" already exists in DI`)
+      throw new Error(`"${key}" already exists in DI`);
     }
     this._DIContainer[key] = ctx;
     this.freshEmitDI();
@@ -265,7 +275,7 @@ export class ActMaster {
       }
       return {
         name: '',
-        exec: (data) => data
+        exec: (data) => data,
       };
     }
 
