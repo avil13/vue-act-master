@@ -11,8 +11,11 @@ export type listenerFunction = (arg: any) => any;
 
 export type TransformerFn = (value: any) => any | Promise<CancelledAct | any>;
 
-
-export type autoUnsubscribeArgs = { eventName: string, listener: listenerFunction, context?: any };
+export type autoUnsubscribeArgs = {
+  eventName: string;
+  listener: listenerFunction;
+  context?: any;
+};
 
 export interface listenersMap {
   [eventName: string]: listenerFunction[];
@@ -25,6 +28,7 @@ export interface waiterMap {
 export interface ActMasterOptions {
   actions?: ActMasterAction[];
   errorOnReplaceAction?: boolean;
+  errorOnReplaceDI?: boolean;
   errorOnEmptyAction?: boolean;
   // method for calling auto unsubscribe
   autoUnsubscribeCallback?: (args: autoUnsubscribeArgs) => void;
@@ -32,9 +36,10 @@ export interface ActMasterOptions {
 
 export type devActMasterConfig = {
   errorOnReplaceAction: ActMasterOptions['errorOnReplaceAction'];
+  errorOnReplaceDI: ActMasterOptions['errorOnReplaceDI'];
   errorOnEmptyAction: ActMasterOptions['errorOnEmptyAction'];
   autoUnsubscribeCallback: ActMasterOptions['autoUnsubscribeCallback'];
-}
+};
 
 export interface ActMasterAction {
   exec(...args: any[]): Promise<CancelledAct | any> | CancelledAct | any;

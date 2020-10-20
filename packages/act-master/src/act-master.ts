@@ -11,7 +11,7 @@ import {
 } from './types';
 
 export * from './types';
-export * from './decorators';
+export * from './decorators/index';
 export { CancelledAct };
 
 /**
@@ -30,7 +30,8 @@ export class ActMaster {
 
   private readonly config: devActMasterConfig = {
     errorOnReplaceAction: true,
-    errorOnEmptyAction: false,
+    errorOnReplaceDI: false,
+    errorOnEmptyAction: true,
     autoUnsubscribeCallback: undefined,
   };
 
@@ -44,6 +45,7 @@ export class ActMaster {
     const {
       actions,
       errorOnReplaceAction,
+      errorOnReplaceDI,
       errorOnEmptyAction,
       autoUnsubscribeCallback,
     } = options;
@@ -62,6 +64,10 @@ export class ActMaster {
 
     if (typeof errorOnEmptyAction === 'boolean') {
       this.config.errorOnEmptyAction = errorOnEmptyAction;
+    }
+
+    if (typeof errorOnReplaceDI === 'boolean') {
+      this.config.errorOnReplaceDI = errorOnReplaceDI;
     }
 
     ActMaster.instance = this;
@@ -235,7 +241,7 @@ export class ActMaster {
   }
 
   setDI(key: string, ctx: any): ActMaster {
-    if (this._DIContainer[key]) {
+    if (this.config.errorOnReplaceDI && this._DIContainer[key]) {
       throw new Error(`"${key}" already exists in DI`);
     }
     this._DIContainer[key] = ctx;

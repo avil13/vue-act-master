@@ -189,7 +189,7 @@ export const transformedAction: ActMasterAction = {
 
 import { ActMasterAction } from 'vue-act-master';
 
-export class ClassAction implements ActMasterAction = {
+export class ClassAction implements ActMasterAction {
   name = 'get.data';
 
   async exec() {
@@ -211,7 +211,7 @@ You can launch the action after another one through the "wait" property.
 // Action queue
 import { ActMasterAction } from 'vue-act-master';
 
-export class FirstAction implements ActMasterAction = {
+export class FirstAction implements ActMasterAction {
   name = 'FirstAction';
   exec() {
     return {
@@ -220,7 +220,7 @@ export class FirstAction implements ActMasterAction = {
   }
 };
 
-export class SecondAction implements ActMasterAction = {
+export class SecondAction implements ActMasterAction {
   // The name of the action, after which this action will automatically start.
   wait: ['FirstAction'],
   name = 'SecondAction';
@@ -259,7 +259,7 @@ import { UseDI, ActMasterAction } from 'vue-act-master';
 
 import { SuperAPI } from '../you/api';
 
-export class WithDiAction implements ActMasterAction = {
+export class WithDiAction implements ActMasterAction {
   name = 'login';
 
   @UseDI('api')
@@ -279,7 +279,7 @@ OR
 import { ActMasterAction } from 'vue-act-master';
 import { SuperAPI } from '../you/api';
 
-export class WithDiAction implements ActMasterAction = {
+export class WithDiAction implements ActMasterAction {
   name = 'login';
 
   private api: SuperAPI; // SuperAPI as interface
@@ -303,7 +303,7 @@ export class WithDiAction implements ActMasterAction = {
 
 import { Emit, ActMasterAction, emitAction } from 'vue-act-master';
 
-export class WithEmitAction implements ActMasterAction = {
+export class WithEmitAction implements ActMasterAction {
   name = 'login';
 
   @Emit();
@@ -326,7 +326,7 @@ OR
 
 import { ActMasterAction, emitAction } from 'vue-act-master';
 
-export class WithEmitAction implements ActMasterAction = {
+export class WithEmitAction implements ActMasterAction {
   name = 'login';
 
   private emit: emitAction;

@@ -1,9 +1,11 @@
 {
   "name": "act-master",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "author": "avil13",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "main": "dist/index.common.js",
+  "module": "dist/index.esm.js",
+  "browser": "dist/index.umd.js",
+  "typings": "dist/index.d.ts",
   "files": [
     "README.md",
     "dist",
@@ -12,7 +14,7 @@
   ],
   "license": "MIT",
   "scripts": {
-    "build": "npm test && rm -rf ./dist && tsc -p ./tsconfig.prod.json",
+    "build": "yarn test && rm -rf ./dist && rollup -c",
     "changelog": "auto-changelog",
     "lint:fix": "eslint --fix --ext .ts .",
     "test:watch": "jest --watch",
@@ -24,5 +26,14 @@
   "repository": {
     "type": "git",
     "url": "git@github.com:avil13/vue-act-master.git"
+  },
+  "devDependencies": {
+    "@types/node": "^14.11.10",
+    "babel-jest": "^26.6.0",
+    "jest": "^26.6.0",
+    "jest-canvas-mock": "^2.3.0",
+    "rollup": "^2.32.0",
+    "rollup-plugin-typescript2": "^0.28.0",
+    "ts-jest": "^26.4.1"
   }
 }

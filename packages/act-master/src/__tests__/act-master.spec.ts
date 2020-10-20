@@ -6,7 +6,7 @@ const addTestAction = addTestActionFactory($act);
 
 describe('ActMaster', () => {
   beforeEach(() => {
-    clearActMaster($act)
+    clearActMaster($act);
   });
 
   // tests

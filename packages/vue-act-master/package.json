@@ -1,10 +1,12 @@
 {
   "name": "vue-act-master",
-  "version": "0.3.0",
+  "version": "0.4.1",
   "description": "",
   "author": "avil13",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "main": "dist/index.common.js",
+  "module": "dist/index.esm.js",
+  "browser": "dist/index.umd.js",
+  "typings": "dist/vue-act-master/src/index.d.ts",
   "files": [
     "README.md",
     "dist",
@@ -12,7 +14,7 @@
     "nuxt"
   ],
   "scripts": {
-    "build": "yarn test && rm -rf ./dist && tsc -p ./tsconfig.prod.json",
+    "build": "yarn test && rm -rf ./dist && rollup -c",
     "changelog": "auto-changelog",
     "lint:fix": "eslint --fix --ext .ts .",
     "test:watch": "jest --watch",
@@ -32,14 +34,11 @@
     "url": "git@github.com:avil13/vue-act-master.git"
   },
   "license": "MIT",
-  "_moduleAliases": {
-    "act-master": "../act-master/dist"
-  },
   "dependencies": {
-    "vue": "^2.*"
+    "act-master": "^1.0.0",
+    "vue": "2.*"
   },
   "devDependencies": {
-    "@babel/core": "^7.11.6",
     "@types/jest": "^26.0.14",
     "@types/node": "^14.11.2",
     "@typescript-eslint/eslint-plugin": "^4.3.0",
@@ -52,6 +51,8 @@
     "jest": "^26.4.2",
     "jest-canvas-mock": "^2.3.0",
     "prettier": "^2.1.2",
+    "rollup": "^2.32.0",
+    "rollup-plugin-typescript2": "^0.28.0",
     "ts-jest": "^26.4.1",
     "ts-node": "^9.0.0",
     "typescript": "^4.0.3"
