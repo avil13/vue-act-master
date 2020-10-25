@@ -30,8 +30,19 @@ export class VueActMaster implements PluginObject<ActMasterOptions> {
       ...options,
     });
 
-    vue.act = actMaster;
-    vue.prototype.$act = actMaster;
+    // add the instance method
+    //@ts-ignore
+    if (vue.config?.globalProperties && !vue.config.globalProperties.$act) {
+      // vue 3
+      //@ts-ignore
+      vue.config.globalProperties.$act = actMaster;
+      //@ts-ignore
+      vue.provide('$act', actMaster);
+    } else if (!Object.prototype.hasOwnProperty.call(vue, '$act')) {
+      // vue 2
+      vue.act = actMaster;
+      vue.prototype.$act = actMaster;
+    }
   }
 
   install(vue: typeof Vue, options?: ActMasterOptions): void {
