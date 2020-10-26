@@ -1,60 +1,1 @@
-{
-  "name": "vue-act-master",
-  "version": "0.6.0",
-  "description": "",
-  "author": "avil13",
-  "main": "dist/index.common.js",
-  "module": "dist/index.esm.js",
-  "browser": "dist/index.umd.js",
-  "typings": "dist/vue-act-master/src/index.d.ts",
-  "files": [
-    "README.md",
-    "dist",
-    "src",
-    "nuxt"
-  ],
-  "scripts": {
-    "build": "yarn test && rm -rf ./dist && rollup -c",
-    "changelog": "auto-changelog",
-    "lint:fix": "eslint --fix --ext .ts .",
-    "test:watch": "jest --watch",
-    "test": "jest --collect-coverage",
-    "type-check:watch": "npm run type-check -- --watch",
-    "type-check": "tsc -p ./tsconfig.prod.json --noEmit",
-    "_prepublish": "npm run test && npm run build && auto-changelog"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "npm run lint:fix && git update-index --again && npm run changelog",
-      "pre-push": "npm test"
-    }
-  },
-  "repository": {
-    "type": "git",
-    "url": "git@github.com:avil13/vue-act-master.git"
-  },
-  "license": "MIT",
-  "dependencies": {
-    "act-master": "^1.0.0",
-    "vue": "2.*"
-  },
-  "devDependencies": {
-    "@types/jest": "^26.0.14",
-    "@types/node": "^14.11.2",
-    "@typescript-eslint/eslint-plugin": "^4.3.0",
-    "auto-changelog": "^2.2.1",
-    "babel-jest": "^26.3.0",
-    "eslint": "^7.10.0",
-    "eslint-config-prettier": "^6.12.0",
-    "eslint-plugin-prettier": "^3.1.4",
-    "husky": "^4.3.0",
-    "jest": "^26.4.2",
-    "jest-canvas-mock": "^2.3.0",
-    "prettier": "^2.1.2",
-    "rollup": "^2.32.0",
-    "rollup-plugin-typescript2": "^0.28.0",
-    "ts-jest": "^26.4.1",
-    "ts-node": "^9.0.0",
-    "typescript": "^4.0.3"
-  }
-}
+{  "name": "vue-act-master",  "version": "0.6.0",  "description": "",  "author": "avil13",  "main": "dist/index.common.js",  "module": "dist/index.esm.js",  "browser": "dist/index.umd.js",  "typings": "dist/vue-act-master/src/index.d.ts",  "files": [    "README.md",    "dist",    "src",    "nuxt"  ],  "scripts": {    "build": "yarn test && rm -rf ./dist && rollup -c",    "changelog": "auto-changelog",    "lint:fix": "eslint --fix --ext .ts .",    "test:watch": "jest --watch",    "test": "jest --collect-coverage",    "type-check:watch": "npm run type-check -- --watch",    "type-check": "tsc -p ./tsconfig.prod.json --noEmit",    "_prepublish": "npm run test && npm run build && auto-changelog"  },  "husky": {    "hooks": {      "pre-commit": "npm run lint:fix && git update-index --again && npm run changelog",      "pre-push": "npm test"    }  },  "repository": {    "type": "git",    "url": "https://github.com/avil13/vue-act-master.git"  },  "license": "MIT",  "dependencies": {    "act-master": "^1.0.0",    "vue": "2.*"  },  "devDependencies": {    "@types/jest": "^26.0.14",    "@types/node": "^14.11.2",    "@typescript-eslint/eslint-plugin": "^4.3.0",    "auto-changelog": "^2.2.1",    "babel-jest": "^26.3.0",    "eslint": "^7.10.0",    "eslint-config-prettier": "^6.12.0",    "eslint-plugin-prettier": "^3.1.4",    "husky": "^4.3.0",    "jest": "^26.4.2",    "jest-canvas-mock": "^2.3.0",    "prettier": "^2.1.2",    "rollup": "^2.32.0",    "rollup-plugin-typescript2": "^0.28.0",    "ts-jest": "^26.4.1",    "ts-node": "^9.0.0",    "typescript": "^4.0.3"  }}
