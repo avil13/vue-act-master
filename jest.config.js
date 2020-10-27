@@ -72,16 +72,13 @@ module.exports = {
   // A set of global variables that need to be available in all test environments
   globals: {
     'ts-jest': {
-      tsConfig: 'tsconfig.json',
+      tsconfig: 'tsconfig.json',
       diagnostics: false,
     },
   },
 
   // An array of directory names to be searched recursively up from the requiring module's location
-  moduleDirectories: [
-    "node_modules",
-    "src",
-  ],
+  moduleDirectories: ['node_modules', 'src'],
 
   // An array of file extensions your modules use
   moduleFileExtensions: ['js', 'json', 'ts'],
