@@ -1,14 +1,22 @@
 # vue-act-master
 
----
+## Why?
 
 The easiest library to create a flexible application architecture.
 A way to separate business logic from application view.
 
 ---
+
+[Example project structure](https://github.com/avil13/vue-act-master/blob/master/packages/example/README.md) 🗺
+
+---
+
+## Contents
+
 - [Installation](#install)
 - [Usage](#use)
 - [Actions examples](#actions-examples)
+  - [Add Actions to Vue-act-master](#add-actions-to-vue-act-master)
   - [Simple](#simple)
   - [With transformation](#with-transformation)
   - [Cancel Action](#cancel-action)
@@ -16,7 +24,6 @@ A way to separate business logic from application view.
   - [Wait](#wait)
   - [DI in Actions](#di-in-actions)
   - [Emit another Action in Action](#emit-another-action-in-action)
-  - [Add Actions to Vue-act-master](#add-actions-to-vue-act-master)
 - [Nuxt.JS](#nuxt-js)
 
 ---
@@ -63,6 +70,31 @@ new Vue({
 }
 ```
 
+[top](#contents)
+
+---
+
+## Add Actions to Vue-act-master
+
+```html
+// App.vue
+
+<script>
+// actions: ActMasterAction[]
+import { actions } from '../you/actions/path';
+
+export default {
+  mounted() {
+    this.$act.addActions(actions);
+    // OR
+    this.$act.addAction(actions[0]);
+  }
+}
+</script>
+```
+
+[top](#contents)
+
 ---
 
 ## Use
@@ -103,6 +135,8 @@ export default {
 </script>
 ```
 
+[top](#contents)
+
 ---
 
 ## Actions examples
@@ -127,6 +161,10 @@ export const dataAction: ActMasterAction = {
 };
 ```
 
+[top](#contents)
+
+---
+
 ### Cancel Action
 
 Action can be interrupted by returning a special object "CancelledAct".
@@ -147,7 +185,12 @@ export const dataAction: ActMasterAction = {
 };
 ```
 
+[top](#contents)
+
+---
+
 ### With transformation
+
 ```ts
 // transformed-action.ts
 
@@ -182,8 +225,12 @@ export const transformedAction: ActMasterAction = {
   }
 };
 ```
+[top](#contents)
+
+---
 
 ### Class Styled Action
+
 ```ts
 // class-action.ts
 
@@ -202,6 +249,10 @@ export class ClassAction implements ActMasterAction {
   }
 };
 ```
+
+[top](#contents)
+
+---
 
 ### Wait
 
@@ -232,6 +283,10 @@ export class SecondAction implements ActMasterAction {
   }
 };
 ```
+
+[top](#contents)
+
+---
 
 ## DI in Actions
 
@@ -295,6 +350,10 @@ export class WithDiAction implements ActMasterAction {
 };
 ```
 
+[top](#contents)
+
+---
+
 ## Emit another Action in Action
 
 ```ts
@@ -345,29 +404,11 @@ export class WithEmitAction implements ActMasterAction {
 };
 ```
 
-
-## Add Actions to Vue-act-master
-
-```html
-// App.vue
-
-<script>
-// actions: ActMasterAction[]
-import { actions } from '../you/actions/path';
-
-export default {
-  mounted() {
-    this.$act.addActions(actions);
-    // OR
-    this.$act.addAction(actions[0]);
-  }
-}
-</script>
-```
+[top](#contents)
 
 ---
 
-# Nuxt.JS
+## Nuxt.JS
 
 Install dependencies:
 

@@ -1,5 +1,5 @@
 <template>
-  <form @submit.prevent="submit">
+  <form @submit.prevent="submitForm">
     <div class="hero is-primary">
       <div class="hero-body">
         <h1 class="title has-text-centered is-size-2">Login Form</h1>
@@ -84,7 +84,7 @@ export default defineComponent({
       this.description = '';
     },
 
-    async submit() {
+    async submitForm() {
       const res = await this.$act.exec<boolean | CancelledAct>(
           eventNames.login,
         this.login,
