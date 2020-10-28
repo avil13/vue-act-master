@@ -1,6 +1,6 @@
 {
   "name": "act-master",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "author": "avil13",
   "main": "dist/index.common.js",
   "module": "dist/index.esm.js",
@@ -21,7 +21,7 @@
     "test": "jest --collect-coverage",
     "type-check:watch": "npm run type-check -- --watch",
     "type-check": "tsc -p ./tsconfig.prod.json --noEmit",
-    "_prepublish": "npm run test && npm run build && auto-changelog"
+    "prepublish": "npm run test && npm run build && auto-changelog && git update-index"
   },
   "repository": {
     "type": "git",
