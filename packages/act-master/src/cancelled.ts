@@ -1,8 +1,17 @@
-
 export class CancelledAct {
-  constructor(readonly reason?: string, readonly data?: any) {
-    if (!(this instanceof CancelledAct)) {
-      return new CancelledAct(reason, data);
-    }
+  static _name = 'CancelledAct';
+
+  static is(obj: CancelledAct | any): boolean {
+    return (
+      obj._name === CancelledAct._name && typeof obj.reason !== 'undefined'
+    );
+  }
+
+  get _name() {
+    return CancelledAct._name;
+  }
+
+  constructor(public readonly reason: string = '', public readonly data?: any) {
+    //
   }
 }

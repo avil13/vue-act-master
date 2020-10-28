@@ -1,12 +1,12 @@
 import { ActMaster, ActMasterOptions } from 'act-master';
-import Vue, { PluginObject } from 'vue';
 
 export * from 'act-master';
 
 /**
- * Declaration
+ * Declaration vue2
  *
  */
+//@ts-ignore
 declare module 'vue/types/vue' {
   interface Vue {
     $act: ActMaster;
@@ -17,8 +17,24 @@ declare module 'vue/types/vue' {
   }
 }
 
-export class VueActMaster implements PluginObject<ActMasterOptions> {
-  static install(vue: typeof Vue, options?: ActMasterOptions): void {
+/**
+ * Declaration vue3
+ *
+ */
+//@ts-ignore
+declare module '@vue/runtime-core' {
+  export interface ComponentCustomProperties {
+    /**
+     * Normalized current location. See {@link RouteLocationNormalizedLoaded}.
+     */
+    $act: ActMaster;
+  }
+}
+
+export class VueActMaster {
+  static instance: ActMaster | null = null;
+
+  static install(vue: any, options?: ActMasterOptions): void {
     const actMaster = new ActMaster({
       autoUnsubscribeCallback({ context, eventName, listener }) {
         if (context) {
@@ -30,13 +46,12 @@ export class VueActMaster implements PluginObject<ActMasterOptions> {
       ...options,
     });
 
+    VueActMaster.instance = actMaster;
+
     // add the instance method
-    //@ts-ignore
     if (vue.config?.globalProperties && !vue.config.globalProperties.$act) {
       // vue 3
-      //@ts-ignore
       vue.config.globalProperties.$act = actMaster;
-      //@ts-ignore
       vue.provide('$act', actMaster);
     } else if (!Object.prototype.hasOwnProperty.call(vue, '$act')) {
       // vue 2
@@ -45,7 +60,7 @@ export class VueActMaster implements PluginObject<ActMasterOptions> {
     }
   }
 
-  install(vue: typeof Vue, options?: ActMasterOptions): void {
+  install(vue: any, options?: ActMasterOptions): void {
     VueActMaster.install(vue, options);
   }
 }
