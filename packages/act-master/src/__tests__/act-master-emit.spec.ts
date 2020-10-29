@@ -11,7 +11,7 @@ describe('EMIT', () => {
   const ACTION_NAME_2 = 'ACTION_NAME_CHILD';
 
   beforeEach(() => {
-    clearActMaster($act)
+    clearActMaster($act);
   });
 
   it('js emitter', async () => {
