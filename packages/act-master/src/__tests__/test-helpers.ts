@@ -1,3 +1,4 @@
+import { clearLine } from 'readline';
 import { ActMaster } from '../act-master';
 import { ActMasterAction } from '../types';
 
@@ -16,7 +17,7 @@ export const addTestActionFactory = ($act: ActMaster) => {
     ]);
     return { eventName, expectMockResult, execMock };
   };
-}
+};
 
 export const clearActMaster = ($act?: ActMaster): void => {
   if ($act) {
@@ -24,4 +25,26 @@ export const clearActMaster = ($act?: ActMaster): void => {
     $act.clearListeners();
     $act.clearDI();
   }
-}
+};
+
+export const removeSingleton = () => {
+  //@ts-ignore
+  ActMaster.instance = undefined;
+};
+
+export const entityCount = (
+  $act: ActMaster,
+  key: 'actions' | 'waiters' | 'listeners' | 'di'
+): number => {
+  const map = {
+    actions: '_actions',
+    waiters: '_waiters',
+    listeners: '_listeners',
+    di: '_DIContainer',
+  };
+
+  const propName = map[key];
+
+  //@ts-ignore
+  return Object.keys($act[propName]).length;
+};

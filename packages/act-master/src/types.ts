@@ -25,8 +25,13 @@ export interface waiterMap {
   [eventName: string]: string[]; // list of emitNames to be called after
 }
 
+export interface DIMap {
+  [key: string]: any;
+}
+
 export interface ActMasterOptions {
   actions?: ActMasterAction[];
+  di?: DIMap;
   errorOnReplaceAction?: boolean;
   errorOnReplaceDI?: boolean;
   errorOnEmptyAction?: boolean;

@@ -3,11 +3,12 @@ import {
   ActEventName,
   ActMasterAction,
   ActMasterActionDevDI,
+  ActMasterOptions,
+  devActMasterConfig,
+  DIMap,
   listenerFunction,
   listenersMap,
-  ActMasterOptions,
   waiterMap,
-  devActMasterConfig,
 } from './types';
 
 export * from './types';
@@ -26,7 +27,7 @@ export class ActMaster {
 
   private readonly _listeners: listenersMap = {};
 
-  private _DIContainer: { [key: string]: any } = {};
+  private _DIContainer: DIMap = {};
 
   private readonly config: devActMasterConfig = {
     errorOnReplaceAction: true,
@@ -44,6 +45,7 @@ export class ActMaster {
 
     const {
       actions,
+      di,
       errorOnReplaceAction,
       errorOnReplaceDI,
       errorOnEmptyAction,
@@ -56,6 +58,17 @@ export class ActMaster {
 
     if (typeof autoUnsubscribeCallback === 'function') {
       this.config.autoUnsubscribeCallback = autoUnsubscribeCallback;
+    }
+
+    if (typeof di === 'object' && di) {
+      if (Array.isArray(di)) {
+        throw new Error(`"di" can't be array`);
+      }
+      for (const k in di) {
+        if (Object.prototype.hasOwnProperty.call(di, k)) {
+          this.setDI(k, di[k]);
+        }
+      }
     }
 
     if (typeof errorOnReplaceAction === 'boolean') {
