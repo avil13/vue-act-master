@@ -21,7 +21,7 @@
     "test": "jest --collect-coverage",
     "type-check:watch": "npm run type-check -- --watch",
     "type-check": "tsc -p ./tsconfig.prod.json --noEmit",
-    "_prepublish": "npm run test && npm run build && auto-changelog"
+    "prepublish": "npm run test && npm run build && auto-changelog"
   },
   "husky": {
     "hooks": {
@@ -35,7 +35,7 @@
   },
   "license": "MIT",
   "dependencies": {
-    "act-master": "^1.0.5",
+    "act-master": "^1.0.6",
     "vue": "*"
   },
   "devDependencies": {

@@ -37,7 +37,7 @@ export class VueActMaster {
   static install(vue: any, options?: ActMasterOptions): void {
     const actMaster = new ActMaster({
       autoUnsubscribeCallback({ context, eventName, listener }) {
-        if (context) {
+        if (context && typeof context.$once === 'function') {
           context.$once('hook:beforeDestroy', () => {
             actMaster.unsubscribe(eventName, listener);
           });
