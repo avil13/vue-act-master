@@ -128,7 +128,7 @@ export default {
       (data) => {
         this.result = data;
       },
-      this // for auto unsubscribe
+      this // for auto unsubscribe (not working in Vue 3)
     );
   },
 }
