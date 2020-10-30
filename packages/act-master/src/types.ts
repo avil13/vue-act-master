@@ -56,6 +56,7 @@ export interface ActMasterAction {
   UseDI?: (contexts: { [key: string]: any }) => void;
   useEmit?: (emit: emitAction) => void;
   debounceOfEmit?: number;
+  errorHandlerEventName?: ActEventName;
   [key: string]: any;
 }
 

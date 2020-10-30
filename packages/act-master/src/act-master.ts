@@ -167,7 +167,27 @@ export class ActMaster {
     eventName: ActEventName,
     ...args: any[]
   ): Promise<T | CancelledAct> {
-    return this.emit<T>(eventName, ...args);
+    return this.emit<T>(eventName, ...args).catch((error: Error) => {
+      const action = this.getActionOrNull(eventName);
+
+      if (
+        action?.errorHandlerEventName &&
+        action.errorHandlerEventName !== eventName
+      ) {
+        this.emit(action.errorHandlerEventName, error);
+        return new CancelledAct(error.message);
+      }
+
+      if (
+        this.config.errorHandlerEventName &&
+        this.config.errorHandlerEventName !== eventName
+      ) {
+        this.emit(this.config.errorHandlerEventName, error);
+        return new CancelledAct(error.message);
+      }
+
+      throw error;
+    });
   }
 
   async emit<T2>(
