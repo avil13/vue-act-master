@@ -44,7 +44,7 @@ describe('VueActMaster', () => {
       addTestAction(ACTION_NAME);
 
       //@ts-ignore
-      expect($act.getActionOrFail(ACTION_NAME)).toBeTruthy();
+      expect($act.getActionOrNull(ACTION_NAME)).toBeTruthy();
     });
 
     it('remove action', async () => {
