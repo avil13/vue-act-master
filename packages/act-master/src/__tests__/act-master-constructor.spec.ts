@@ -1,5 +1,5 @@
 import { ActMaster, ActMasterOptions } from 'act-master';
-import { inherits } from 'util';
+
 import { clearActMaster, entityCount, removeSingleton } from './test-helpers';
 
 let $act: ActMaster = new ActMaster();
@@ -60,7 +60,7 @@ describe('ActMaster constructor options', () => {
 
     const add = () => $act.addActions(actions);
 
-    expect(add).toThrow('actiion "test-name" already existing');
+    expect(add).toThrow('Action "test-name" already existing');
   });
 
   it('errorOnReplaceAction:[false]', () => {
@@ -81,13 +81,7 @@ describe('ActMaster constructor options', () => {
       errorOnEmptyAction: true,
     });
 
-    try {
-      await $act.exec('test');
-
-      expect(true).toBe(`We can't get in here.`);
-    } catch (e) {
-      expect(e instanceof Error).toBe(true);
-    }
+    expect(() => $act.exec('test')).rejects.toThrow();
   });
 
   it('errorOnReplaceDI', () => {
@@ -111,6 +105,29 @@ describe('ActMaster constructor options', () => {
     });
 
     $act.subscribe('test', () => void 0);
+
+    expect(mockFn).toBeCalledTimes(1);
+  });
+
+  xit('errorHandlerEventName', async () => {
+    const errorHandlerEventName = 'on_err';
+    const mockFn = jest.fn();
+
+    init({
+      errorHandlerEventName,
+      errorOnEmptyAction: true,
+      actions: [
+        {
+          name: errorHandlerEventName,
+          exec: mockFn,
+        },
+      ],
+    });
+
+    $act.subscribe(errorHandlerEventName, mockFn);
+
+    // make error and skip the error
+    await $act.exec('NoEmitCall').catch(() => void 0);
 
     expect(mockFn).toBeCalledTimes(1);
   });

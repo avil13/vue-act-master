@@ -15,7 +15,7 @@ describe('ActMaster', () => {
       const { eventName } = addTestAction();
 
       //@ts-ignore
-      expect($act.getActionOrFail(eventName)).toBeTruthy();
+      expect($act.getActionOrNull(eventName)).toBeTruthy();
     });
 
     it('remove action', async () => {

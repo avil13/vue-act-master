@@ -1,5 +1,5 @@
 export class CancelledAct {
-  static _name = 'CancelledAct';
+  static readonly _name = 'CancelledAct';
 
   static is(obj: CancelledAct | any): boolean {
     return (

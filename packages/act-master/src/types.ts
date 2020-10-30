@@ -37,6 +37,7 @@ export interface ActMasterOptions {
   errorOnEmptyAction?: boolean;
   // method for calling auto unsubscribe
   autoUnsubscribeCallback?: (args: autoUnsubscribeArgs) => void;
+  errorHandlerEventName?: ActEventName;
 }
 
 export type devActMasterConfig = {
@@ -44,11 +45,12 @@ export type devActMasterConfig = {
   errorOnReplaceDI: ActMasterOptions['errorOnReplaceDI'];
   errorOnEmptyAction: ActMasterOptions['errorOnEmptyAction'];
   autoUnsubscribeCallback: ActMasterOptions['autoUnsubscribeCallback'];
+  errorHandlerEventName?: ActEventName;
 };
 
 export interface ActMasterAction {
   exec(...args: any[]): Promise<CancelledAct | any> | CancelledAct | any;
-  name: string;
+  name: ActEventName;
   transform?: TransformerFn;
   wait?: string[]; // // list of emitNames to be called after
   UseDI?: (contexts: { [key: string]: any }) => void;

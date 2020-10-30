@@ -1,5 +1,11 @@
 import { CancelledAct } from './cancelled';
 import {
+  ActinonAlreadyExistingError,
+  InvalidDITypeError,
+  KeyAlreadyExistsInDIError,
+  NotFoundActionError,
+} from './errors';
+import {
   ActEventName,
   ActMasterAction,
   ActMasterActionDevDI,
@@ -11,6 +17,7 @@ import {
   waiterMap,
 } from './types';
 
+export * from './errors';
 export * from './types';
 export * from './decorators/index';
 export { CancelledAct };
@@ -34,6 +41,7 @@ export class ActMaster {
     errorOnReplaceDI: false,
     errorOnEmptyAction: true,
     autoUnsubscribeCallback: undefined,
+    errorHandlerEventName: undefined,
   };
 
   private static instance: ActMaster;
@@ -50,6 +58,7 @@ export class ActMaster {
       errorOnReplaceDI,
       errorOnEmptyAction,
       autoUnsubscribeCallback,
+      errorHandlerEventName,
     } = options;
 
     if (actions) {
@@ -62,7 +71,7 @@ export class ActMaster {
 
     if (typeof di === 'object' && di) {
       if (Array.isArray(di)) {
-        throw new Error(`"di" can't be array`);
+        throw new InvalidDITypeError();
       }
       for (const k in di) {
         if (Object.prototype.hasOwnProperty.call(di, k)) {
@@ -83,6 +92,10 @@ export class ActMaster {
       this.config.errorOnReplaceDI = errorOnReplaceDI;
     }
 
+    if (typeof errorHandlerEventName === 'string') {
+      this.config.errorHandlerEventName = errorHandlerEventName;
+    }
+
     ActMaster.instance = this;
   }
 
@@ -97,7 +110,7 @@ export class ActMaster {
 
   addAction(eventName: string, action: ActMasterAction): ActMaster {
     if (this.config.errorOnReplaceAction && this._actions[eventName]) {
-      throw new Error(`actiion "${eventName}" already existing`);
+      throw new ActinonAlreadyExistingError(eventName);
     }
 
     if (action.useEmit && action.name) {
@@ -126,7 +139,7 @@ export class ActMaster {
 
   removeAction(eventName: ActEventName): void {
     if (!this._actions[eventName]) {
-      throw new Error(`actiion "${eventName}" not found`);
+      throw new NotFoundActionError(eventName);
     }
 
     delete this._actions[eventName];
@@ -154,14 +167,19 @@ export class ActMaster {
     eventName: ActEventName,
     ...args: any[]
   ): Promise<T | CancelledAct> {
-    return await this.emit<T>(eventName, ...args);
+    return this.emit<T>(eventName, ...args);
   }
 
   async emit<T2>(
     eventName: string,
     ...args: any[]
   ): Promise<T2 | CancelledAct> {
-    const action = this.getActionOrFail(eventName);
+    const action = this.getActionOrNull(eventName);
+
+    if (action === null) {
+      throw new NotFoundActionError(eventName);
+    }
+
     const execResult = await action.exec(...args);
 
     if (execResult instanceof CancelledAct) {
@@ -255,7 +273,7 @@ export class ActMaster {
 
   setDI(key: string, ctx: any): ActMaster {
     if (this.config.errorOnReplaceDI && this._DIContainer[key]) {
-      throw new Error(`"${key}" already exists in DI`);
+      throw new KeyAlreadyExistsInDIError(key);
     }
     this._DIContainer[key] = ctx;
     this.freshEmitDI();
@@ -285,20 +303,17 @@ export class ActMaster {
   //#endregion
 
   //#region [ helpers ]
-  private getActionOrFail(eventName: ActEventName): ActMasterAction {
+  private getActionOrNull(eventName: ActEventName): ActMasterAction | null {
     const action = this._actions[eventName];
 
-    if (!action) {
-      if (this.config.errorOnEmptyAction) {
-        throw new Error(`Can't find "${eventName}" action`);
-      }
+    if (!action && !this.config.errorOnEmptyAction) {
       return {
         name: '',
         exec: (data) => data,
       };
     }
 
-    return action;
+    return action || null;
   }
   //#endregion
 }
