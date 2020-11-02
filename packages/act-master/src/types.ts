@@ -4,7 +4,7 @@ export type ActEventName = string;
 
 export type emitAction<T = any> = (
   name: ActEventName,
-  data?: any | any[]
+  ...data: any[]
 ) => Promise<T>;
 
 export type listenerFunction = (arg: any) => any;
