@@ -1,6 +1,7 @@
 import { ActMaster, ActMasterOptions } from 'act-master';
 
 export * from 'act-master';
+export * from './decorators';
 
 /**
  * Declaration vue2
