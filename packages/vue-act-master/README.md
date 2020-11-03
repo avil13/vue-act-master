@@ -17,6 +17,7 @@ A way to separate business logic from application view.
 - [Usage](#use)
 - [Actions examples](#actions-examples)
   - [Add Actions to Vue-act-master](#add-actions-to-vue-act-master)
+  - [Subscribe / Unsubscribe (on/off), once](#subscribe--unsubscribe-onoff-once)
   - [Simple](#simple)
   - [With transformation](#with-transformation)
   - [Cancel Action](#cancel-action)
@@ -99,6 +100,8 @@ export default {
 
 ## Use
 
+### Subscribe / Unsubscribe (on/off), once
+
 ```html
 <template>
   <div>
@@ -133,6 +136,31 @@ export default {
   },
 }
 </script>
+```
+
+`Subscribe` method - returns the function to `unsubscribe` from events.
+
+If you pass the instance `Vue` to the __third argument__, the unsubscription will be done automatically at hooks `beforeDestroy`.
+
+For `subscribe` / `unsubscribe` methods there are also `on` / `off` aliases.
+
+```ts
+const handler = (data) => console.log(data);
+
+const unsubscribe = this.$act.subscribe('get.data', handler);
+// Same thing.
+const off = this.$act.on('get.data', handler);
+```
+
+---
+
+If you need to subscribe to only one event, use the `once` method.
+
+Unsubscribe will be called automatically after the first triggering.
+
+```ts
+// ...
+this.$act.once('get.data', handler);
 ```
 
 [top](#contents)
@@ -257,6 +285,8 @@ export class ClassAction implements ActMasterAction {
 ### Wait
 
 You can launch the action after another one through the "wait" property.
+
+Any of the actions in `wait`, after execution, will call the current action.
 
 ```ts
 // Action queue
