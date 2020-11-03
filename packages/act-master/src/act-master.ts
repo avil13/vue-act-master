@@ -207,7 +207,7 @@ export class ActMaster {
     }
 
     const value: T2 = action.transform
-      ? action.transform(execResult)
+      ? await action.transform(execResult)
       : execResult;
     const listeners = this._listeners[eventName];
 
