@@ -7,7 +7,11 @@ A way to separate business logic from application view.
 
 ---
 
-[Example project structure](https://github.com/avil13/vue-act-master/blob/master/packages/example/README.md) 🗺
+## [Example project structure](https://github.com/avil13/vue-act-master/blob/master/packages/example/README.md) 🗺
+
+---
+
+## [Test writing help with "ActTest"](https://github.com/avil13/vue-act-master/blob/master/packages/act-master/src/test-utils/README.md)
 
 ---
 
@@ -453,3 +457,18 @@ Add `vue-act-master/nuxt` to modules section of `nuxt.config.js`
     modules: ['vue-act-master/nuxt'];
 }
 ```
+
+[top](#contents)
+
+---
+
+## Constructor properties
+
+| Property | Default | Description
+|---|---|---|
+| actions?: ActMasterAction[];         | []   | An array of action items
+| di?: DIMap;                          | {}   | DI entities
+| errorOnReplaceAction?: boolean;      | true | Error on action change
+| errorOnReplaceDI?: boolean;          | false | Error on entity DI replacement
+| errorOnEmptyAction?: boolean;         | true | Error on empty action.
+| errorHandlerEventName?: ActEventName; | undefined | Action call on error (can be used in actions too)

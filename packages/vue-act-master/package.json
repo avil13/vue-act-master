@@ -34,8 +34,11 @@
     "url": "https://github.com/avil13/vue-act-master.git"
   },
   "license": "MIT",
+  "np": {
+    "yarn": true
+  },
   "dependencies": {
-    "act-master": "^1.1.2",
+    "act-master": "^1.2.0",
     "vue": "*"
   },
   "devDependencies": {
