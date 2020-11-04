@@ -16,7 +16,8 @@ It creates an instance of the `act-master` class, which can be easily used after
 ```ts
 // Basic part, same for all examples
 
-import { ActTest } from 'act-master/test-utils';
+// For 'act-master' use src 'act-master/dist/test-utils';
+import { ActTest } from 'vue-act-master/dist/test-utils';
 
 const $act = ActTest.getInstance();
 
