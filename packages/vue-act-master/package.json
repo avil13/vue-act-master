@@ -1,6 +1,6 @@
 {
   "name": "vue-act-master",
-  "version": "0.8.1",
+  "version": "0.8.2",
   "description": "",
   "author": "avil13",
   "main": "dist/index.common.js",
@@ -34,9 +34,6 @@
     "url": "https://github.com/avil13/vue-act-master.git"
   },
   "license": "MIT",
-  "np": {
-    "yarn": true
-  },
   "dependencies": {
     "act-master": "^1.2.0",
     "vue": "*"
