@@ -1,12 +1,13 @@
-import { ActMaster } from '../act-master';
-import { addTestActionFactory, clearActMaster } from './test-helpers';
+import { ActTest } from '../test-utils';
+import { addTestActionFactory } from './test-helpers';
 
-const $act = new ActMaster();
+const $act = ActTest.getInstance();
+
 const addTestAction = addTestActionFactory($act);
 
 describe('ActMaster', () => {
   beforeEach(() => {
-    clearActMaster($act);
+    ActTest.resetAll();
   });
 
   // tests

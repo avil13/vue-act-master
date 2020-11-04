@@ -108,7 +108,7 @@ export class ActMaster {
     }
   }
 
-  addAction(eventName: string, action: ActMasterAction): ActMaster {
+  addAction(eventName: ActEventName, action: ActMasterAction): ActMaster {
     if (this.config.errorOnReplaceAction && this._actions[eventName]) {
       throw new ActinonAlreadyExistingError(eventName);
     }

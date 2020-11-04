@@ -1,13 +1,14 @@
-import { ActMaster } from '../act-master';
 import { CancelledAct } from '../cancelled';
-import { clearActMaster, addTestActionFactory } from './test-helpers';
+import { ActTest } from '../test-utils';
+import { addTestActionFactory } from './test-helpers';
 
-const $act = new ActMaster();
+const $act = ActTest.getInstance();
+
 const addTestAction = addTestActionFactory($act);
 
 describe('wait-prop', () => {
   beforeEach(() => {
-    clearActMaster($act)
+    ActTest.resetAll();
   });
 
   // tests
@@ -37,7 +38,7 @@ describe('wait-prop', () => {
       name: name1,
       exec() {
         return new CancelledAct('Please stop!!!');
-      }
+      },
     });
 
     const { execMock } = addTestAction({
@@ -51,10 +52,10 @@ describe('wait-prop', () => {
   });
 
   xit('waitOnce', async () => {
-
+    //
   });
 
   xit('clear waiters', async () => {
-
+    //
   });
 });

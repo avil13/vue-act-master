@@ -1,24 +1,23 @@
 import { ActMaster, ActMasterOptions } from 'act-master';
+import { ActTest } from '../test-utils';
 
-import { clearActMaster, entityCount, removeSingleton } from './test-helpers';
-
-let $act: ActMaster = new ActMaster();
+let $act: ActMaster = ActTest.getInstance();
 
 const init = (options: ActMasterOptions = {}) => {
-  removeSingleton();
+  ActTest.removeSingleton();
 
-  $act = new ActMaster(options);
+  $act = ActTest.getInstance(options);
 };
 
 describe('ActMaster constructor options', () => {
   beforeEach(() => {
-    clearActMaster($act);
+    ActTest.resetAll();
   });
 
   const exec = () => void 0;
 
   it('actions', () => {
-    expect(entityCount($act, 'actions')).toBe(0);
+    expect(ActTest.entityCount('actions')).toBe(0);
 
     init({
       actions: [
@@ -33,11 +32,11 @@ describe('ActMaster constructor options', () => {
       ],
     });
 
-    expect(entityCount($act, 'actions')).toBe(2);
+    expect(ActTest.entityCount('actions')).toBe(2);
   });
 
   it('di', () => {
-    expect(entityCount($act, 'di')).toBe(0);
+    expect(ActTest.entityCount('di')).toBe(0);
 
     init({
       di: {
@@ -47,7 +46,7 @@ describe('ActMaster constructor options', () => {
       },
     });
 
-    expect(entityCount($act, 'di')).toBe(3);
+    expect(ActTest.entityCount('di')).toBe(3);
   });
 
   it('errorOnReplaceAction:[true]', () => {
