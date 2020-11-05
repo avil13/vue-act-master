@@ -1,11 +1,11 @@
+import { ActMaster } from '../act-master';
+import { CancelledAct } from '../cancelled';
 import {
   ActEventName,
-  ActMaster,
   ActMasterAction,
   ActMasterOptions,
-  CancelledAct,
   listenerFunction,
-} from 'act-master';
+} from '../types';
 
 export class ActTest {
   private static $act: ActMaster;
