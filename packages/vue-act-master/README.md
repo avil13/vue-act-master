@@ -306,7 +306,7 @@ export class FirstAction implements ActMasterAction {
 };
 
 export class SecondAction implements ActMasterAction {
-  // The name of the action, after which this action will automatically start.
+  // Names of events, after any and which action automatically starts.
   wait: ['FirstAction'],
   name = 'SecondAction';
   exec(data) {
@@ -358,7 +358,6 @@ export class WithDiAction implements ActMasterAction {
     return this.api.login(loginData);
   }
 };
-``
 ```
 OR
 ```ts
