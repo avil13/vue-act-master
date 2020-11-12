@@ -11,7 +11,7 @@ A way to separate business logic from application view.
 
 ---
 
-## [Test writing help with "ActTest"](https://github.com/avil13/vue-act-master/blob/master/packages/act-master/src/test-utils/README.md)
+## [Test writing with "ActTest"](https://github.com/avil13/vue-act-master/blob/master/packages/act-master/src/test-utils/README.md)
 
 ---
 
