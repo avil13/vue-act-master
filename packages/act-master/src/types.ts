@@ -50,7 +50,7 @@ export type devActMasterConfig = {
 
 export interface ActMasterAction {
   exec(...args: any[]): Promise<CancelledAct | any> | CancelledAct | any;
-  name: ActEventName;
+  readonly name: ActEventName;
   transform?: TransformerFn;
   wait?: string[]; // // list of emitNames to be called after
   UseDI?: (contexts: { [key: string]: any }) => void;
