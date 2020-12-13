@@ -29,6 +29,7 @@ A way to separate business logic from application view.
   - [Wait](#wait)
   - [DI in Actions](#di-in-actions)
   - [Emit another Action in Action](#emit-another-action-in-action)
+  - [Vue2 class component subscribe decorator](#vue2-class-component-subscribe-decorator)
 - [Nuxt.JS](#nuxt-js)
 
 ---
@@ -42,8 +43,8 @@ yarn add vue-act-master
 ```js
 // main.ts
 
-import Vue from 'vue'
-import App from './App.vue'
+import Vue from 'vue';
+import App from './App.vue';
 
 import { VueActMaster } from 'vue-act-master';
 
@@ -51,14 +52,13 @@ import { VueActMaster } from 'vue-act-master';
 import { actions } from '../you/actions/path';
 
 Vue.use(VueActMaster, {
-  actions
+  actions,
 });
 
 new Vue({
   el: '#app',
-  render: h => h(App)
-})
-
+  render: (h) => h(App),
+});
 ```
 
 ```js
@@ -85,16 +85,16 @@ new Vue({
 // App.vue
 
 <script>
-// actions: ActMasterAction[]
-import { actions } from '../you/actions/path';
+  // actions: ActMasterAction[]
+  import { actions } from '../you/actions/path';
 
-export default {
-  mounted() {
-    this.$act.addActions(actions);
-    // OR
-    this.$act.addAction(actions[0]);
-  }
-}
+  export default {
+    mounted() {
+      this.$act.addActions(actions);
+      // OR
+      this.$act.addAction(actions[0]);
+    },
+  };
 </script>
 ```
 
@@ -111,40 +111,40 @@ export default {
   <div>
     {{ value }} - {{ result }}
 
-    <button @click="action"> Run ACTION!!!</button>
+    <button @click="action">Run ACTION!!!</button>
   </div>
 </template>
 
 <script>
-export default {
-  data() {
-    value: null,
-    result: null,
-  },
+  export default {
+    data() {
+      value: null,
+      result: null,
+    },
 
-  methods: {
-    async action() {
-      // run action
-      this.value = await this.$act.exec('get.data');
-    }
-  },
+    methods: {
+      async action() {
+        // run action
+        this.value = await this.$act.exec('get.data');
+      }
+    },
 
-  mounted() {
-    this.$act.subscribe(
-      'get.data',
-      (data) => {
-        this.result = data;
-      },
-      this // for auto unsubscribe (not working in Vue 3)
-    );
-  },
-}
+    mounted() {
+      this.$act.subscribe(
+        'get.data',
+        (data) => {
+          this.result = data;
+        },
+        this // for auto unsubscribe (not working in Vue 3, send hook "onUnmounted")
+      );
+    },
+  }
 </script>
 ```
 
 `Subscribe` method - returns the function to `unsubscribe` from events.
 
-If you pass the instance `Vue` to the __third argument__, the unsubscription will be done automatically at hooks `beforeDestroy`.
+If you pass the instance `Vue` to the **third argument**, the unsubscription will be done automatically at hooks `beforeDestroy`.
 
 For `subscribe` / `unsubscribe` methods there are also `on` / `off` aliases.
 
@@ -174,6 +174,7 @@ this.$act.once('get.data', handler);
 ## Actions examples
 
 ### Simple
+
 ```ts
 // simplest-action.ts
 
@@ -185,11 +186,10 @@ export const dataAction: ActMasterAction = {
   async exec() {
     const url = 'https://jsonplaceholder.typicode.com/todos/1';
 
-    const data = await fetch(url)
-      .then(response => response.json())
+    const data = await fetch(url).then((response) => response.json());
 
     return data;
-  }
+  },
 };
 ```
 
@@ -213,7 +213,7 @@ export const dataAction: ActMasterAction = {
   exec() {
     // ...
     return new CancelledAct('Some reason to stop action...');
-  }
+  },
 };
 ```
 
@@ -257,6 +257,7 @@ export const transformedAction: ActMasterAction = {
   }
 };
 ```
+
 [top](#contents)
 
 ---
@@ -274,12 +275,11 @@ export class ClassAction implements ActMasterAction {
   async exec() {
     const url = 'https://jsonplaceholder.typicode.com/todos/1';
 
-    const data = await fetch(url)
-      .then(response => response.json())
+    const data = await fetch(url).then((response) => response.json());
 
     return data;
   }
-};
+}
 ```
 
 [top](#contents)
@@ -328,17 +328,16 @@ export class SecondAction implements ActMasterAction {
 // App.vue
 
 <script>
-import { SuperAPI } from '../you/api';
+  import { SuperAPI } from '../you/api';
 
-{
-  mounted() {
-    // Adding DI scope
-    this.$act.setDI('api', SuperAPI);
+  {
+    mounted() {
+      // Adding DI scope
+      this.$act.setDI('api', SuperAPI);
+    }
   }
-}
 </script>
 ```
-
 
 ```ts
 // with-di-action.ts
@@ -357,9 +356,11 @@ export class WithDiAction implements ActMasterAction {
   exec(loginData) {
     return this.api.login(loginData);
   }
-};
+}
 ```
+
 OR
+
 ```ts
 // with-di-action.ts
 // without decorator
@@ -380,7 +381,7 @@ export class WithDiAction implements ActMasterAction {
   useDI({ api }) {
     this.api = api;
   }
-};
+}
 ```
 
 [top](#contents)
@@ -427,14 +428,41 @@ export class WithEmitAction implements ActMasterAction {
     const result = api.login(loginData);
 
     // use another action
-    this.emit('set.authorized', true)
+    this.emit('set.authorized', true);
   }
 
   // set Emitter
   useEmit(emit: emitAction) {
     this.emit = emit;
   }
-};
+}
+```
+
+[top](#contents)
+
+---
+
+## Vue2 class component subscribe decorator
+
+If you use vue2 and classes, you can use the decorator to subscribe.
+
+```html
+<script lang="ts">
+  import { Component, Vue } from 'vue-property-decorator';
+  import { ActSubscribe } from 'vue-act-master';
+
+  @Component({})
+  export default class MyVueComponent extends Vue {
+    @ActSubscribe('GetUserData')
+    user: User | null = null;
+
+    mounted() {
+      // Making a request.
+      // The data in the `user` variable will be updated automatically.
+      this.$act.exec('GetUserData');
+    }
+  }
+</script>
 ```
 
 [top](#contents)
@@ -453,7 +481,7 @@ Add `vue-act-master/nuxt` to modules section of `nuxt.config.js`
 
 ```js
 {
-    modules: ['vue-act-master/nuxt'];
+  modules: ['vue-act-master/nuxt'];
 }
 ```
 
@@ -463,11 +491,11 @@ Add `vue-act-master/nuxt` to modules section of `nuxt.config.js`
 
 ## Constructor properties
 
-| Property | Default | Description
-|---|---|---|
-| actions?: ActMasterAction[];         | []   | An array of action items
-| di?: DIMap;                          | {}   | DI entities
-| errorOnReplaceAction?: boolean;      | true | Error on action change
-| errorOnReplaceDI?: boolean;          | false | Error on entity DI replacement
-| errorOnEmptyAction?: boolean;         | true | Error on empty action.
-| errorHandlerEventName?: ActEventName; | undefined | Action call on error (can be used in actions too)
+| Property                              | Default   | Description                                       |
+| ------------------------------------- | --------- | ------------------------------------------------- |
+| actions?: ActMasterAction[];          | []        | An array of action items                          |
+| di?: DIMap;                           | {}        | DI entities                                       |
+| errorOnReplaceAction?: boolean;       | true      | Error on action change                            |
+| errorOnReplaceDI?: boolean;           | false     | Error on entity DI replacement                    |
+| errorOnEmptyAction?: boolean;         | true      | Error on empty action.                            |
+| errorHandlerEventName?: ActEventName; | undefined | Action call on error (can be used in actions too) |

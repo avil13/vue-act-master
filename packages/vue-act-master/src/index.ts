@@ -38,7 +38,13 @@ export class VueActMaster {
   static install(vue: any, options?: ActMasterOptions): void {
     const actMaster = new ActMaster({
       autoUnsubscribeCallback({ context, eventName, listener }) {
-        if (context && typeof context.$once === 'function') {
+        if (context && typeof context === 'function') {
+          // vue 3
+          context(function () {
+            actMaster.unsubscribe(eventName, listener);
+          });
+        } else if (context && typeof context.$once === 'function') {
+          // vue 2
           context.$once('hook:beforeDestroy', () => {
             actMaster.unsubscribe(eventName, listener);
           });
