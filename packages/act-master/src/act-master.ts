@@ -200,6 +200,15 @@ export class ActMaster {
       throw new NotFoundActionError(eventName);
     }
 
+    // validator
+    if (action.validateInput) {
+      const isValidOrError = await action.validateInput(...args);
+
+      if (isValidOrError !== true) {
+        return isValidOrError;
+      }
+    }
+
     const execResult = await action.exec(...args);
 
     if (execResult instanceof CancelledAct) {

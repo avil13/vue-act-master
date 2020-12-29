@@ -11,6 +11,10 @@ export type listenerFunction = (arg: any) => any;
 
 export type TransformerFn = (value: any) => any | Promise<CancelledAct | any>;
 
+export type ValidateInputFn = (
+  ...args: any[]
+) => true | CancelledAct | any | Promise<true | CancelledAct | any>;
+
 export type autoUnsubscribeArgs = {
   eventName: string;
   listener: listenerFunction;
@@ -49,13 +53,37 @@ export type devActMasterConfig = {
 };
 
 export interface ActMasterAction {
+  /**
+   * Function executor
+   */
   exec(...args: any[]): Promise<CancelledAct | any> | CancelledAct | any;
+  /**
+   * Name of the action
+   */
   readonly name: ActEventName;
+  /**
+   * Transform data after exec
+   */
   transform?: TransformerFn;
-  wait?: string[]; // // list of emitNames to be called after
+  /**
+   * List of emitNames to be called after
+   */
+  wait?: string[];
+  /**
+   * Validating arguments before passing them to exec
+   */
+  validateInput?: ValidateInputFn;
+  /**
+   * Pass Dependency to action
+   */
   UseDI?: (contexts: { [key: string]: any }) => void;
+  /**
+   * Pass Emitter to action
+   */
   useEmit?: (emit: emitAction) => void;
-  debounceOfEmit?: number;
+  /**
+   * Name of the action that catches the error
+   */
   errorHandlerEventName?: ActEventName;
   [key: string]: any;
 }

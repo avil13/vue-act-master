@@ -221,6 +221,45 @@ export const dataAction: ActMasterAction = {
 
 ---
 
+### Validate arguments
+
+Before calling the `exec` method, you can validate the arguments that are sent to it.
+
+We add a method `validateInput` to which all arguments intended for `exec` get.
+
+If they are valid we return `true`.
+
+Otherwise an error message of your choice.
+
+```ts
+// validate-action.ts
+
+import { ActMasterAction, CancelledAct } from 'vue-act-master';
+
+export const dataAction: ActMasterAction = {
+  name: 'get.data',
+
+  validateInput(arg?: any): true | CancelledAct {
+    if (typeof arg !== 'number') {
+      return new CancelledAct('Need a number');
+    }
+    return true;
+  }
+
+  async exec(id: number) {
+    const url = `https://jsonplaceholder.typicode.com/todos/${id}`;
+
+    return await fetch(url).then((response) => response.json());
+  },
+};
+```
+
+
+
+[top](#contents)
+
+---
+
 ### With transformation
 
 ```ts
