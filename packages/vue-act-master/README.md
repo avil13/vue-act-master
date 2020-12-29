@@ -25,6 +25,7 @@ A way to separate business logic from application view.
   - [Simple](#simple)
   - [With transformation](#with-transformation)
   - [Cancel Action](#cancel-action)
+  - [Validate arguments](#validate-arguments)
   - [Class Styled Action](#class-styled-action)
   - [Wait](#wait)
   - [DI in Actions](#di-in-actions)
