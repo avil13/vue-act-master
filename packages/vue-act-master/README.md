@@ -1,4 +1,4 @@
-# vue-act-master
+# Vue-Act-master
 
 ## Why?
 
