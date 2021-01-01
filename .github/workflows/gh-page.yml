@@ -1,0 +1,35 @@
+name: gh-page
+
+on:
+  push:
+    branches:
+      - master
+
+defaults:
+  run:
+    shell: bash
+    working-directory: packages/docs
+
+jobs:
+  publish-example-site:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 12
+          registry-url: https://registry.npmjs.org/
+
+      - name: Install and Build - ⌛&🏗️
+        run: |
+          yarn
+          yarn build
+
+      - name: Deploy 🚀.🚀.🚀
+        uses: JamesIves/github-pages-deploy-action@releases/v3
+        with:
+          ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+          BRANCH: gh-pages # The branch the action should deploy to.
+          FOLDER: packages/docs/src/.vitepress/dist # The folder the action should deploy.
+          CLEAN: true
