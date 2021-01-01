@@ -11,7 +11,7 @@ defaults:
     working-directory: packages/docs
 
 jobs:
-  publish-example-site:
+  publish-docs-site:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
