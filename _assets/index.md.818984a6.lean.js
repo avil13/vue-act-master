@@ -1,1 +1,0 @@
-import{o as e,e as a,G as t}from"./framework.5fb8d9f1.js";const r='{"title":"Vue-Act-Master","description":"","frontmatter":{},"headers":[{"level":2,"title":"Motivation","slug":"motivation"}],"relativePath":"index.md","lastUpdated":1609530834903.5718}';var i={};const o=t('',7);i.render=function(t,r,i,n,s,p){return e(),a("div",null,[o])};export default i;export{r as __pageData};
