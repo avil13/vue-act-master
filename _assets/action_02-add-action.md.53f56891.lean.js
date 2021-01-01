@@ -1,0 +1,1 @@
+import{o as n,e as a,G as s}from"./framework.5fb8d9f1.js";const t='{"title":"Add Actions to Vue-act-master","description":"","frontmatter":{},"relativePath":"action/02-add-action.md","lastUpdated":1609530834903.5718}';var p={};const o=s('',8);p.render=function(s,t,p,c,e,u){return n(),a("div",null,[o])};export default p;export{t as __pageData};
