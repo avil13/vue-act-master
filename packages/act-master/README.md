@@ -1,4 +1,4 @@
-<h1 align="center">Vue-Act-Master</h1>
+<h1 align="center">Act-Master</h1>
 
 ## Why?
 
