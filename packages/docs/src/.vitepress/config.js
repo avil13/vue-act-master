@@ -1,7 +1,9 @@
+const baseUrl = process.env.DEV ? '/' : '/vue-act-master'
+
 module.exports = {
   title: 'Vue-Act-Master',
   description: 'A frontend-way to separate business logic from application view.',
-  base: process.env.DEV ? '/' : '/vue-act-master',
+  base: baseUrl,
 
   head: getHead(),
 
@@ -56,9 +58,9 @@ function getSidebar() {
 
 function getHead() {
   return [
-    ['link', { rel:'icon', href:'/icon.svg', type:'image/svg+xml', sizes:'any'}],
-    ['link', { rel:'icon', href:'/favicon.ico'}], // <!-- 32×32 -->
-    ['link', { rel: 'apple-touch-icon', href: '/apple.png'}], // <!-- 180×180 -->
-    ['link', { rel: 'manifest', href: '/manifest.json'}],
+    ['link', { rel:'icon', href: `${baseUrl}/icon.svg`, type:'image/svg+xml', sizes:'any'}],
+    ['link', { rel:'icon', href: `${baseUrl}/favicon.ico`}], // <!-- 32×32 -->
+    ['link', { rel: 'apple-touch-icon', href: `${baseUrl}/apple.png`}], // <!-- 180×180 -->
+    ['link', { rel: 'manifest', href: `${baseUrl}/manifest.json`}],
   ];
 }
