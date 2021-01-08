@@ -197,7 +197,45 @@ const result = await this.$act.exec('get.data.transformed');
 console.log(result); // => { todoItem: "delectus aut autem", done: false }
 ```
 
+<<<<<<< HEAD
 ## Watch
+=======
+## Class Styled Action
+
+You can use classes to create actions.
+
+Along with classes, it will be possible to use decorators helper.
+
+::: tip
+The examples below write `readonly name`.
+This is to make sure that you have strict typing when you call the action.
+:::
+
+```ts
+// class-action.ts
+
+import { ActMasterAction } from 'vue-act-master';
+
+export class ClassAction implements ActMasterAction {
+  readonly name = 'get.data';
+
+  async exec() {
+    const url = 'https://jsonplaceholder.typicode.com/todos/1';
+
+    const response = await fetch(url);
+    return response.json();
+  }
+}
+```
+
+```ts
+// ../you/actions/path
+
+export const actions: ActMasterAction[] = [
+  new ClassAction(),
+]
+```
+>>>>>>> 44a83f0 (wip)
 
 You can launch the action after another one through the "watch" property.
 
@@ -213,7 +251,7 @@ Otherwise it will start an endless loop.
 import { ActMasterAction } from 'vue-act-master';
 
 export class FirstAction implements ActMasterAction {
-  name = 'FirstAction';
+  readonly name = 'FirstAction';
   exec() {
     return {
       name: 'Leo',
@@ -224,7 +262,7 @@ export class FirstAction implements ActMasterAction {
 export class SecondAction implements ActMasterAction {
   // Names of events, after any and which action automatically starts.
   watch: ['FirstAction'],
-  name = 'SecondAction';
+  readonly name = 'SecondAction';
   exec(data) {
     console.log(data); // { "Name": "Leo" }
     return {
@@ -362,7 +400,7 @@ import { UseDI, ActMasterAction } from 'vue-act-master';
 import { SuperAPI } from '../you/api';
 
 export class WithDiAction implements ActMasterAction {
-  name = 'login';
+  readonly name = 'login';
 
   @UseDI('api')
   private api!: SuperAPI; // SuperAPI as interface
@@ -383,7 +421,7 @@ import { ActMasterAction } from 'vue-act-master';
 import { SuperAPI } from '../you/api';
 
 export class WithDiAction implements ActMasterAction {
-  name = 'login';
+  readonly name = 'login';
 
   private api: SuperAPI; // SuperAPI as interface
 
@@ -415,7 +453,7 @@ You can use this to [return different values](../advanced/08-emit-many-results.h
 import { ActMasterAction, EmitAction } from 'vue-act-master';
 
 export class WithEmitAction implements ActMasterAction {
-  name = 'login';
+  readonly name = 'login';
 
   private emit: EmitAction;
 
@@ -442,7 +480,7 @@ OR
 import { ActMasterAction, Emit, EmitAction } from 'vue-act-master';
 
 export class WithEmitAction implements ActMasterAction {
-  name = 'login';
+  readonly name = 'login';
 
   @Emit()
   private emit!: EmitAction;

@@ -23,6 +23,8 @@ export interface DIMap {
   [key: string]: any;
 }
 
+export type ActMasterActions = ActMasterAction[];
+
 export interface ActMasterOptions {
   actions?: ActMasterAction[];
   di?: DIMap;
