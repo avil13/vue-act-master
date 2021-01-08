@@ -1,6 +1,6 @@
 <div align="center">
   <h1>Act-Master</h1>
-  <img  src="./assets/act-master-logo.svg" alt="act-master">
+  <img  src="https://raw.githubusercontent.com/avil13/vue-act-master/master/packages/vue-act-master/assets/act-master-logo.svg" alt="act-master">
 </div>
 
 ## Why?
