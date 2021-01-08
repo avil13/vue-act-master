@@ -3,6 +3,8 @@ module.exports = {
   description: 'A frontend-way to separate business logic from application view.',
   base: process.env.DEV ? '/' : '/vue-act-master',
 
+  head: getHead(),
+
   themeConfig: {
     repo: 'avil13/vue-act-master',
     docsDir: 'packages/docs/src',
@@ -47,5 +49,16 @@ function getSidebar() {
         },
       ],
     },
+  ];
+}
+
+
+
+function getHead() {
+  return [
+    ['link', { rel:'icon', href:'/icon.svg', type:'image/svg+xml', sizes:'any'}],
+    ['link', { rel:'icon', href:'/favicon.ico'}], // <!-- 32×32 -->
+    ['link', { rel: 'apple-touch-icon', href: '/apple.png'}], // <!-- 180×180 -->
+    ['link', { rel: 'manifest', href: '/manifest.json'}],
   ];
 }

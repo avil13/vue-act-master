@@ -1,4 +1,8 @@
-# Vue-Act-Master
+<div align="center" style="padding-top:1rem;">
+  <img src="./public/assets/act-master-logo.svg" alt="vue-act-master">
+
+  <h1>Vue-Act-Master</h1>
+</div>
 
 ## Motivation
 

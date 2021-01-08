@@ -1,4 +1,7 @@
-<h1 align="center">Vue-Act-Master</h1>
+<div align="center">
+  <h1>Vue-Act-Master</h1>
+  <img  src="./assets/act-master-logo.svg" alt="vue-act-master">
+</div>
 
 ## Why?
 
