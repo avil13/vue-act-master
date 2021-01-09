@@ -22,7 +22,7 @@
   "license": "MIT",
   "scripts": {
     "build": "yarn test && rm -rf ./dist && rollup -c",
-    "changelog": "auto-changelog",
+    "changelog": "auto-changelog && git add CHANGELOG.md",
     "commit": "cz",
     "lint:fix": "eslint --fix --ext .ts .",
     "test:watch": "jest --watch",
