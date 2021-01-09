@@ -1,6 +1,6 @@
 {
   "name": "vue-act-master",
-  "version": "0.8.6",
+  "version": "0.8.7",
   "description": "",
   "author": "avil13",
   "main": "dist/index.common.js",
@@ -14,7 +14,13 @@
     "nuxt"
   ],
   "homepage": "https://avil13.github.io/vue-act-master/",
-  "keywords": ["actions", "events", "vue", "commander", "business logic"],
+  "keywords": [
+    "actions",
+    "events",
+    "vue",
+    "commander",
+    "business logic"
+  ],
   "scripts": {
     "build": "yarn test && rm -rf ./dist && rollup -c",
     "changelog": "auto-changelog",
