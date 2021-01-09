@@ -1,6 +1,6 @@
 {
   "name": "act-master",
-  "version": "1.3.2",
+  "version": "1.3.3",
   "author": "avil13",
   "main": "dist/index.common.js",
   "module": "dist/index.esm.js",
@@ -12,7 +12,13 @@
     "src"
   ],
   "homepage": "https://avil13.github.io/vue-act-master/",
-  "keywords": ["actions", "events", "vue", "commander", "business logic"],
+  "keywords": [
+    "actions",
+    "events",
+    "vue",
+    "commander",
+    "business logic"
+  ],
   "license": "MIT",
   "scripts": {
     "build": "yarn test && rm -rf ./dist && rollup -c",
