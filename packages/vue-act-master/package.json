@@ -23,17 +23,17 @@
   ],
   "scripts": {
     "build": "yarn test && rm -rf ./dist && rollup -c",
-    "changelog": "auto-changelog",
+    "changelog": "auto-changelog && git add CHANGELOG.md",
     "lint:fix": "eslint --fix --ext .ts .",
     "test:watch": "jest --watch",
     "test": "jest --collect-coverage",
     "type-check:watch": "npm run type-check -- --watch",
     "type-check": "tsc -p ./tsconfig.prod.json --noEmit",
-    "prepublish": "npm run test && npm run build && auto-changelog"
+    "prepublish": "npm run test && npm run build && npm run changelog"
   },
   "husky": {
     "hooks": {
-      "pre-commit": "npm run lint:fix && npm run changelog && git update-index --again",
+      "pre-commit": "npm run lint:fix && npm run changelog",
       "pre-push": "npm test"
     }
   },

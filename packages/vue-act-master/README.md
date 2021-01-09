@@ -1,13 +1,12 @@
-<div align="center">
-  <h1>Vue-Act-Master</h1>
-  <img  src="https://raw.githubusercontent.com/avil13/vue-act-master/master/assets/act-master-logo.svg" alt="vue-act-master">
-</div>
-
-## Why?
+# Vue-Act-Master
 
 A way to separate business logic from application view.
 
 The easiest library to create a flexible application architecture.
+
+<div align="center">
+  <img  src="https://raw.githubusercontent.com/avil13/vue-act-master/master/assets/act-master-logo.svg" alt="vue-act-master">
+</div>
 
 ---
 
