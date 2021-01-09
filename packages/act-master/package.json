@@ -9,9 +9,10 @@
   "files": [
     "README.md",
     "dist",
-    "src",
-    "nuxt"
+    "src"
   ],
+  "homepage": "https://avil13.github.io/vue-act-master/",
+  "keywords": ["actions", "events", "vue", "commander", "business logic"],
   "license": "MIT",
   "scripts": {
     "build": "yarn test && rm -rf ./dist && rollup -c",
