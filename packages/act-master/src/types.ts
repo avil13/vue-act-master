@@ -21,13 +21,10 @@ export type autoUnsubscribeArgs = {
   context?: any;
 };
 
-export interface listenersMap {
-  [eventName: string]: listenerFunction[];
-}
+export type listenersMap = Map<string, listenerFunction[]>;
 
-export interface waiterMap {
-  [eventName: string]: string[]; // list of emitNames to be called after
-}
+// list of emitNames to be called after
+export type waiterMap = Map<string, string[]>;
 
 export interface DIMap {
   [key: string]: any;

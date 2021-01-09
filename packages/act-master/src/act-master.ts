@@ -30,9 +30,9 @@ export class ActMaster {
     [eventName: string]: ActMasterAction;
   } = {};
 
-  private readonly _waiters: waiterMap = {};
+  private readonly _waiters: waiterMap = new Map();
 
-  private readonly _listeners: listenersMap = {};
+  private readonly _listeners: listenersMap = new Map();
 
   private _DIContainer: DIMap = {};
 
@@ -127,10 +127,9 @@ export class ActMaster {
 
     if (action.wait) {
       action.wait.forEach((waitEventName) => {
-        if (!this._waiters[waitEventName]) {
-          this._waiters[waitEventName] = [];
-        }
-        this._waiters[waitEventName].push(eventName);
+        const waiters = this._waiters.get(waitEventName) || [];
+        waiters.push(eventName);
+        this._waiters.set(waitEventName, waiters);
       });
     }
 
@@ -155,8 +154,8 @@ export class ActMaster {
 
   clearListeners(): void {
     for (const eventName in this._listeners) {
-      if (Object.prototype.hasOwnProperty.call(this._listeners, eventName)) {
-        delete this._listeners[eventName];
+      if (this._listeners.has(eventName)) {
+        this._listeners.delete(eventName);
       }
     }
   }
@@ -218,7 +217,7 @@ export class ActMaster {
     const value: T2 = action.transform
       ? await action.transform(execResult)
       : execResult;
-    const listeners = this._listeners[eventName];
+    const listeners = this._listeners.get(eventName);
 
     if (listeners) {
       listeners.forEach((listenerCallback) => {
@@ -226,8 +225,8 @@ export class ActMaster {
       });
     }
 
-    if (!(value instanceof CancelledAct) && this._waiters[eventName]) {
-      for (const waitingEventName of this._waiters[eventName]) {
+    if (!(value instanceof CancelledAct) && this._waiters.has(eventName)) {
+      for (const waitingEventName of this._waiters.get(eventName) || []) {
         await this.emit(waitingEventName, value);
       }
     }
@@ -242,10 +241,10 @@ export class ActMaster {
     listener: listenerFunction,
     context?: any
   ): () => boolean {
-    if (!this._listeners[eventName]) {
-      this._listeners[eventName] = [];
-    }
-    this._listeners[eventName].push(listener);
+    this._listeners.set(eventName, [
+      ...(this._listeners.get(eventName) || []),
+      listener,
+    ]);
 
     if (this.config.autoUnsubscribeCallback) {
       this.config.autoUnsubscribeCallback({
@@ -259,7 +258,7 @@ export class ActMaster {
   }
 
   unsubscribe(eventName: ActEventName, listener: listenerFunction): boolean {
-    const listeners = this._listeners[eventName];
+    const listeners = this._listeners.get(eventName);
     if (!listeners) {
       return false;
     }
@@ -269,7 +268,7 @@ export class ActMaster {
       listeners.splice(index, 1);
     }
 
-    this._listeners[eventName] = listeners;
+    this._listeners.set(eventName, listeners);
 
     return index > -1;
   }
