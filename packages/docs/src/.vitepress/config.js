@@ -45,9 +45,16 @@ function getSidebar() {
     {
       text: 'Tests',
       children: [
-
         {
           text: 'ActMaster test-utils', link: '/testing/05-testing'
+        },
+      ],
+    },
+    {
+      text: 'Tips and tricks',
+      children: [
+        {
+          text: 'WebSocket', link: '/tips/web-socket'
         },
       ],
     },

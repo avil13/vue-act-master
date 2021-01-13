@@ -341,11 +341,16 @@ It can be connected via the decorator or via the helper.
 
 This way you can build chains of actions that can be stopped by `CancelledAct`.
 
+::: warning
+Be careful. The action should not call itself.
+Otherwise it will start an endless loop.
+:::
+
 ```ts
 // with-emit-action.ts
 // with decorator
 
-import { Emit, ActMasterAction, emitAction } from 'vue-act-master';
+import { ActMasterAction, Emit, emitAction } from 'vue-act-master';
 
 export class WithEmitAction implements ActMasterAction {
   name = 'login';
