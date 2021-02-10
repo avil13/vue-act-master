@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { ActMaster } from './act-master';
 import { ActMasterAction } from './types';
 
@@ -30,11 +31,23 @@ export class ActOne implements ActMasterAction {
 
 type ActItem<T extends ActMasterAction> = T extends {
   readonly name: infer N;
-  exec(...args: infer A): infer R;
-  // transform?: (args: any[]) => infer R2
+  exec(...args: infer P): infer R;
+  // transform?: (args: R) => infer R2
 }
-  ? (name: N, ...args: A) => R | Promise<R>
+  ? (name: N, ...args: P) => Promise<R>
   : never;
+
+type ActItemArgs<T extends ActMasterAction> = T extends {
+  readonly name: infer N;
+  exec(...args: infer P): any;
+}
+  ? [name: N, ...args: P]
+  : never;
+
+type GetAction<
+  L extends { name: string }[],
+  T extends string
+> = T extends L[infer N]['name'] ? L[N] : never;
 
 // interface ActionList {
 //   actions: ActMasterAction[];
@@ -45,7 +58,10 @@ const actList = [
   new ActZero(),
   new ActOne(),
   // new ActTwo(),
-] as const;
+  // ] as const;
+];
+
+type xxx = GetAction<typeof actList, 'get_0'>;
 
 // declare interface ActionList {
 //   actions: typeof actList;
@@ -53,23 +69,29 @@ const actList = [
 
 // type TAction = ActionList['actions'][number];
 
-interface ActMasterDemo extends Omit<ActMaster, 'exec'>{
-  exec: ActItem<typeof actList[number]>; // | ActMaster['exec'];
-}
+// interface ActMasterDemo extends Omit<ActMaster, 'exec'> {
+//   exec: ActItem<typeof actList[number]>; // | ActMaster['exec'];
+// }
+
+type IActExecArgs = ActItemArgs<typeof actList[number]>;
 
 class ActM {
-  async exec(name, ...args) {
+  async exec(argsList: IActExecArgs) {
+    const [name, ...args] = argsList;
+
     const act = actList.find((item) => item.name === name);
+
     if (!act) {
       return new Error();
     }
     return act.exec(...args);
-  },
-};
+  }
+}
 
-const $act = new ActM() as ActMasterDemo;
+const $act = new ActM();
 
-$act.exec('get_1', '22');
+$act.exec('get_0');
+$act.exec('get_1', 2);
 
 // type TExec<T extends ActMasterAction> = (
 //   name: T['name'],
@@ -77,3 +99,30 @@ $act.exec('get_1', '22');
 // ) => Promise<ReturnType<T['exec']>>;
 // const exec: TExec<ActOne> = () => Promise.resolve(100);
 // exec('get.data', 1);
+
+interface ActContracts {
+  GetIds: (key: 'GetIds') => number[];
+  GetId: (key: 'GetId') => number;
+}
+
+type ActionByContract = ActContracts[keyof ActContracts]
+//  extends (
+//   name: infer K
+// ) => any
+//   ? K
+//   : 'never2';
+
+type Act = keyof ActContracts extends never
+  ? ActMaster['exec']
+  : ActionByContract;
+
+const exec: Act = (key) => {
+  console.log('=>', key);
+  return 1;
+};
+
+export const expectType = <T>(expression: T) => {
+  // Do nothing, the TypeScript compiler handles this for us
+};
+
+expectType<(key: 'GetId') => number>(exec('GetId'));
