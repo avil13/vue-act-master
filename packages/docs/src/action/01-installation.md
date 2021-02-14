@@ -4,7 +4,7 @@ Start by creating a project.
 
 Then add a vue-act-master.
 
-```sh
+```bash
 yarn add vue-act-master
 ```
 
