@@ -28,8 +28,8 @@
     "test:watch": "jest --watch",
     "test": "jest --collect-coverage --runInBand",
     "type-check:watch": "npm run type-check -- --watch",
-    "type-check": "tsc -p ./tsconfig.prod.json --noEmit",
-    "prepublish": "npm run test && npm run build && npm run changelog"
+    "type-check": "tsc --p ./tsconfig.prod.json --noEmit",
+    "prepublishOnly": "npm run test && npm run build && npm run changelog"
   },
   "husky": {
     "hooks": {

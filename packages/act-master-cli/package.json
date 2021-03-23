@@ -1,6 +1,6 @@
 {
   "name": "act-master-cli",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "author": "avil13",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -11,7 +11,7 @@
     "bin"
   ],
   "bin": {
-    "act-master-cli": "./bin/act-master-cli"
+    "act-master-cli": "bin/act-master-cli"
   },
   "engines": {
     "node": ">=12"

@@ -46,6 +46,7 @@ const getFunctionSrcData = (items: IFilteredItem[]) => {
  * @param fileSrc for testing don't do writing
  *
  * @example
+ * import { ActMaster } from 'act-master';
  *
  * declare module 'act-master' {
  *   export interface ActMaster {
@@ -61,6 +62,11 @@ export const makeInterfaceContent = (
   const project = new Project();
 
   const sourceFile = project.createSourceFile(filePath);
+
+  sourceFile.addImportDeclaration({
+    namedImports: [{ name: 'ActMaster' }],
+    moduleSpecifier: 'act-master',
+  });
 
   const actInterface = sourceFile.addInterface({
     name: 'ActMaster',
