@@ -63,11 +63,6 @@ export const makeInterfaceContent = (
 
   const sourceFile = project.createSourceFile(filePath);
 
-  sourceFile.addImportDeclaration({
-    namedImports: [{ name: 'ActMaster' }],
-    moduleSpecifier: 'act-master',
-  });
-
   const actInterface = sourceFile.addInterface({
     name: 'ActMaster',
     isExported: true,
@@ -89,6 +84,11 @@ export const makeInterfaceContent = (
   const declarationText = `declare module 'act-master' { ${interfaceText} }`;
 
   sourceFile.replaceWithText(declarationText);
+
+  sourceFile.addImportDeclaration({
+    namedImports: [{ name: 'ActMaster' }],
+    moduleSpecifier: 'act-master',
+  });
 
   sourceFile.formatText({
     ensureNewLineAtEndOfFile: true,

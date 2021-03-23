@@ -26,7 +26,7 @@ describe('validateItem', () => {
     expect(res).toContain('Promise<');
   });
 
-  it.only('getIndexContent', () => {
+  it('getIndexContent', () => {
     const items = getItems('../../__fixtures__/**/*ts');
 
     const res = makeIndexContent('path/to/action.ts', items);
