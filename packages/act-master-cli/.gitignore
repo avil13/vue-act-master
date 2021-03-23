@@ -1,0 +1,4 @@
+# Files that may appear as a result of the tests
+
+act-generate/*
+test-act-generate/*
