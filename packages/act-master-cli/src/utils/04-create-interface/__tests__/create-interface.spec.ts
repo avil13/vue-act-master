@@ -16,14 +16,18 @@ const getItems = (actionPath: string): IFilteredItem[] => {
 };
 
 describe('validateItem', () => {
-  it('getInterfaceContent', () => {
+  it.each<[string]>([
+    //
+    // ['export interface ActMaster'],
+    [
+      `exec(actName: 'async.action', arg0: number, arg1: string): Promise<{ name: string; age: number } | null>;`,
+    ],
+  ])('getInterfaceContent(%s)', (expected) => {
     const items = getItems('../../__fixtures__/**/*ts');
 
     const res = makeInterfaceContent('path/to/interface.d.ts', items);
 
-    expect(res).toContain('export interface ActMaster');
-    expect(res).toContain('exec');
-    expect(res).toContain('Promise<');
+    expect(res).toMatch(expected);
   });
 
   it('getIndexContent', () => {

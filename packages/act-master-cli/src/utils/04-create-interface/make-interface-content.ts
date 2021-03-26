@@ -1,6 +1,27 @@
-import { ClassDeclaration, Project } from 'ts-morph';
+import {
+  ClassDeclaration,
+  MethodDeclarationOverloadStructure,
+  MethodDeclarationStructure,
+  Project,
+} from 'ts-morph';
 import { IFilteredItem } from '../02-filter-list/index';
 import { getImportDeclarations } from './make-index-content';
+
+const getReturnType = (
+  structure?: MethodDeclarationStructure | MethodDeclarationOverloadStructure
+): string => {
+  if (!structure) {
+    return 'unknown';
+  }
+
+  const returnType = structure.returnType as string;
+
+  if (returnType.includes('Promise')) {
+    return returnType;
+  }
+
+  return structure.isAsync ? returnType : `Promise<${structure.returnType}>`;
+};
 
 /**
  *
@@ -24,9 +45,7 @@ const getExecInterface = (item: ClassDeclaration) => {
   const parameters = [nameArg, ...(params || [])];
 
   const fnSrc = item.getMethod('transform') || item.getMethod('exec');
-  const returnType = fnSrc?.getStructure().isAsync
-    ? fnSrc?.getStructure().returnType
-    : `Promise<${fnSrc?.getStructure().returnType}>`;
+  const returnType = getReturnType(fnSrc?.getStructure());
 
   return {
     parameters,
