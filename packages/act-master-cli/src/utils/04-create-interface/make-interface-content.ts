@@ -1,5 +1,6 @@
 import {
   ClassDeclaration,
+  ImportDeclaration,
   MethodDeclarationOverloadStructure,
   MethodDeclarationStructure,
   Project,
@@ -23,19 +24,49 @@ const getReturnType = (
   return structure.isAsync ? returnType : `Promise<${structure.returnType}>`;
 };
 
+const getFilteredImports = (
+  returnType: string,
+  imports: ImportDeclaration[]
+) => {
+  // const filteredImports: OptionalKind<ImportDeclarationStructure>[] = [];
+
+  const returnTypes = returnType
+    .replace(/Promise<([^>]+)>/gi, '$1')
+    .split('|')
+    .map((v) => v.trim());
+
+  imports.forEach((imp) => {
+    const defaultImport = imp.getStructure().defaultImport;
+
+    if (defaultImport && returnTypes.includes(defaultImport)) {
+      const p = imp.getSourceFile().getFilePath();
+      console.log('=>', p);
+    }
+  });
+
+  // console.log(
+  //   '=>',
+  //   // imports[0].getImportClause()?.getNamedImports()[0].getStructure().name
+  //   imports[0].getStructure().namedImports,
+  //   imports[0].getStructure().defaultImport
+  // );
+};
+
 /**
  *
  * @returns String ('name', arg: type) => Promise<type>
  */
-const getExecInterface = (item: ClassDeclaration) => {
-  const actName = item.getProperty('name');
+const getExecInterface = (item: IFilteredItem) => {
+  const classDeclaration: ClassDeclaration = item.classDeclaration;
+
+  const actName = classDeclaration.getProperty('name');
   const nameType = actName?.getInitializer()?.getText(false) || '';
   const nameArg = {
     name: 'actName',
     type: nameType,
   };
 
-  const execSrc = item.getInstanceMethod('exec');
+  const execSrc = classDeclaration.getInstanceMethod('exec');
   const methodStructure = execSrc?.getStructure();
 
   const params = methodStructure?.parameters?.map(({ name, type }) => ({
@@ -44,8 +75,17 @@ const getExecInterface = (item: ClassDeclaration) => {
   }));
   const parameters = [nameArg, ...(params || [])];
 
-  const fnSrc = item.getMethod('transform') || item.getMethod('exec');
+  const fnSrc =
+    classDeclaration.getMethod('transform') ||
+    classDeclaration.getMethod('exec');
   const returnType = getReturnType(fnSrc?.getStructure());
+
+  if (nameType === `'with-other-type-return'`) {
+    const sourceFile = item.sourceFile;
+
+    const imports = sourceFile.getImportDeclarations();
+    getFilteredImports(returnType, imports);
+  }
 
   return {
     parameters,
@@ -54,7 +94,7 @@ const getExecInterface = (item: ClassDeclaration) => {
 };
 
 const getFunctionSrcData = (items: IFilteredItem[]) => {
-  return items.map((item) => getExecInterface(item.classDeclaration));
+  return items.map((item) => getExecInterface(item));
 };
 
 /**

@@ -16,7 +16,7 @@ const getItems = (actionPath: string): IFilteredItem[] => {
 };
 
 describe('validateItem', () => {
-  it.each<[string]>([
+  it.only.each<[string]>([
     //
     // ['export interface ActMaster'],
     [

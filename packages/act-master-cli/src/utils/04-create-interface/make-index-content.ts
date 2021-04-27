@@ -1,12 +1,11 @@
-import path from 'path';
 import {
   ImportDeclarationStructure,
   OptionalKind,
   Project,
   VariableDeclarationKind,
 } from 'ts-morph';
-
 import { IFilteredItem } from '../02-filter-list/index';
+import { normalizePathAlias } from '../alias-helper';
 
 const getClassName = (item: IFilteredItem): string => {
   const classDeclaration = item.classDeclaration;
@@ -28,19 +27,6 @@ const getInitializer = (item: IFilteredItem): string => {
 const getInitializerList = (items: IFilteredItem[]) => {
   const str = items.map((item) => getInitializer(item)).join(',\n ');
   return `[\n ${str},\n]`;
-};
-
-/**
- * Добавить нормализацию путей относительно файла
- *
- */
-const normalizePathAlias = (filePath: string) => {
-  const config = {
-    src: path.normalize(`${process.cwd()}/src`),
-    alias: '@',
-  };
-
-  return filePath.replace(config.src, config.alias);
 };
 
 export const getImportDeclarations = (

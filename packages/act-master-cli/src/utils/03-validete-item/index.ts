@@ -1,11 +1,11 @@
 import { IFilteredItem } from './../02-filter-list';
 
 export enum ActValidationError {
-  noExecMethod = 'noExecMethod',
-  emptyArgumentsType = 'emptyArgumentsType',
-  wrongNameType = 'wrongNameType',
-  noReturnTypeExec = 'noReturnTypeExec',
-  noReturnTypeTransform = 'noReturnTypeTransform',
+  noExecMethod = 'NO EXEC METHOD',
+  emptyArgumentsType = 'EMPTY ARGUMENTS TYPE',
+  wrongNameType = 'WRONG NAME TYPE',
+  noReturnTypeExec = 'NO RETURN TYPE EXEC',
+  noReturnTypeTransform = 'NO RETURN TYPE TRANSFORM',
 }
 
 export class ValidateError {
