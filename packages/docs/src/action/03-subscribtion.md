@@ -1,5 +1,7 @@
 # Subscribe / Unsubscribe (on/off), once
 
+[[toc]]
+
 To explain how it works, let's create a simple example of a component in Vue-2.
 
 ```html

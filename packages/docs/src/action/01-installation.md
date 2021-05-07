@@ -1,5 +1,7 @@
 ## Instalation
 
+[[toc]]
+
 Start by creating a project.
 
 Then add a vue-act-master.
@@ -78,5 +80,18 @@ Add `vue-act-master/nuxt` to modules section of `nuxt.config.js`
 ```js
 {
   modules: ['vue-act-master/nuxt'];
+}
+```
+
+Parameters can be passed to the "actMaster" property.
+
+```js
+// nuxt.config.js
+export default {
+  ...
+  modules: ['vue-act-master/nuxt'];
+  actMaster: {
+    actions: '@/act/index.ts'
+  }
 }
 ```

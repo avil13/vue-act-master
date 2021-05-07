@@ -1,5 +1,7 @@
 # Add Actions to Vue-act-master
 
+[[toc]]
+
 You can add actions in different ways.
 
 Suppose you have a variable with an array of actions:

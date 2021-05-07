@@ -7217,10 +7217,10 @@ vite@^1.0.0-rc.1, vite@^1.0.0-rc.4:
     vue "^3.0.3"
     ws "^7.3.1"
 
-vite@^2.0.0-beta.70:
-  version "2.2.3"
-  resolved "https://registry.yarnpkg.com/vite/-/vite-2.2.3.tgz#1acbdfa56ac00e00e7ccb6988f63f130c2f99dbb"
-  integrity sha512-PtjyBL4GtACM+uT5q5hi2+AlMBbb6YI2b2bam6QI8ZdZt4FezseF0yZHQx0G+b3po9jIJ/GS5N9gc5Yq9Rue7g==
+vite@^2.0.5:
+  version "2.2.4"
+  resolved "https://registry.yarnpkg.com/vite/-/vite-2.2.4.tgz#8f9cc85aacab04c850085894b086c8717f12ed16"
+  integrity sha512-vnIwSNci+phFMp6krhy+FbYzKL0R67Sdt9mVZ96S27AewrApSJjTqncJcalk8sf60BgcbW4+1C6DFIWkxquO9g==
   dependencies:
     esbuild "^0.9.3"
     postcss "^8.2.1"
@@ -7229,10 +7229,10 @@ vite@^2.0.0-beta.70:
   optionalDependencies:
     fsevents "~2.3.1"
 
-vitepress@^0.12.0:
-  version "0.12.2"
-  resolved "https://registry.yarnpkg.com/vitepress/-/vitepress-0.12.2.tgz#5e53c78a3ca045f8513cd4bedf2e280f98d48f61"
-  integrity sha512-dU4O7nG4TfI4CbGbrry1TAXlg19+xm9wlHJdvZnYYjTFRlS7zvHDWgxcP7zduUvhqXCGoGURFKjMPo8MRghVNg==
+vitepress@^0.13.2:
+  version "0.13.2"
+  resolved "https://registry.yarnpkg.com/vitepress/-/vitepress-0.13.2.tgz#f4bc7d11844172fb2e2fedb42945f84e1b60b207"
+  integrity sha512-Y5gN7QAXh2Dd3+e59FWnLuszudg7sO/0//9qUKg84cAX/cZrjvhUgxcAh8MqfCFw8K5m2/0D445FzuwBcqHQLw==
   dependencies:
     "@docsearch/css" "^1.0.0-alpha.28"
     "@docsearch/js" "^1.0.0-alpha.28"
@@ -7258,8 +7258,7 @@ vitepress@^0.12.0:
     polka "^0.5.2"
     prismjs "^1.23.0"
     sirv "^1.0.11"
-    slash "^3.0.0"
-    vite "^2.0.0-beta.70"
+    vite "^2.0.5"
     vue "^3.0.5"
 
 vue-router@^4.0.0-beta.13, vue-router@^4.0.0-rc.1:

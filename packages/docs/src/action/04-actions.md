@@ -1,5 +1,7 @@
 # ActMasterAction
 
+[[toc]]
+
 Action is the place to store your business logic.
 
 This is essentially an implementation of the Commander pattern.
@@ -45,6 +47,40 @@ You can also pass arguments to the `exec` method.
 this.value = await this.$act.exec('get.data', 101);
 ```
 
+
+## Class Styled Action
+
+You can use classes to create actions.
+
+Along with classes, it will be possible to use decorators helper.
+
+> We recommend using classes. They are more desirable, especially if you are using TypeScript.
+
+```ts
+// class-action.ts
+
+import { ActMasterAction } from 'vue-act-master';
+
+export class ClassAction implements ActMasterAction {
+  name = 'get.data';
+
+  async exec() {
+    const url = 'https://jsonplaceholder.typicode.com/todos/1';
+
+    const response = await fetch(url);
+    return response.json();
+  }
+}
+```
+
+```ts
+// ../you/actions/path
+
+export const actions: ActMasterAction[] = [
+  new ClassAction(),
+]
+```
+
 ## Cancel Action
 
 Action can be interrupted by returning a special object "CancelledAct".
@@ -55,8 +91,8 @@ This will stop the chain of events if you build it using `wait` or `emit`.
 
 import { ActMasterAction, CancelledAct } from 'vue-act-master';
 
-export const dataAction: ActMasterAction = {
-  name: 'get.data',
+export class DataAction implements ActMasterAction {
+  name = 'get.data',
 
   exec() {
     // ...
@@ -81,8 +117,8 @@ Otherwise an error message of your choice.
 
 import { ActMasterAction, CancelledAct } from 'vue-act-master';
 
-export const dataAction: ActMasterAction = {
-  name: 'get.data',
+export class DataAction implements ActMasterAction {
+  name = 'get.data',
 
   validateInput(arg?: any): true | CancelledAct {
     if (typeof arg !== 'number') {
@@ -126,8 +162,9 @@ The argument will be the result of the `exec` method.
 
 import { ActMasterAction } from 'vue-act-master';
 
-export const transformedAction: ActMasterAction = {
-  name: 'get.data.transformed',
+export class TransformedAction implements ActMasterAction {
+
+  name = 'get.data.transformed',
 
   async exec() {
     const url = 'https://jsonplaceholder.typicode.com/todos/1';
@@ -160,37 +197,6 @@ const result = await this.$act.exec('get.data.transformed');
 console.log(result); // => { todoItem: "delectus aut autem", done: false }
 ```
 
-## Class Styled Action
-
-You can use classes to create actions.
-
-Along with classes, it will be possible to use decorators helper.
-
-```ts
-// class-action.ts
-
-import { ActMasterAction } from 'vue-act-master';
-
-export class ClassAction implements ActMasterAction {
-  name = 'get.data';
-
-  async exec() {
-    const url = 'https://jsonplaceholder.typicode.com/todos/1';
-
-    const response = await fetch(url);
-    return response.json();
-  }
-}
-```
-
-```ts
-// ../you/actions/path
-
-export const actions: ActMasterAction[] = [
-  new ClassAction(),
-]
-```
-
 ## Wait
 
 You can launch the action after another one through the "wait" property.
@@ -205,7 +211,7 @@ export class FirstAction implements ActMasterAction {
   name = 'FirstAction';
   exec() {
     return {
-      name: 'Leo',
+      name = 'Leo',
     };
   }
 };
@@ -217,7 +223,7 @@ export class SecondAction implements ActMasterAction {
   exec(data) {
     console.log(data); // { "Name": "Leo" }
     return {
-      name: 'Mike',
+      name = 'Mike',
     };
   }
 };
@@ -331,8 +337,6 @@ export class WithDiAction implements ActMasterAction {
 ```
 
 
-
-
 ## Emit another Action in Action
 
 If you need to call another action inside the current one, you can do it using the `emit` handler.
@@ -355,7 +359,7 @@ import { ActMasterAction, Emit, emitAction } from 'vue-act-master';
 export class WithEmitAction implements ActMasterAction {
   name = 'login';
 
-  @Emit();
+  @Emit()
   private emit!: emitAction;
 
   exec(loginData) {
