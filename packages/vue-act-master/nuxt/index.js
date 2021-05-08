@@ -2,7 +2,11 @@
 const { resolve } = require('path');
 
 module.exports = function nuxtVueActMaster(moduleOptions) {
-  const options = Object.assign({}, (this.options.actMaster || {}), moduleOptions);
+  const options = Object.assign(
+    {},
+    this.options.actMaster || {},
+    moduleOptions
+  );
 
   // Register plugin
   this.addPlugin({
