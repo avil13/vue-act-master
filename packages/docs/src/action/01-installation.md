@@ -78,7 +78,8 @@ yarn add vue-act-master
 Add `vue-act-master/nuxt` to modules section of `nuxt.config.js`
 
 ```js
-{
+// nuxt.config.js
+export default {
   modules: ['vue-act-master/nuxt'];
 }
 ```
@@ -89,9 +90,16 @@ Parameters can be passed to the "actMaster" property.
 // nuxt.config.js
 export default {
   ...
-  modules: ['vue-act-master/nuxt'];
-  actMaster: {
-    actions: '@/act/index.ts'
-  }
+  modules: ['vue-act-master/nuxt'],
+  actMaster: { // config for Vue-Act-Master
+    actions: require.resolve('./act/index.ts'), //    resolve path to the actions file
+    di: require.resolve('./act/di.ts'), // [optional] resolve path to the DI file
+  },
 }
 ```
+You can use the file with the default export of the array of actions.
+Or with exporting the `actions` variable
+
+Same with file "di", you can export the default variable with the object, or the variable `di`
+
+
