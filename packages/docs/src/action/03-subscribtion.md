@@ -106,23 +106,28 @@ If you use vue2 and classes, you can use the decorator to subscribe.
 
   @Component({})
   export default class MyVueComponent extends Vue {
-    @ActSubscribe('get.userData')
+    @ActSubscribe('GetUserData')
     user: User | null = null;
+
+    @ActSubscribe('GetUserData', 'data.name', null)
+    name: string | null = null;
 
     async mounted() {
       // Making a request.
       // The data in the `this.user` variable will be updated automatically.
-      await this.$act.exec('get.userData');
+      await this.$act.exec('GetUserData');
 
-      console.log(this.user); // => User {}
+      console.log(this.user); // => User { data: { name: 'Mike' } }
     }
   }
 </script>
 ```
 
 ::: tip
-```ts
+```
 user: User | null = null;
 ```
 Don't use `undefined` in init - the property will not be reactive.
 :::
+
+This decorator works with the second version because it uses hook events to unsubscribe

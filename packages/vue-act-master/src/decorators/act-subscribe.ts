@@ -9,7 +9,7 @@ import * as Vue from 'vue/types/umd';
  * that will cause memory leak.
  *
  */
-export function ActSubscribe(eventName: ActEventName) {
+export function ActSubscribe(eventName: ActEventName, pathToData?: string, defaultValue = null) {
   return createDecorator((componentOptions, key) => {
     const subscribeHook = {
       created() {
@@ -18,7 +18,7 @@ export function ActSubscribe(eventName: ActEventName) {
           eventName,
           (data: any) => {
             //@ts-ignore
-            this[key] = data;
+            this[key] = (pathToData ? objectPath(data, pathToData) : data) || defaultValue;
           },
           this
         );
@@ -73,3 +73,16 @@ export function createDecorator(
     Ctor.__decorators__.push((options) => factory(options, key, index));
   };
 }
+
+function objectPath(obj: any, path: string | null) {
+  let value = obj;
+
+  if (path) {
+    path.split('.').forEach((key) => {
+      value = value[key];
+    });
+  }
+
+  return value;
+};
+

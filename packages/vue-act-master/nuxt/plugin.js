@@ -7,7 +7,7 @@ import { actions } from '<%= options.actions %>';
 <% if (options.di) { %>
 import di from '<%= options.di %>';
 <% } else { %>
-  const di = {};
+const di = {};
 <% } %>
 
 const actionsList = actions || actionsDefault;
