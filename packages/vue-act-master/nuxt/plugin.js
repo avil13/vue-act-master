@@ -1,7 +1,8 @@
 import Vue from 'vue';
 import { VueActMaster } from 'vue-act-master';
 
-import actions from '<%= options.actions %>';
+import actionsDefault from '<%= options.actions %>';
+import { actions } from '<%= options.actions %>';
 
 <% if (options.di) { %>
 import di from '<%= options.di %>';
@@ -9,7 +10,7 @@ import di from '<%= options.di %>';
   const di = {};
 <% } %>
 
-const actionsList = actions && actions.actions || actions;
+const actionsList = actions || actionsDefault;
 const diItems = di && di.di || di;
 
 
