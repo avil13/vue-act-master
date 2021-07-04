@@ -1,3 +1,4 @@
+import { ConfigManager } from '../../lib/config-manager';
 import {
   ClassDeclaration,
   ImportDeclaration,
@@ -7,6 +8,8 @@ import {
 } from 'ts-morph';
 import { IFilteredItem } from '../02-filter-list/index';
 import { getImportDeclarations } from './make-index-content';
+
+const configManager = new ConfigManager();
 
 const getReturnType = (
   structure?: MethodDeclarationStructure | MethodDeclarationOverloadStructure
@@ -113,7 +116,7 @@ const getFunctionSrcData = (items: IFilteredItem[]) => {
  *   }
  * }
  */
-export const makeInterfaceContent = (
+export const makeInterfaceContent = async (
   filePath: string,
   items: IFilteredItem[],
   isWrite = false
@@ -157,7 +160,9 @@ export const makeInterfaceContent = (
   if (isWrite) {
     sourceFile.save();
 
-    return getImportDeclarations(items).map((item) => {
+    const config = await configManager.getConfig();
+
+    return getImportDeclarations(items, config).map((item) => {
       return item.moduleSpecifier;
     });
   }

@@ -1,10 +1,5 @@
-import path from 'path';
+import { ActCliConfig } from '../types';
 
-export const normalizePathAlias = (filePath: string) => {
-  const config = {
-    src: path.normalize(`${process.cwd()}/src`),
-    alias: '@',
-  };
-
-  return filePath.replace(config.src, config.alias);
+export const normalizePathAlias = (filePath: string, config: ActCliConfig) => {
+  return filePath.replace(config.config.src, config.config.alias);
 };

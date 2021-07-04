@@ -34,7 +34,7 @@ export const generateCommand = async () => {
 
   // create actions interface
   await removeFile(ActCliConfig.generate.actionsInterface);
-  let listImportedFiles = makeInterfaceContent(
+  let listImportedFiles = await makeInterfaceContent(
     ActCliConfig.generate.actionsInterface,
     actionFilteredList,
     true

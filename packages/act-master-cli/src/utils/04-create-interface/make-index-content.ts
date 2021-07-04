@@ -1,3 +1,5 @@
+import { ConfigManager } from '../../lib/config-manager';
+import { ActCliConfig } from '../../types';
 import {
   ImportDeclarationStructure,
   OptionalKind,
@@ -6,6 +8,8 @@ import {
 } from 'ts-morph';
 import { IFilteredItem } from '../02-filter-list/index';
 import { normalizePathAlias } from '../alias-helper';
+
+const configManager = new ConfigManager();
 
 const getClassName = (item: IFilteredItem): string => {
   const classDeclaration = item.classDeclaration;
@@ -30,11 +34,15 @@ const getInitializerList = (items: IFilteredItem[]) => {
 };
 
 export const getImportDeclarations = (
-  items: IFilteredItem[]
+  items: IFilteredItem[],
+  config: ActCliConfig
 ): OptionalKind<ImportDeclarationStructure>[] => {
   return items.map((item) => {
     const className = getClassName(item);
-    const moduleSpecifier = normalizePathAlias(item.sourceFile.getFilePath());
+    const moduleSpecifier = normalizePathAlias(
+      item.sourceFile.getFilePath(),
+      config
+    );
 
     return {
       namedImports: [
@@ -54,7 +62,7 @@ export const getImportDeclarations = (
  * @param items
  * @param isWrite
  */
-export const makeIndexContent = (
+export const makeIndexContent = async (
   filePath: string,
   items: IFilteredItem[],
   isWrite = false
@@ -83,7 +91,9 @@ export const makeIndexContent = (
     ],
   });
 
-  sourceFile.addImportDeclarations(getImportDeclarations(items));
+  const config = await configManager.getConfig();
+
+  sourceFile.addImportDeclarations(getImportDeclarations(items, config));
 
   sourceFile.formatText({
     ensureNewLineAtEndOfFile: true,
@@ -93,7 +103,7 @@ export const makeIndexContent = (
   if (isWrite) {
     sourceFile.save();
 
-    return getImportDeclarations(items).map((item) => {
+    return getImportDeclarations(items, config).map((item) => {
       return item.moduleSpecifier;
     });
   }

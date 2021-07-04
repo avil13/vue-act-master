@@ -22,10 +22,10 @@ describe('validateItem', () => {
     [
       `exec(actName: 'async.action', arg0: number, arg1: string): Promise<{ name: string; age: number } | null>;`,
     ],
-  ])('getInterfaceContent(%s)', (expected) => {
+  ])('getInterfaceContent(%s)', async (expected) => {
     const items = getItems('../../__fixtures__/**/*ts');
 
-    const res = makeInterfaceContent('path/to/interface.d.ts', items);
+    const res = await makeInterfaceContent('path/to/interface.d.ts', items);
 
     expect(res).toMatch(expected);
   });

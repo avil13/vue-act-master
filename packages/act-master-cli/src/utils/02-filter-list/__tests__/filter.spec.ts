@@ -6,5 +6,5 @@ it('filter files', () => {
 
   const list = listFiles.filter((item) => actionFilter(item));
 
-  expect(list.length).toBe(2);
+  expect(list.length).toBe(3);
 });
