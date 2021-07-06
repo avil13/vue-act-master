@@ -1,6 +1,6 @@
 {
   "name": "act-master",
-  "version": "1.4.1",
+  "version": "1.4.2",
   "author": "avil13",
   "main": "dist/index.common.js",
   "module": "dist/index.esm.js",
@@ -29,7 +29,7 @@
     "test": "jest --collect-coverage --runInBand",
     "type-check:watch": "npm run type-check -- --watch",
     "type-check": "tsc -p ./tsconfig.prod.json --noEmit",
-    "prepublish": "npm run test && npm run build && auto-changelog && git update-index"
+    "prepublishOnly": "npm run test && npm run build && auto-changelog && git update-index"
   },
   "husky": {
     "hooks": {
