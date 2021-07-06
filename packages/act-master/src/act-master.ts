@@ -204,6 +204,10 @@ export class ActMaster {
       const isValidOrError = await action.validateInput(...args);
 
       if (isValidOrError !== true) {
+        if (this.config.errorHandlerEventName) {
+          this.emit(this.config.errorHandlerEventName, isValidOrError);
+        }
+
         return isValidOrError;
       }
     }

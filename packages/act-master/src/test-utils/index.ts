@@ -13,6 +13,7 @@ export class ActTest {
 
   static getInstance(options: ActMasterOptions = {}): ActMaster {
     if (options || !ActTest.$act) {
+      ActTest.removeSingleton();
       ActTest.$act = new ActMaster(options);
     }
     return ActTest.$act;
