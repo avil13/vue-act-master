@@ -44,7 +44,7 @@
   "license": "MIT",
   "dependencies": {
     "act-master": "^1.4.*",
-    "vue": "*"
+    "vue": "2.*"
   },
   "devDependencies": {
     "@types/jest": "^26.0.14",

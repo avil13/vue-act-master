@@ -9,7 +9,7 @@ import * as Vue from 'vue/types/umd';
  * that will cause memory leak.
  *
  */
-export function ActSubscribe(eventName: ActEventName, pathToData?: string, defaultValue = null) {
+export function ActSubscribe(eventName: ActEventName, pathToData?: string, defaultValue: unknown = null) {
   return createDecorator((componentOptions, key) => {
     const subscribeHook = {
       created() {
@@ -18,7 +18,7 @@ export function ActSubscribe(eventName: ActEventName, pathToData?: string, defau
           eventName,
           (data: any) => {
             //@ts-ignore
-            this[key] = (pathToData ? objectPath(data, pathToData) : data) || defaultValue;
+            this[key] = (pathToData && objectPath(data, pathToData, defaultValue)) || (data !== undefined && data) || defaultValue;
           },
           this
         );
@@ -70,17 +70,25 @@ export function createDecorator(
     if (typeof index !== 'number') {
       index = undefined;
     }
-    Ctor.__decorators__.push((options) => factory(options, key, index));
+    Ctor.__decorators__.push((options: any) => factory(options, key, index));
   };
 }
 
-function objectPath(obj: any, path: string | null) {
+function objectPath(obj: any, path: string | null, defaultValue: unknown) {
   let value = obj;
 
   if (path) {
-    path.split('.').forEach((key) => {
+    const list = path.split('.');
+    let key;
+    let i = 0;
+    for (i=0; i < list.length; i++) {
+        key = list[i];
       value = value[key];
-    });
+      if (value === undefined) {
+        value = defaultValue;
+        break;
+      }
+    }
   }
 
   return value;
