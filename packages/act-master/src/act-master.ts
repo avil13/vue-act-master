@@ -30,6 +30,11 @@ export class ActMaster {
 
   private readonly _listeners = new Map<string, listenerFunction[]>();
 
+  private readonly _inProgressWatchers = new Map<
+    string,
+    (inProgress: boolean) => void
+  >();
+
   private _DIContainer: DIMap = {};
 
   private readonly config: devActMasterConfig = {
@@ -160,27 +165,34 @@ export class ActMaster {
     eventName: ActEventName,
     ...args: any[]
   ): Promise<T | CancelledAct> {
-    return this.emit<T>(eventName, ...args).catch((error: Error) => {
-      const action = this.getActionOrNull(eventName);
+    this.setProgress(eventName, true);
+    return this.emit<T>(eventName, ...args)
+      .then((data) => {
+        this.setProgress(eventName, false);
+        return data;
+      })
+      .catch((error: Error) => {
+        this.setProgress(eventName, false);
+        const action = this.getActionOrNull(eventName);
 
-      if (
-        action?.errorHandlerEventName &&
-        action.errorHandlerEventName !== eventName
-      ) {
-        this.emit(action.errorHandlerEventName, error);
-        return new CancelledAct(error.message);
-      }
+        if (
+          action?.errorHandlerEventName &&
+          action.errorHandlerEventName !== eventName
+        ) {
+          this.emit(action.errorHandlerEventName, error);
+          return new CancelledAct(error.message);
+        }
 
-      if (
-        this.config.errorHandlerEventName &&
-        this.config.errorHandlerEventName !== eventName
-      ) {
-        this.emit(this.config.errorHandlerEventName, error);
-        return new CancelledAct(error.message);
-      }
+        if (
+          this.config.errorHandlerEventName &&
+          this.config.errorHandlerEventName !== eventName
+        ) {
+          this.emit(this.config.errorHandlerEventName, error);
+          return new CancelledAct(error.message);
+        }
 
-      throw error;
-    });
+        throw error;
+      });
   }
 
   async emit<T2>(
@@ -291,6 +303,34 @@ export class ActMaster {
     return this.unsubscribe(eventName, listener);
   }
   //#endregion
+
+  /// #region [ extends functions ]
+  inProgress(
+    key: ActEventName | ActEventName[],
+    callback: (inProgress: boolean) => void
+  ) {
+    if (Array.isArray(key)) {
+      key.forEach((k) => this._inProgressWatchers.set(k, callback));
+
+      return () => {
+        key.forEach((k) => {
+          this._inProgressWatchers.delete(k);
+        });
+      };
+    }
+
+    this._inProgressWatchers.set(key, callback);
+
+    return () => this._inProgressWatchers.delete(key);
+  }
+
+  private setProgress(key: ActEventName, status: boolean) {
+    if (this._inProgressWatchers.has(key)) {
+      //@ts-ignore
+      this._inProgressWatchers.get(key)(status);
+    }
+  }
+  // #endregion
 
   //#region [ DI ]
   clearDI(): void {
