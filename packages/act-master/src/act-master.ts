@@ -13,8 +13,6 @@ import {
   devActMasterConfig,
   DIMap,
   listenerFunction,
-  listenersMap,
-  waiterMap,
 } from './types';
 
 export * from './errors';
@@ -26,13 +24,11 @@ export { CancelledAct };
  *
  */
 export class ActMaster {
-  private readonly _actions: {
-    [eventName: string]: ActMasterAction;
-  } = {};
+  private readonly _actions = new Map<string, ActMasterAction>();
 
-  private readonly _waiters: waiterMap = new Map();
+  private readonly _waiters = new Map<string, string[]>();
 
-  private readonly _listeners: listenersMap = new Map();
+  private readonly _listeners = new Map<string, listenerFunction[]>();
 
   private _DIContainer: DIMap = {};
 
@@ -103,13 +99,15 @@ export class ActMaster {
   addActions(actions: ActMasterAction[]): void {
     if (Array.isArray(actions)) {
       actions.forEach((action: ActMasterAction) => {
-        this.addAction(action.name, action);
+        this.addAction(action);
       });
     }
   }
 
-  addAction(eventName: ActEventName, action: ActMasterAction): ActMaster {
-    if (this.config.errorOnReplaceAction && this._actions[eventName]) {
+  addAction(action: ActMasterAction): ActMaster {
+    const eventName = action.name;
+
+    if (this.config.errorOnReplaceAction && this._actions.has(eventName)) {
       throw new ActinonAlreadyExistingError(eventName);
     }
 
@@ -121,7 +119,7 @@ export class ActMaster {
       action._EMITTER_ = this.emit.bind(this);
     }
 
-    this._actions[eventName] = action;
+    this._actions.set(eventName, action);
 
     this.emitDIProps(action);
 
@@ -137,19 +135,15 @@ export class ActMaster {
   }
 
   removeAction(eventName: ActEventName): void {
-    if (!this._actions[eventName]) {
+    if (!this._actions.has(eventName)) {
       throw new NotFoundActionError(eventName);
     }
 
-    delete this._actions[eventName];
+    this._actions.delete(eventName);
   }
 
   clearActions(): void {
-    for (const eventName in this._actions) {
-      if (Object.prototype.hasOwnProperty.call(this._actions, eventName)) {
-        delete this._actions[eventName];
-      }
-    }
+    this._actions.clear();
   }
 
   clearListeners(): void {
@@ -313,14 +307,13 @@ export class ActMaster {
   }
 
   private freshEmitDI() {
-    let action: any;
-    for (const k in this._actions) {
-      if (Object.prototype.hasOwnProperty.call(this._actions, k)) {
-        action = this._actions[k];
-
+    let action: ActMasterAction | undefined;
+    Object.keys(this._actions).forEach((key: string) => {
+      action = this._actions.get(key);
+      if (action) {
         this.emitDIProps(action);
       }
-    }
+    });
   }
 
   private emitDIProps(action: ActMasterActionDevDI) {
@@ -336,7 +329,7 @@ export class ActMaster {
 
   //#region [ helpers ]
   private getActionOrNull(eventName: ActEventName): ActMasterAction | null {
-    const action = this._actions[eventName];
+    const action = this._actions.get(eventName);
 
     if (!action && !this.config.errorOnEmptyAction) {
       return {

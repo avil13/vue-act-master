@@ -63,17 +63,20 @@ export class ActTest {
   }
 
   static entityCount(key: 'actions' | 'waiters' | 'listeners' | 'di'): number {
+    if (key === 'di') {
+      //@ts-ignore
+      return Object.keys(ActTest.$act._DIContainer).length;
+    }
+
     const map = {
       actions: '_actions',
       waiters: '_waiters',
       listeners: '_listeners',
-      di: '_DIContainer',
-    };
+    } as const;
 
     const propName = map[key];
 
-    //@ts-ignore
-    return Object.keys(ActTest.$act[propName]).length;
+    return ActTest.$act[propName].size;
   }
 
   static getLastResult(): any {
