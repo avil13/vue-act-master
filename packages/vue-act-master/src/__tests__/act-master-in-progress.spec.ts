@@ -4,7 +4,7 @@ import { ActMaster } from 'act-master';
 import Vue from 'vue';
 
 import { ActInProgress } from '../decorators';
-import { VueActMaster } from 'vue-act-master';
+import { VueActMaster } from '../index';
 
 const $act = new ActMaster();
 

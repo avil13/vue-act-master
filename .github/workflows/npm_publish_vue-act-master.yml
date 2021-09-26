@@ -23,10 +23,9 @@ jobs:
       - name: Set NEED_PUBLISH
         run: echo "NEED_PUBLISH=$(./need-publish.sh)" >> $GITHUB_ENV
 
-      - run: yarn
-        if: ${{ env.NEED_PUBLISH }}
-
-      - run: yarn publish
-        if: ${{ env.NEED_PUBLISH }}
+      - if: ${{ env.NEED_PUBLISH }}
+        run: |
+          yarn
+          yarn publish
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
