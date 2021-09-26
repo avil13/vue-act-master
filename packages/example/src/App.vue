@@ -61,7 +61,7 @@ export default defineComponent({
 
     // Watching authorization checks.
     this.unsubscribe = this.$act.subscribe(
-      eventNames.checkAuth, // event nmae
+      eventNames.checkAuth, // event name
       (val: boolean) => {
         // handler
         this.isAuth = val;

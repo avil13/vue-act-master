@@ -1,31 +1,11 @@
-# Vue-Act-Master example
+# Vue 3 + Typescript + Vite
 
-## Uses:
+This template should help get you started developing with Vue 3 and Typescript in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
 
-- vue 3 (vitejs)
-- vue-router
-- vue-act-master
+## Recommended IDE Setup
 
-### Map of project:
+- [VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=johnsoncodehk.volar)
 
-```
-├── main.js   . . . . . // Connection of vue-act-master and actions
-├── App.vue . . . . . . // Adding a DI and subscribe to login events
-├── acts
-│   ├── auth  . . . . . // Action Folder
-│   │   ├── check.ts  . // Authentication check
-│   │   ├── login.ts  . // Authentication or error response
-│   │   └── logout.ts . // Logout action
-│   ├── di-names.ts
-│   ├── event-names.ts
-│   └── index.ts  . . . // The file in which all actions are collected
-├── api
-│   └── api.ts  . . . . // Here are methods for working with API
-├── index.css
-├── pages
-│   ├── login.vue  . . // Sending authorization request and error handling
-│   └── main.vue
-├── router.ts
-└── shims-vue.d.ts
+## Type Support For `.vue` Imports in TS
 
-```
+Since TypeScript cannot handle type information for `.vue` imports, they are shimmed to be a generic Vue component type by default. In most cases this is fine if you don't really care about component prop types outside of templates. However, if you wish to get actual prop types in `.vue` imports (for example to get props validation when using manual `h(...)` calls), you can enable Volar's `.vue` type support plugin by running `Volar: Switch TS Plugin on/off` from VSCode command palette.

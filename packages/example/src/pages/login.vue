@@ -48,11 +48,14 @@
               </div>
 
               <button
+                v-if="!isLoading"
                 type="submit"
                 class="button is-info is-rounded is-outlined is-medium"
               >
                 Login
               </button>
+
+              <progress v-else class="progress is-large is-info" max="100">60%</progress>
             </div>
           </div>
         </div>
@@ -75,6 +78,8 @@ export default defineComponent({
       password: '',
       message: '',
       description: '',
+      isLoading: false,
+      offProgress: () => undefined, // avoid memory leaks
     };
   },
 
@@ -86,7 +91,7 @@ export default defineComponent({
 
     async submitForm() {
       const res = await this.$act.exec<boolean | CancelledAct>(
-          eventNames.login,
+        eventNames.login,
         this.login,
         this.password
       );
@@ -97,5 +102,18 @@ export default defineComponent({
       }
     },
   },
+
+  mounted() {
+    this.offProgress = this.$act.inProgress(
+      eventNames.login,
+      (status) => {
+        this.isLoading = status;
+      }
+    )
+  },
+
+  beforeDestroy() {
+    this.offProgress();
+  }
 });
 </script>
