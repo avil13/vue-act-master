@@ -26,8 +26,7 @@ jobs:
       - run: yarn
         if: ${{ env.NEED_PUBLISH }}
 
-      - run: yarn publish --access public
+      - run: yarn publish
         if: ${{ env.NEED_PUBLISH }}
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
-          NPM_TOKEN: ${{secrets.NPM_TOKEN}}
