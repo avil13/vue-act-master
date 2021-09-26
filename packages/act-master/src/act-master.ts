@@ -357,8 +357,8 @@ export class ActMaster {
   }
 
   private emitDIProps(action: ActMasterActionDevDI) {
-    if (action.__useDI__) {
-      action.__useDI__(this._DIContainer);
+    if (action._DI_CONTAINER_) {
+      action._DI_CONTAINER_ = this._DIContainer;
     }
 
     if (action.useDI) {
