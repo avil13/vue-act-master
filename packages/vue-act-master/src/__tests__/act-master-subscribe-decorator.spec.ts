@@ -1,7 +1,10 @@
+import { Component } from 'vue-property-decorator';
+
 import { ActMaster } from 'act-master';
 import Vue from 'vue';
 
 import { ActSubscribe } from '../decorators';
+import { VueActMaster } from 'vue-act-master';
 
 const $act = new ActMaster();
 
@@ -19,6 +22,8 @@ describe('vue-act-master Subscribe decorator', () => {
   it('ActSubscribe', async () => {
     const DATA = Math.random();
 
+    Vue.use(VueActMaster);
+
     $act.addActions([
       {
         name: ACTION_NAME,
@@ -28,6 +33,7 @@ describe('vue-act-master Subscribe decorator', () => {
       },
     ]);
 
+    @Component
     class TestClass extends Vue {
       @ActSubscribe(ACTION_NAME)
       orderData = null;
@@ -37,7 +43,6 @@ describe('vue-act-master Subscribe decorator', () => {
 
     await $act.exec(ACTION_NAME, DATA);
 
-    expect('TODO: Need fix this test' || comp).toBeTruthy();
-    // expect(comp.orderData).toBe(DATA);
+    expect(comp.orderData).toBe(DATA);
   });
 });
