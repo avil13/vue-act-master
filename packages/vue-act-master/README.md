@@ -57,15 +57,15 @@ new Vue({
 ```ts
 // ../you/actions/path
 export const actions: ActMasterAction[] = [
-  new ClassAction(),
-]
+  new GetDataAction(),
+];
 ```
 
 ```ts
 // action-get-data.ts
 import { ActMasterAction } from 'vue-act-master';
 
-export class ClassAction implements ActMasterAction {
+export class GetDataAction implements ActMasterAction {
   name = 'GetData';
 
   async exec() {
