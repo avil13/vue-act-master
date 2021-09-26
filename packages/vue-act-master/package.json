@@ -43,7 +43,7 @@
   },
   "license": "MIT",
   "dependencies": {
-    "act-master": "^1.4.*",
+    "act-master": "^1.5.*",
     "vue": "2.*"
   },
   "devDependencies": {
