@@ -19,3 +19,40 @@ The easiest library to create a flexible application architecture.
 
 ## 🧪 [Test writing with "ActTest"](https://github.com/avil13/vue-act-master/blob/master/packages/act-master/src/test-utils/README.md)
 
+---
+
+# Example
+
+## Installation
+
+```bash
+npm install act-master
+```
+
+# Usage
+
+```ts
+import { ActMaster } from 'act-master';
+
+const $act = new ActMaster();
+
+const action = {
+  name: 'LogData',
+  exec(message) {
+    console.log('Log:', message);
+    return 'Success!!!';
+  }
+};
+
+$act.addAction(action);
+
+// Use action
+const result = await $act.exec('LogData', 'Hello world');
+
+console.log('Result:', result);
+```
+console.log
+```bash
+Log: Hello world
+Result: Success!!!
+```

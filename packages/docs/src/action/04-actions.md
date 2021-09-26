@@ -229,6 +229,63 @@ export class SecondAction implements ActMasterAction {
 };
 ```
 
+## inProgress
+
+If you need to show the progress bar on the desired command, you can use the inProgress method.
+
+It takes a function which will be called when the state of the action changes.
+
+```ts
+// App.vue
+
+<script>
+export default {
+  data() {
+    return {
+      // status of process
+      isLoading: false,
+      // There will be an unsubscribe function to avoid memory leaks
+      off: () => null,
+    };
+  },
+
+  mounted() {
+    this.off = this.inProgress('GetData', (status: boolean) => {
+      this.isLoading = status;
+    });
+
+    // Call action
+    this.$act.exec('GetData');
+  },
+
+  beforeDestroy() {
+    this.off(); // unsubscribe
+  }
+}
+</script>
+```
+
+If you use classes and decorators, you can write it down shorter.
+
+```ts
+// App.vue - with decorators
+
+<script lang="ts">
+  import { Component, Vue } from 'vue-property-decorator';
+  import { ActInProgress } from 'vue-act-master';
+
+  @Component
+  export default class MyVueComponent extends Vue {
+    @ActInProgress('GetData')
+    isLoading = false;
+
+    mounted() {
+      this.$act.exec('GetData');
+    }
+  }
+</script>
+```
+
 
 ## DI in Actions
 

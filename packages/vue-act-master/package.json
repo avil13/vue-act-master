@@ -29,7 +29,7 @@
     "test": "jest --collect-coverage --runInBand",
     "type-check:watch": "npm run type-check -- --watch",
     "type-check": "tsc -p ./tsconfig.prod.json --noEmit",
-    "prepublish": "npm run test && npm run build && npm run changelog"
+    "prepublishOnly": "npm run test && npm run build && npm run changelog"
   },
   "husky": {
     "hooks": {
@@ -43,10 +43,12 @@
   },
   "license": "MIT",
   "dependencies": {
-    "act-master": "^1.4.*",
+    "act-master": "^1.5.*",
     "vue": "2.*"
   },
   "devDependencies": {
+    "@babel/preset-env": "^7.15.6",
+    "@babel/preset-typescript": "^7.15.0",
     "@types/jest": "^26.0.14",
     "@types/node": "^14.11.2",
     "@typescript-eslint/eslint-plugin": "^4.3.0",
@@ -65,6 +67,8 @@
     "rollup-plugin-typescript2": "^0.28.0",
     "ts-jest": "^26.4.1",
     "ts-node": "^9.0.0",
-    "typescript": "^4.0.3"
+    "typescript": "^4.0.3",
+    "vue-class-component": "^7.2.6",
+    "vue-property-decorator": "^9.1.2"
   }
 }
