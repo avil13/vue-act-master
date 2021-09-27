@@ -1,6 +1,7 @@
 import typescript from 'rollup-plugin-typescript2';
 import filesize from 'rollup-plugin-filesize';
 import { terser } from 'rollup-plugin-terser';
+import json from '@rollup/plugin-json';
 import path from 'path';
 import pkg from './package.json';
 
@@ -58,6 +59,8 @@ function getExternal() {
 
 function getPlugins(isMin = false) {
   return [
+    json(),
+
     typescript({
       useTsconfigDeclarationDir: false,
       tsconfig: path.join(__dirname, 'tsconfig.prod.json'),

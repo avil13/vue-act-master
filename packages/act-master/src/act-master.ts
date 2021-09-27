@@ -15,6 +15,9 @@ import {
   listenerFunction,
 } from './types';
 
+//@ts-ignore
+import { version } from '../package.json';
+
 export * from './errors';
 export * from './types';
 export * from './decorators/index';
@@ -24,6 +27,8 @@ export { CancelledAct };
  *
  */
 export class ActMaster {
+  readonly version = version;
+
   private readonly _actions = new Map<string, ActMasterAction>();
 
   private readonly _waiters = new Map<string, string[]>();
