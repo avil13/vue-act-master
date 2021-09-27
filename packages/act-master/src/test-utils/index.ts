@@ -68,8 +68,12 @@ export class ActTest {
       return Object.keys(ActTest.$act._DIContainer).length;
     }
 
+    if (key === 'actions') {
+      //@ts-ignore
+      return ActTest.$act._actions.size;
+    }
+
     const map = {
-      actions: '_actions',
       waiters: '_waiters',
       listeners: '_listeners',
     } as const;
