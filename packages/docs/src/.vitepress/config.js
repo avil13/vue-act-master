@@ -58,6 +58,13 @@ function getSidebar() {
       }, ],
     },
     {
+      text: 'Advanced',
+      children: [{
+        text: 'Advanced methods',
+        link: '/advanced/06-advanced'
+      }, ],
+    },
+    {
       text: 'Tips and tricks',
       children: [{
         text: 'WebSocket',

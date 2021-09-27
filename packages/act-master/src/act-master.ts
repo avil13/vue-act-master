@@ -35,6 +35,10 @@ export class ActMaster {
     (inProgress: boolean) => void
   >();
 
+  private readonly _subsMap = new Map<any, (() => void)[]>();
+
+  private _lastUnsubscribe: () => any = () => false;
+
   private _DIContainer: DIMap = {};
 
   private readonly config: devActMasterConfig = {
@@ -264,7 +268,11 @@ export class ActMaster {
       });
     }
 
-    return () => this.unsubscribe(eventName, listener);
+    const unsubscribe = () => this.unsubscribe(eventName, listener);
+
+    this._lastUnsubscribe = unsubscribe;
+
+    return unsubscribe;
   }
 
   unsubscribe(eventName: ActEventName, listener: listenerFunction): boolean {
@@ -308,20 +316,28 @@ export class ActMaster {
   inProgress(
     key: ActEventName | ActEventName[],
     callback: (inProgress: boolean) => void
-  ) {
+  ): () => any {
     if (Array.isArray(key)) {
       key.forEach((k) => this._inProgressWatchers.set(k, callback));
 
-      return () => {
+      const unsubscribe = () => {
         key.forEach((k) => {
           this._inProgressWatchers.delete(k);
         });
       };
+
+      this._lastUnsubscribe = unsubscribe;
+
+      return unsubscribe;
     }
 
     this._inProgressWatchers.set(key, callback);
 
-    return () => this._inProgressWatchers.delete(key);
+    const unsubscribe = () => this._inProgressWatchers.delete(key);
+
+    this._lastUnsubscribe = unsubscribe;
+
+    return unsubscribe;
   }
 
   private setProgress(key: ActEventName, status: boolean) {
@@ -329,6 +345,25 @@ export class ActMaster {
       //@ts-ignore
       this._inProgressWatchers.get(key)(status);
     }
+  }
+
+  get subsList() {
+    return {
+      add: (key: any, ...fns: (() => any)[]) => {
+        if (!fns.length) {
+          fns.push(this._lastUnsubscribe);
+        }
+        const list = this._subsMap.get(key) || [];
+        list.push(...fns);
+        this._subsMap.set(key, list);
+      },
+
+      clear: (key: any) => {
+        const list = this._subsMap.get(key) || [];
+        list.forEach((unsubscribe) => unsubscribe());
+        this._subsMap.delete(key);
+      },
+    };
   }
   // #endregion
 
