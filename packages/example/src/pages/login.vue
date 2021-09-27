@@ -79,7 +79,6 @@ export default defineComponent({
       message: '',
       description: '',
       isLoading: false,
-      offProgress: () => undefined, // avoid memory leaks
     };
   },
 
@@ -104,16 +103,17 @@ export default defineComponent({
   },
 
   mounted() {
-    this.offProgress = this.$act.inProgress(
+    this.$act.inProgress(
       eventNames.login,
       (status) => {
         this.isLoading = status;
       }
-    )
+    );
+    this.$act.subsList.add(this);
   },
 
   beforeDestroy() {
-    this.offProgress();
+    this.$act.subsList.clear(this);
   }
 });
 </script>

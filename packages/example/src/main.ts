@@ -1,5 +1,3 @@
-import './index.css';
-
 import { createApp } from 'vue';
 import { VueActMaster } from 'vue-act-master';
 
