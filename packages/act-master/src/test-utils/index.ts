@@ -76,10 +76,26 @@ export class ActTest {
 
     const propName = map[key];
 
-    return ActTest.$act[propName].size;
+    let count = 0;
+
+    ActTest.$act[propName].forEach((val) => {
+      count += val.length;
+    });
+
+    return count;
   }
 
   static getLastResult(): any {
     return ActTest._lastResult;
+  }
+
+  static makeActionStub(action?: Partial<ActMasterAction>): ActMasterAction {
+    const act = {
+      name: `${Math.random()}`,
+      exec: () => null,
+      ...action,
+    };
+
+    return act;
   }
 }
