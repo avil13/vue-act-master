@@ -10,7 +10,11 @@ import { createDecorator, VueDecorator } from './helpers';
  * that will cause memory leak.
  *
  */
-export function ActSubscribe(eventName: ActEventName, pathToData?: PathToData, defaultValue: unknown = null): VueDecorator {
+export function ActSubscribe(
+  eventName: ActEventName,
+  pathToData?: PathToData,
+  defaultValue: unknown = null
+): VueDecorator {
   return createDecorator((componentOptions, key) => {
     const subscribeHook = {
       created() {
@@ -18,8 +22,19 @@ export function ActSubscribe(eventName: ActEventName, pathToData?: PathToData, d
         this.$act.subscribe(
           eventName,
           (data: any) => {
+            const value =
+              (pathToData && objectPath(data, pathToData, defaultValue)) ||
+              (data !== undefined && data) ||
+              defaultValue;
+
             //@ts-ignore
-            this[key] = (pathToData && objectPath(data, pathToData, defaultValue)) || (data !== undefined && data) || defaultValue;
+            if (typeof this[key] === 'function') {
+              //@ts-ignore
+              this[key](value);
+            } else {
+              //@ts-ignore
+              this[key] = value;
+            }
           },
           this
         );
@@ -36,9 +51,13 @@ export function ActSubscribe(eventName: ActEventName, pathToData?: PathToData, d
 
 type GetValueCallback = (value: any) => any;
 
-type PathToData = string | null | GetValueCallback
+type PathToData = string | null | GetValueCallback;
 
 function objectPath(obj: any, path: PathToData, defaultValue: unknown) {
+  if (obj === undefined) {
+    return defaultValue;
+  }
+
   if (typeof path === 'function') {
     return path(obj);
   }
@@ -49,15 +68,20 @@ function objectPath(obj: any, path: PathToData, defaultValue: unknown) {
     const list = path.split('.');
     let key;
     let i = 0;
-    for (i=0; i < list.length; i++) {
-        key = list[i];
-      value = value[key];
+    for (i = 0; i < list.length; i++) {
+      key = list[i];
+
       if (value === undefined) {
-        value = defaultValue;
-        break;
+        return defaultValue;
+      }
+
+      value = value[key];
+
+      if (value === undefined) {
+        return defaultValue;
       }
     }
   }
 
   return value;
-};
+}

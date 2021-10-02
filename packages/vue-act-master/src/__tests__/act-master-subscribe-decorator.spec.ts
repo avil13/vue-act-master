@@ -9,8 +9,11 @@ import { VueActMaster } from '../index';
 const $act = new ActMaster();
 
 describe('vue-act-master Subscribe decorator', () => {
-  const ACTION_NAME = 'ACTION_NAME';
   let DATA = Math.random();
+
+  beforeAll(() => {
+    Vue.use(VueActMaster);
+  });
 
   beforeEach(() => {
     if ($act) {
@@ -22,7 +25,8 @@ describe('vue-act-master Subscribe decorator', () => {
   });
 
   it('simple', async () => {
-    Vue.use(VueActMaster);
+    const ACTION_NAME = 'simple';
+
     $act.addActions([
       {
         name: ACTION_NAME,
@@ -46,7 +50,8 @@ describe('vue-act-master Subscribe decorator', () => {
   });
 
   it('get prop string', async () => {
-    Vue.use(VueActMaster);
+    const ACTION_NAME = 'get prop string';
+
     $act.addActions([
       {
         name: ACTION_NAME,
@@ -74,7 +79,8 @@ describe('vue-act-master Subscribe decorator', () => {
   });
 
   it('get prop Function', async () => {
-    Vue.use(VueActMaster);
+    const ACTION_NAME = 'get prop Function';
+
     $act.addActions([
       {
         name: ACTION_NAME,
@@ -101,8 +107,42 @@ describe('vue-act-master Subscribe decorator', () => {
     expect(comp.orderData).toBe(DATA);
   });
 
-  it.only('default value', async () => {
-    Vue.use(VueActMaster);
+  it('wrap method', async () => {
+    const ACTION_NAME = 'wrap method';
+
+    $act.addActions([
+      {
+        name: ACTION_NAME,
+        exec(data) {
+          return data;
+        },
+      },
+    ]);
+
+    @Component
+    class TestClass extends Vue {
+      @ActSubscribe(ACTION_NAME, 'value')
+      onChange(data: any) {
+        this.orderData = data.item;
+      }
+
+      orderData = null;
+    }
+
+    const comp = new TestClass();
+
+    await $act.exec(ACTION_NAME, {
+      value: {
+        item: DATA,
+      },
+    });
+
+    expect(comp.orderData).toBe(DATA);
+  });
+
+  it('default value', async () => {
+    const ACTION_NAME = 'default value';
+
     $act.addActions([
       {
         name: ACTION_NAME,
