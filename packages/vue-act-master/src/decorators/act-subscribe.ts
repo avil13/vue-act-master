@@ -10,7 +10,7 @@ import { createDecorator, VueDecorator } from './helpers';
  * that will cause memory leak.
  *
  */
-export function ActSubscribe(eventName: ActEventName, pathToData?: string, defaultValue: unknown = null): VueDecorator {
+export function ActSubscribe(eventName: ActEventName, pathToData?: PathToData, defaultValue: unknown = null): VueDecorator {
   return createDecorator((componentOptions, key) => {
     const subscribeHook = {
       created() {
@@ -33,3 +33,31 @@ export function ActSubscribe(eventName: ActEventName, pathToData?: string, defau
     }
   });
 }
+
+type GetValueCallback = (value: any) => any;
+
+type PathToData = string | null | GetValueCallback
+
+function objectPath(obj: any, path: PathToData, defaultValue: unknown) {
+  if (typeof path === 'function') {
+    return path(obj);
+  }
+
+  let value = obj;
+
+  if (path) {
+    const list = path.split('.');
+    let key;
+    let i = 0;
+    for (i=0; i < list.length; i++) {
+        key = list[i];
+      value = value[key];
+      if (value === undefined) {
+        value = defaultValue;
+        break;
+      }
+    }
+  }
+
+  return value;
+};
