@@ -211,7 +211,7 @@ export class FirstAction implements ActMasterAction {
   name = 'FirstAction';
   exec() {
     return {
-      name = 'Leo',
+      name: 'Leo',
     };
   }
 };
@@ -223,7 +223,7 @@ export class SecondAction implements ActMasterAction {
   exec(data) {
     console.log(data); // { "Name": "Leo" }
     return {
-      name = 'Mike',
+      name: 'Mike',
     };
   }
 };
