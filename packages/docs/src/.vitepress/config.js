@@ -8,6 +8,8 @@ module.exports = {
   head: getHead(),
 
   themeConfig: {
+    logo: 'assets/act-master-logo.svg',
+
     repo: 'avil13/vue-act-master',
     docsDir: 'packages/docs/src',
 
