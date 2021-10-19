@@ -29,14 +29,14 @@ export { CancelledAct };
 export class ActMaster {
   readonly version = version;
 
-  private readonly _actions = new Map<string, ActMasterAction>();
+  private readonly _actions = new Map<ActEventName, ActMasterAction>();
 
-  private readonly _waiters = new Map<string, string[]>();
+  private readonly _waiters = new Map<ActEventName, ActEventName[]>();
 
-  private readonly _listeners = new Map<string, listenerFunction[]>();
+  private readonly _listeners = new Map<ActEventName, listenerFunction[]>();
 
   private readonly _inProgressWatchers = new Map<
-    string,
+    ActEventName,
     (inProgress: boolean) => void
   >();
 
@@ -45,6 +45,11 @@ export class ActMaster {
   private _lastUnsubscribe: () => any = () => false;
 
   private _DIContainer: DIMap = {};
+
+  private readonly _singlePromisesStore = new Map<
+    ActEventName,
+    Promise<any | CancelledAct>
+  >();
 
   private readonly config: devActMasterConfig = {
     errorOnReplaceAction: true,
@@ -175,10 +180,26 @@ export class ActMaster {
     ...args: any[]
   ): Promise<T | CancelledAct> {
     this.setProgress(eventName, true);
-    return this.emit<T>(eventName, ...args)
+
+    if (this._singlePromisesStore.has(eventName)) {
+      const promise: Promise<T | CancelledAct> | undefined =
+        this._singlePromisesStore.get(eventName);
+
+      if (promise) {
+        return promise;
+      }
+    }
+
+    const promise = this.emit<T>(eventName, ...args)
       .then((data) => {
         this.setProgress(eventName, false);
         return data;
+      })
+      .then((result) => {
+        if (this._singlePromisesStore.has(eventName)) {
+          this._singlePromisesStore.delete(eventName);
+        }
+        return result;
       })
       .catch((error: Error) => {
         this.setProgress(eventName, false);
@@ -202,6 +223,14 @@ export class ActMaster {
 
         throw error;
       });
+
+    const action = this.getActionOrNull(eventName);
+
+    if (action && action.isSingleExec) {
+      this._singlePromisesStore.set(eventName, promise);
+    }
+
+    return promise;
   }
 
   async emit<T2>(
@@ -317,7 +346,7 @@ export class ActMaster {
   }
   //#endregion
 
-  /// #region [ extends functions ]
+  //#region [ extends functions ]
   inProgress(
     key: ActEventName | ActEventName[],
     callback: (inProgress: boolean) => void

@@ -62,6 +62,10 @@ export interface ActMasterAction {
    */
   wait?: string[];
   /**
+   * An action can have only one result if several calls are made
+   */
+  isSingleExec?: boolean;
+  /**
    * Validating arguments before passing them to exec
    */
   validateInput?: ValidateInputFn;
