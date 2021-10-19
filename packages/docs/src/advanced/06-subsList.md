@@ -1,4 +1,4 @@
-# For users who have already started working with "Act-Master"
+# Advanced unsubscribe
 
 ## subsList
 

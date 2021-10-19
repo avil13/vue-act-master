@@ -28,50 +28,62 @@ module.exports = {
 
 
 function getSidebar() {
-  return [{
+  return [
+    {
       text: 'Intro',
       link: '/',
     },
     {
       text: 'Installation',
-      link: '/action/01-installation'
+      link: '/action/01-installation',
     },
     {
       text: 'Actions',
-      children: [{
+      children: [
+        {
           text: 'Adding actions',
-          link: '/action/02-add-action'
+          link: '/action/02-add-action',
         },
         {
           text: 'Subscribe/Unsubscribe (on/off),once',
-          link: '/action/03-subscribtion'
+          link: '/action/03-subscribtion',
         },
         {
           text: 'ActMasterAction',
-          link: '/action/04-actions'
+          link: '/action/04-actions',
         },
       ],
     },
     {
       text: 'Tests',
-      children: [{
-        text: 'ActMaster test-utils',
-        link: '/testing/05-testing'
-      }, ],
+      children: [
+        {
+          text: 'ActMaster test-utils',
+          link: '/testing/05-testing',
+        },
+      ],
     },
     {
       text: 'Advanced',
-      children: [{
-        text: 'Advanced methods',
-        link: '/advanced/06-advanced'
-      }, ],
+      children: [
+        {
+          text: 'Advanced unsubscribe',
+          link: '/advanced/06-subsList',
+        },
+        {
+          text: 'Advanced single execution',
+          link: '/advanced/07-single-execution',
+        },
+      ],
     },
     {
       text: 'Tips and tricks',
-      children: [{
-        text: 'WebSocket',
-        link: '/tips/web-socket'
-      }, ],
+      children: [
+        {
+          text: 'WebSocket',
+          link: '/tips/web-socket',
+        },
+      ],
     },
   ];
 }
