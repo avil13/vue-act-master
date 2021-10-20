@@ -36,7 +36,7 @@ export default {
 Before retrieving the values, we can clear them from the action.
 
 To do this we need to use the function `emit`.
-It was discussed [here](../action/04-actions#emit-another-action-in-action).
+It was discussed [here](../action/04-actions.html#emit-another-action-in-action).
 
 
 ```ts
