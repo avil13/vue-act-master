@@ -407,7 +407,7 @@ It can be connected via the decorator or via the helper.
 
 This way you can build chains of actions that can be stopped by `CancelledAct`.
 
-You can use this to [return different values](/advanced/08-emit-many-results) to subscribers.
+You can use this to [return different values](../advanced/08-emit-many-results) to subscribers.
 
 ```ts
 // with-emit-action.ts
