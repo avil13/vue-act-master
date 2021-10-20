@@ -91,6 +91,4 @@ export interface ActMasterActionDevDI extends ActMasterAction {
       value: null | any;
     };
   };
-  _EMITTER_?: emitAction;
-  __UseDI__?: (contexts: { [key: string]: any }) => void;
 }

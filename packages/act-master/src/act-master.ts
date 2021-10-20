@@ -12,6 +12,7 @@ import {
   ActMasterOptions,
   devActMasterConfig,
   DIMap,
+  emitAction,
   listenerFunction,
 } from './types';
 
@@ -131,11 +132,16 @@ export class ActMaster {
     }
 
     if (action.useEmit && action.name) {
-      action.useEmit(this.emit.bind(this));
-    }
-
-    if (action._EMITTER_ === null) {
-      action._EMITTER_ = this.emit.bind(this);
+      const bindedEmitter: emitAction = async (
+        eventName: ActEventName,
+        ...args
+      ) => {
+        if (action.name === eventName) {
+          return this.notifyListeners(eventName, args[0]);
+        }
+        return this.emit(eventName, ...args);
+      };
+      action.useEmit(bindedEmitter);
     }
 
     this._actions.set(eventName, action);
@@ -233,8 +239,8 @@ export class ActMaster {
     return promise;
   }
 
-  async emit<T2>(
-    eventName: string,
+  private async emit<T2>(
+    eventName: ActEventName,
     ...args: any[]
   ): Promise<T2 | CancelledAct> {
     const action = this.getActionOrNull(eventName);
@@ -265,13 +271,8 @@ export class ActMaster {
     const value: T2 = action.transform
       ? await action.transform(execResult)
       : execResult;
-    const listeners = this._listeners.get(eventName);
 
-    if (listeners) {
-      listeners.forEach((listenerCallback) => {
-        listenerCallback(value);
-      });
-    }
+    this.notifyListeners(eventName, value);
 
     if (!(value instanceof CancelledAct) && this._waiters.has(eventName)) {
       for (const waitingEventName of this._waiters.get(eventName) || []) {
@@ -280,6 +281,16 @@ export class ActMaster {
     }
 
     return value;
+  }
+
+  private notifyListeners(eventName: ActEventName, value: any): void {
+    const listeners = this._listeners.get(eventName);
+
+    if (listeners) {
+      listeners.forEach((listenerCallback) => {
+        listenerCallback(value);
+      });
+    }
   }
   //#endregion
 
