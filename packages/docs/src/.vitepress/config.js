@@ -74,6 +74,10 @@ function getSidebar() {
           text: 'Advanced single execution',
           link: '/advanced/07-single-execution',
         },
+        {
+          text: 'Advanced emit many results',
+          link: '/advanced/08-emit-many-results',
+        },
       ],
     },
     {

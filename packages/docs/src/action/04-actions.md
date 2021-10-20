@@ -203,6 +203,11 @@ You can launch the action after another one through the "wait" property.
 
 Any of the actions in `wait`, after execution, will call the current action.
 
+::: warning
+Be careful. The action should not follow itself.
+Otherwise it will start an endless loop.
+:::
+
 ```ts
 // Action queue
 import { ActMasterAction } from 'vue-act-master';
@@ -402,10 +407,33 @@ It can be connected via the decorator or via the helper.
 
 This way you can build chains of actions that can be stopped by `CancelledAct`.
 
-::: warning
-Be careful. The action should not call itself.
-Otherwise it will start an endless loop.
-:::
+You can use this to [return different values](/advanced/08-emit-many-results) to subscribers.
+
+```ts
+// with-emit-action.ts
+
+import { ActMasterAction, emitAction } from 'vue-act-master';
+
+export class WithEmitAction implements ActMasterAction {
+  name = 'login';
+
+  private emit: emitAction;
+
+  exec(loginData) {
+    const result = api.login(loginData);
+
+    // use another action
+    this.emit('set.authorized', true);
+  }
+
+  // set Emitter
+  useEmit(emit: emitAction) {
+    this.emit = emit;
+  }
+}
+```
+
+OR
 
 ```ts
 // with-emit-action.ts
@@ -428,29 +456,3 @@ export class WithEmitAction implements ActMasterAction {
 };
 ```
 
-OR
-
-```ts
-// with-emit-action.ts
-// without decorator
-
-import { ActMasterAction, emitAction } from 'vue-act-master';
-
-export class WithEmitAction implements ActMasterAction {
-  name = 'login';
-
-  private emit: emitAction;
-
-  exec(loginData) {
-    const result = api.login(loginData);
-
-    // use another action
-    this.emit('set.authorized', true);
-  }
-
-  // set Emitter
-  useEmit(emit: emitAction) {
-    this.emit = emit;
-  }
-}
-```
