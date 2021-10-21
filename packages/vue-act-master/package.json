@@ -1,11 +1,11 @@
 {
   "name": "vue-act-master",
-  "version": "0.13.0",
+  "version": "0.13.1",
   "description": "",
   "author": "avil13",
-  "main": "dist/index.common.js",
-  "module": "dist/index.esm.js",
-  "browser": "dist/index.umd.js",
+  "main": "dist/index.common.min.js",
+  "module": "dist/index.esm.min.js",
+  "browser": "dist/index.umd.min.js",
   "typings": "dist/vue-act-master/src/index.d.ts",
   "files": [
     "README.md",
@@ -43,8 +43,7 @@
   },
   "license": "MIT",
   "dependencies": {
-    "act-master": "^1.8.*",
-    "vue": "2.*"
+    "act-master": "^1.8.*"
   },
   "devDependencies": {
     "@babel/preset-env": "^7.15.6",
@@ -69,6 +68,7 @@
     "ts-node": "^10.2.1",
     "typescript": "^4.4.3",
     "vue-class-component": "^7.2.6",
-    "vue-property-decorator": "^9.1.2"
+    "vue-property-decorator": "^9.1.2",
+    "vue": "2.*"
   }
 }
