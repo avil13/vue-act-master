@@ -2,9 +2,9 @@
   "name": "act-master",
   "version": "1.8.0",
   "author": "avil13",
-  "main": "dist/index.common.js",
-  "module": "dist/index.esm.js",
-  "browser": "dist/index.umd.js",
+  "main": "dist/index.common.min.js",
+  "module": "dist/index.esm.min.js",
+  "browser": "dist/index.umd.min.js",
   "typings": "dist/index.d.ts",
   "files": [
     "README.md",

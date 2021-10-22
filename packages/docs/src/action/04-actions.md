@@ -84,7 +84,7 @@ export const actions: ActMasterAction[] = [
 ## Cancel Action
 
 Action can be interrupted by returning a special object "CancelledAct".
-This will stop the chain of events if you build it using `wait` or `emit`.
+This will stop the chain of events if you build it using `watch` or `emit`.
 
 ```ts
 // cancel-action.ts
@@ -197,11 +197,11 @@ const result = await this.$act.exec('get.data.transformed');
 console.log(result); // => { todoItem: "delectus aut autem", done: false }
 ```
 
-## Wait
+## Watch
 
-You can launch the action after another one through the "wait" property.
+You can launch the action after another one through the "watch" property.
 
-Any of the actions in `wait`, after execution, will call the current action.
+Any of the actions in `watch`, after execution, will call the current action.
 
 ::: warning
 Be careful. The action should not follow itself.
@@ -223,7 +223,7 @@ export class FirstAction implements ActMasterAction {
 
 export class SecondAction implements ActMasterAction {
   // Names of events, after any and which action automatically starts.
-  wait: ['FirstAction'],
+  watch: ['FirstAction'],
   name = 'SecondAction';
   exec(data) {
     console.log(data); // { "Name": "Leo" }

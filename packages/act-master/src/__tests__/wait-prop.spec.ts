@@ -6,13 +6,13 @@ const $act = ActTest.getInstance();
 
 const addTestAction = addTestActionFactory($act);
 
-describe('wait-prop', () => {
+describe('watch-prop', () => {
   beforeEach(() => {
     ActTest.resetAll();
   });
 
   // tests
-  it('wait called after emit', async () => {
+  it('watch called after emit', async () => {
     const name1 = 'name1';
     const name2 = 'name2';
 
@@ -22,7 +22,7 @@ describe('wait-prop', () => {
 
     const { execMock } = addTestAction({
       name: name2,
-      wait: [name1],
+      watch: [name1],
     });
 
     await $act.exec(name1);
@@ -30,7 +30,7 @@ describe('wait-prop', () => {
     expect(execMock).toBeCalledWith(expectMockResult);
   });
 
-  it('wait NOT called after CANCELLED', async () => {
+  it('watch NOT called after CANCELLED', async () => {
     const name1 = 'name1';
     const name2 = 'name2';
 
@@ -43,7 +43,7 @@ describe('wait-prop', () => {
 
     const { execMock } = addTestAction({
       name: name2,
-      wait: [name1],
+      watch: [name1],
     });
 
     await $act.exec(name1);
@@ -51,11 +51,11 @@ describe('wait-prop', () => {
     expect(execMock).not.toBeCalled();
   });
 
-  xit('waitOnce', async () => {
+  xit('watchOnce', async () => {
     //
   });
 
-  xit('clear waiters', async () => {
+  xit('clear watchers', async () => {
     //
   });
 });

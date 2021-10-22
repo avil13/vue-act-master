@@ -83,7 +83,7 @@ it('Example check subscription', async () => {
 | addActions       | Adds actions
 | exec             | Execute action
 | subscribe        | Subscribes to action
-| entityCount      | Returns the number of entities ('actions' \| 'waiters' \| 'listeners' \| 'di') *
+| entityCount      | Returns the number of entities ('actions' \| 'watchers' \| 'listeners' \| 'di') *
 | removeSingleton  | Removes singleton ActMaster *
 
 

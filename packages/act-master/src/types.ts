@@ -60,7 +60,7 @@ export interface ActMasterAction {
   /**
    * List of emitNames to be called after
    */
-  wait?: string[];
+  watch?: string[];
   /**
    * An action can have only one result if several calls are made
    */

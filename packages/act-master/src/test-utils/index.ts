@@ -62,7 +62,7 @@ export class ActTest {
     return ActTest.$act.subscribe(eventName, listener, context);
   }
 
-  static entityCount(key: 'actions' | 'waiters' | 'listeners' | 'di'): number {
+  static entityCount(key: 'actions' | 'watchers' | 'listeners' | 'di'): number {
     if (key === 'di') {
       //@ts-ignore
       return Object.keys(ActTest.$act._DIContainer).length;
@@ -74,7 +74,7 @@ export class ActTest {
     }
 
     const map = {
-      waiters: '_waiters',
+      watchers: '_watchers',
       listeners: '_listeners',
     } as const;
 

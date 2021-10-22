@@ -32,7 +32,7 @@ export class ActMaster {
 
   private readonly _actions = new Map<ActEventName, ActMasterAction>();
 
-  private readonly _waiters = new Map<ActEventName, ActEventName[]>();
+  private readonly _watchers = new Map<ActEventName, ActEventName[]>();
 
   private readonly _listeners = new Map<ActEventName, listenerFunction[]>();
 
@@ -148,11 +148,11 @@ export class ActMaster {
 
     this.emitDIProps(action);
 
-    if (action.wait) {
-      action.wait.forEach((waitEventName) => {
-        const waiters = this._waiters.get(waitEventName) || [];
-        waiters.push(eventName);
-        this._waiters.set(waitEventName, waiters);
+    if (action.watch) {
+      action.watch.forEach((watchEventName) => {
+        const watchers = this._watchers.get(watchEventName) || [];
+        watchers.push(eventName);
+        this._watchers.set(watchEventName, watchers);
       });
     }
 
@@ -274,9 +274,9 @@ export class ActMaster {
 
     this.notifyListeners(eventName, value);
 
-    if (!(value instanceof CancelledAct) && this._waiters.has(eventName)) {
-      for (const waitingEventName of this._waiters.get(eventName) || []) {
-        await this.emit(waitingEventName, value);
+    if (!(value instanceof CancelledAct) && this._watchers.has(eventName)) {
+      for (const watchingEventName of this._watchers.get(eventName) || []) {
+        await this.emit(watchingEventName, value);
       }
     }
 
