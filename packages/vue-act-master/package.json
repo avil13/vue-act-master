@@ -3,9 +3,9 @@
   "version": "0.14.0",
   "description": "",
   "author": "avil13",
-  "main": "dist/index.common.min.js",
-  "module": "dist/index.esm.min.js",
-  "browser": "dist/index.umd.min.js",
+  "main": "dist/index.common.js",
+  "module": "dist/index.esm.js",
+  "browser": "dist/index.umd.js",
   "typings": "dist/vue-act-master/src/index.d.ts",
   "files": [
     "README.md",
