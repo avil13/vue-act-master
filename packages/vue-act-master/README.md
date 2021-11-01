@@ -85,8 +85,6 @@ This will help you test components and change the API more easily.
 // App.vue
 
 <script>
-import { SuperAPI } from '../you/api';
-
 export default {
   data() {
     return {
