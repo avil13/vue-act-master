@@ -11,15 +11,15 @@ export default [
     input: 'src/index.ts',
     output: [
       {
-        file: pkg.main,
+        file: pkg.main.replace('.min.', '.'),
         format: 'cjs',
       },
       {
-        file: pkg.module,
+        file: pkg.module.replace('.min.', '.'),
         format: 'esm',
       },
       {
-        file: pkg.browser,
+        file: pkg.browser.replace('.min.', '.'),
         format: 'umd',
         name: pkg.name,
       },
@@ -32,15 +32,15 @@ export default [
     input: 'src/index.ts',
     output: [
       {
-        file: pkg.main.replace('.js', '.min.js'),
+        file: pkg.main,
         format: 'cjs',
       },
       {
-        file: pkg.module.replace('.js', '.min.js'),
+        file: pkg.module,
         format: 'esm',
       },
       {
-        file: pkg.browser.replace('.js', '.min.js'),
+        file: pkg.browser,
         format: 'umd',
         name: pkg.name,
       },
