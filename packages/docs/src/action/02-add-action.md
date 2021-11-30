@@ -39,3 +39,13 @@ export default {
 };
 </script>
 ```
+
+## With helpers
+
+```ts
+import { act, addActions } from 'act-master';
+
+act.addActions([someAction]);
+// OR
+addActions([someAction]);
+```

@@ -52,6 +52,10 @@ function getSidebar() {
           text: 'ActMasterAction',
           link: '/action/04-actions',
         },
+        {
+          text: 'VanillaJS, React, or Composition API',
+          link: '/action/05-composition-api',
+        },
       ],
     },
     {

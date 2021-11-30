@@ -1,8 +1,31 @@
-## Instalation
+# Instalation
 
 [[toc]]
 
 Start by creating a project.
+
+## Vanilla installation
+
+Then add a act-master.
+
+```bash
+yarn add act-master
+```
+
+Create instance
+
+```ts
+import { ActMaster } from 'act-master';
+
+// Actions
+import { actions } from '../you/actions/path';
+
+const $act = new ActMaster({
+  actions
+});
+```
+
+## Vue installation
 
 Then add a vue-act-master.
 

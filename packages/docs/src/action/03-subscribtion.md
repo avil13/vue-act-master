@@ -2,7 +2,7 @@
 
 [[toc]]
 
-To explain how it works, let's create a simple example of a component in Vue-2.
+To explain how it works, let's create a simple example of a component in Vue.
 
 ```html
 <template>
@@ -39,6 +39,28 @@ To explain how it works, let's create a simple example of a component in Vue-2.
   }
 </script>
 ```
+
+## For the Composition API, the following helpers are available
+
+```ts
+import { act, actSubscribe } from 'act-master';
+
+export default {
+  setup() {
+    // Alternatives:
+    //  act.subscribe === actSubscribe
+    //  act.on === actSubscribe
+    actSubscribe(
+      'get.data',
+      (data) => {
+        this.result = data;
+      },
+      this // for auto unsubscribe
+    );
+  },
+};
+```
+
 
 ---
 
