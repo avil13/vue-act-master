@@ -1,4 +1,5 @@
 import { act, ActMaster, actSubscribe, ActTest, addActions } from 'act-master';
+import { fn2act } from '../function-to-action';
 
 const sumAction = {
   name: 'sum.get',
@@ -82,4 +83,20 @@ describe('act subscriptions', () => {
     listFunctions.forEach((fn) => fn());
     expect(ActTest.entityCount('listeners')).toBe(0);
   });
+});
+
+it('addAction functions', async () => {
+  expect(ActTest.entityCount('actions')).toBe(0);
+
+  const callbackAction = (a: number) => {
+    return a * 2;
+  };
+
+  addActions([sumAction, fn2act(callbackAction)]);
+
+  expect(ActTest.entityCount('actions')).toBe(2);
+
+  const result = await act().exec('callbackAction', 2);
+
+  expect(result).toBe(4);
 });

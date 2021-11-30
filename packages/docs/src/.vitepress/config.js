@@ -82,6 +82,10 @@ function getSidebar() {
           text: 'Advanced emit many results',
           link: '/advanced/08-emit-many-results',
         },
+        {
+          text: 'Convert function to action',
+          link: '/advanced/09-function-to-action',
+        },
       ],
     },
     {
