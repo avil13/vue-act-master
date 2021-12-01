@@ -1,6 +1,6 @@
 {
   "name": "vue-act-master",
-  "version": "0.15.0",
+  "version": "0.15.1",
   "description": "",
   "author": "avil13",
   "main": "dist/index.common.js",
@@ -67,8 +67,8 @@
     "ts-jest": "^27.0.5",
     "ts-node": "^10.2.1",
     "typescript": "^4.4.3",
+    "vue": "*",
     "vue-class-component": "^7.2.6",
-    "vue-property-decorator": "^9.1.2",
-    "vue": "*"
+    "vue-property-decorator": "^9.1.2"
   }
 }
