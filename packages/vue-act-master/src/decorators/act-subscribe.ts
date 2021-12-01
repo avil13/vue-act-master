@@ -22,10 +22,7 @@ export function ActSubscribe(
         this.$act.subscribe(
           eventName,
           (data: any) => {
-            const value =
-              (pathToData && objectPath(data, pathToData, defaultValue)) ||
-              (data !== undefined && data) ||
-              defaultValue;
+            const value = objectPath(data, pathToData, defaultValue);
 
             //@ts-ignore
             if (typeof this[key] === 'function') {
@@ -53,7 +50,7 @@ type GetValueCallback = (value: any) => any;
 
 type PathToData = string | null | GetValueCallback;
 
-function objectPath(obj: any, path: PathToData, defaultValue: unknown) {
+function objectPath(obj: any, path?: PathToData, defaultValue?: unknown) {
   if (obj === undefined) {
     return defaultValue;
   }
@@ -65,7 +62,7 @@ function objectPath(obj: any, path: PathToData, defaultValue: unknown) {
   let value = obj;
 
   if (path) {
-    const list = path.split('.');
+    const list = (path || '').split('.');
     let key;
     let i = 0;
     for (i = 0; i < list.length; i++) {
