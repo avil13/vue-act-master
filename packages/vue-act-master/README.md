@@ -1,11 +1,11 @@
 # Vue-Act-Master
 
-![npm bundle size](https://img.shields.io/bundlephobia/minzip/vue-act-master)
-![npm version](https://img.shields.io/npm/v/vue-act-master)
-
 A way to separate business logic from application view.
 
 The easiest library to create a flexible application architecture.
+
+![npm bundle size](https://img.shields.io/bundlephobia/minzip/vue-act-master)
+![npm version](https://img.shields.io/npm/v/vue-act-master)
 
 <div align="center">
   <img  src="https://raw.githubusercontent.com/avil13/vue-act-master/master/assets/act-master-logo.svg" alt="vue-act-master">
