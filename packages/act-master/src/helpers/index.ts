@@ -23,7 +23,7 @@ act.addActions = addActions;
 export const subscribe = (
   eventName: ActEventName,
   listener: listenerFunction,
-  destroyHookOrKey?: (cb: any) => any | any
+  destroyHookOrKey?: any
 ): (() => boolean) => {
   const off = act().subscribe(eventName, listener);
 
