@@ -1,6 +1,6 @@
 {
   "name": "act-master",
-  "version": "1.10.2",
+  "version": "1.10.3",
   "author": "avil13",
   "main": "dist/index.common.min.js",
   "module": "dist/index.esm.min.js",
