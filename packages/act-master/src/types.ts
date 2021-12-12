@@ -62,6 +62,11 @@ export interface ActMasterAction {
    */
   watch?: string[];
   /**
+   * Use watch
+   * @deprecated
+   */
+  wait?: string[];
+  /**
    * An action can have only one result if several calls are made
    */
   isSingleExec?: boolean;
