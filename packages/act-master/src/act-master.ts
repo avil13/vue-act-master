@@ -10,10 +10,12 @@ import {
   ActMasterAction,
   ActMasterActionDevDI,
   ActMasterOptions,
+  ActMaterPluginAddMethodContext,
+  ActMaterPluginEvent,
   devActMasterConfig,
   DIMap,
   emitAction,
-  listenerFunction,
+  ListenerFunction,
 } from './types';
 
 //@ts-ignore
@@ -34,7 +36,7 @@ export class ActMaster {
 
   private readonly _watchers = new Map<ActEventName, ActEventName[]>();
 
-  private readonly _listeners = new Map<ActEventName, listenerFunction[]>();
+  private readonly _listeners = new Map<ActEventName, ListenerFunction[]>();
 
   private readonly _inProgressWatchers = new Map<
     ActEventName,
@@ -110,6 +112,20 @@ export class ActMaster {
 
     if (typeof errorHandlerEventName === 'string') {
       this.config.errorHandlerEventName = errorHandlerEventName;
+    }
+
+    if (options.plugins) {
+      this.hasPlugin = true;
+      options.plugins.forEach((plugin) => {
+        plugin({
+          addMethod: this.pluginAddMethod.bind(this),
+          on: (ev: ActMaterPluginEvent, callback) => {
+            const list = this.pluginListeners.get(ev) || [];
+            list.push(callback);
+            this.pluginListeners.set(ev, list);
+          },
+        });
+      });
     }
 
     ActMaster.instance = this;
@@ -208,6 +224,7 @@ export class ActMaster {
         return result;
       })
       .catch((error: Error) => {
+        this.pluginNotify('error', error);
         this.setProgress(eventName, false);
         const action = this.getActionOrNull(eventName);
 
@@ -243,6 +260,7 @@ export class ActMaster {
     eventName: ActEventName,
     ...args: any[]
   ): Promise<T2 | CancelledAct> {
+    this.pluginNotify('beforeExec', args);
     const action = this.getActionOrNull(eventName);
 
     if (action === null) {
@@ -251,10 +269,13 @@ export class ActMaster {
 
     // validator
     if (action.validateInput) {
+      this.pluginNotify('validate', args);
+
       const isValidOrError = await action.validateInput(...args);
 
       if (isValidOrError !== true) {
         if (this.config.errorHandlerEventName) {
+          this.pluginNotify('error', isValidOrError);
           this.emit(this.config.errorHandlerEventName, isValidOrError);
         }
 
@@ -272,13 +293,20 @@ export class ActMaster {
       ? await action.transform(execResult)
       : execResult;
 
+    if (action.transform) {
+      this.pluginNotify('transform', value);
+    }
+
     this.notifyListeners(eventName, value);
 
     if (!(value instanceof CancelledAct) && this._watchers.has(eventName)) {
       for (const watchingEventName of this._watchers.get(eventName) || []) {
+        this.pluginNotify('execWatcher', [watchingEventName, value]);
         await this.emit(watchingEventName, value);
       }
     }
+
+    this.pluginNotify('execResult', value);
 
     return value;
   }
@@ -297,9 +325,15 @@ export class ActMaster {
   //#region [ Subscribtions ]
   subscribe(
     eventName: ActEventName,
-    listener: listenerFunction,
+    listener: ListenerFunction,
     context?: any
   ): () => boolean {
+    if (context) {
+      this.pluginNotify('subscribe', [eventName, listener, context]);
+    } else {
+      this.pluginNotify('subscribe', [eventName, listener]);
+    }
+
     this._listeners.set(eventName, [
       ...(this._listeners.get(eventName) || []),
       listener,
@@ -320,7 +354,8 @@ export class ActMaster {
     return unsubscribe;
   }
 
-  unsubscribe(eventName: ActEventName, listener: listenerFunction): boolean {
+  unsubscribe(eventName: ActEventName, listener: ListenerFunction): boolean {
+    this.pluginNotify('unsubscribe', [eventName, listener]);
     const listeners = this._listeners.get(eventName);
     if (!listeners) {
       return false;
@@ -336,7 +371,7 @@ export class ActMaster {
     return index > -1;
   }
 
-  once(eventName: ActEventName, listener: listenerFunction): () => boolean {
+  once(eventName: ActEventName, listener: ListenerFunction): () => boolean {
     const unsubscribe = this.subscribe(eventName, (...args) => {
       unsubscribe();
       listener(...args);
@@ -346,13 +381,13 @@ export class ActMaster {
 
   on(
     eventName: ActEventName,
-    listener: listenerFunction,
+    listener: ListenerFunction,
     context?: any
   ): () => boolean {
     return this.subscribe(eventName, listener, context);
   }
 
-  off(eventName: ActEventName, listener: listenerFunction): boolean {
+  off(eventName: ActEventName, listener: ListenerFunction): boolean {
     return this.unsubscribe(eventName, listener);
   }
   //#endregion
@@ -461,4 +496,44 @@ export class ActMaster {
     return action || null;
   }
   //#endregion
+
+  // #region [ plugin ]
+  private hasPlugin = false;
+
+  private pluginListeners = new Map<
+    ActMaterPluginEvent,
+    ((data?: any) => void)[]
+  >();
+
+  private pluginNotify(ev: ActMaterPluginEvent, data: any) {
+    if (this.hasPlugin && this.pluginListeners.has(ev)) {
+      (this.pluginListeners.get(ev) || []).forEach((fn) => fn(data));
+    }
+  }
+
+  private actMaterPluginAddMethodContext: ActMaterPluginAddMethodContext = {
+    subscribe: this.subscribe.bind(this),
+    on: this.subscribe.bind(this),
+    unsubscribe: this.unsubscribe.bind(this),
+    off: this.off.bind(this),
+  };
+
+  private pluginAddMethod(
+    methodName: string,
+    plugin: (ctx: ActMaterPluginAddMethodContext) => any
+  ): void {
+    if (methodName in this) {
+      throw new Error(`Method "${methodName}" already exists in ActMaster`);
+    }
+
+    const ctx = this.actMaterPluginAddMethodContext;
+
+    Object.defineProperty(this, methodName, {
+      get() {
+        return plugin(ctx);
+      },
+      enumerable: true,
+    });
+  }
+  // #endregion
 }

@@ -2,7 +2,7 @@ import {
   ActEventName,
   ActMaster,
   ActMasterAction,
-  listenerFunction,
+  ListenerFunction,
 } from '../act-master';
 
 // #region [ exec ]
@@ -22,7 +22,7 @@ act.addActions = addActions;
 // #region [ subscribe ]
 export const subscribe = (
   eventName: ActEventName,
-  listener: listenerFunction,
+  listener: ListenerFunction,
   destroyHookOrKey?: any
 ): (() => boolean) => {
   const off = act().subscribe(eventName, listener);

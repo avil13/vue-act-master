@@ -4,7 +4,7 @@ import {
   ActEventName,
   ActMasterAction,
   ActMasterOptions,
-  listenerFunction,
+  ListenerFunction,
 } from '../types';
 
 export class ActTest {
@@ -56,7 +56,7 @@ export class ActTest {
 
   static subscribe(
     eventName: ActEventName,
-    listener: listenerFunction,
+    listener: ListenerFunction,
     context?: any
   ): () => boolean {
     return ActTest.$act.subscribe(eventName, listener, context);

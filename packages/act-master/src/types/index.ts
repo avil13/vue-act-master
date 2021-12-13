@@ -1,4 +1,4 @@
-import { CancelledAct } from './cancelled';
+import { CancelledAct } from '../cancelled';
 
 export type ActEventName = string;
 
@@ -7,7 +7,7 @@ export type emitAction<T = any> = (
   ...data: any[]
 ) => Promise<T>;
 
-export type listenerFunction = (arg: any) => any;
+export type ListenerFunction = (arg: any) => any;
 
 export type TransformerFn = (value: any) => any | Promise<CancelledAct | any>;
 
@@ -17,7 +17,7 @@ export type ValidateInputFn = (
 
 export type autoUnsubscribeArgs = {
   eventName: string;
-  listener: listenerFunction;
+  listener: ListenerFunction;
   context?: any;
 };
 
@@ -34,6 +34,7 @@ export interface ActMasterOptions {
   // method for calling auto unsubscribe
   autoUnsubscribeCallback?: (args: autoUnsubscribeArgs) => void;
   errorHandlerEventName?: ActEventName;
+  plugins?: ActMaterPlugin[];
 }
 
 export type devActMasterConfig = {
@@ -97,3 +98,41 @@ export interface ActMasterActionDevDI extends ActMasterAction {
     };
   };
 }
+
+/// #region [ plugins ]
+export type ActMaterPlugin = (ctx: ActMaterPluginContext) => void;
+
+export interface ActMaterPluginContext {
+  addMethod(
+    methodName: string,
+    plugin: (ctx: ActMaterPluginAddMethodContext) => any
+  ): void;
+  on(ev: ActMaterPluginEvent, callback: (data?: any) => void): void;
+}
+
+export type ActMaterPluginEvent =
+  | 'beforeExec'
+  | 'error'
+  | 'validate'
+  | 'execWatcher'
+  | 'transform'
+  | 'execResult'
+  | 'subscribe'
+  | 'unsubscribe';
+
+export interface ActMaterPluginAddMethodContext {
+  subscribe(
+    eventName: ActEventName,
+    listener: ListenerFunction,
+    context?: any
+  ): () => boolean;
+  on(
+    eventName: ActEventName,
+    listener: ListenerFunction,
+    context?: any
+  ): () => boolean;
+
+  unsubscribe(eventName: ActEventName, listener: ListenerFunction): boolean;
+  off(eventName: ActEventName, listener: ListenerFunction): boolean;
+}
+// #endregion
