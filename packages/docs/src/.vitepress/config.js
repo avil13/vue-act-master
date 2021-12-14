@@ -13,7 +13,7 @@ module.exports = {
     repo: 'avil13/vue-act-master',
     docsDir: 'packages/docs/src',
 
-    editLinks: true,
+    editLinks: false,
     editLinkText: 'Edit this page on GitHub',
     lastUpdated: 'Last Updated',
 
@@ -23,6 +23,14 @@ module.exports = {
     },
 
     sidebar: getSidebar(),
+
+    nav: [
+      {
+        text: 'Plugins',
+        link: '/plugin/search',
+        activeMatch: '^/plugin/'
+      },
+    ]
   },
 };
 
@@ -57,6 +65,19 @@ function getSidebar() {
           link: '/action/05-composition-api',
         },
       ],
+    },
+    {
+      text: 'Plugins',
+      children: [
+        {
+          text: 'Search Plugin',
+          link: '/plugin/search',
+        },
+        {
+          text: 'Build Plugin',
+          link: '/plugin/build-plugin',
+        },
+      ]
     },
     {
       text: 'Tests',
