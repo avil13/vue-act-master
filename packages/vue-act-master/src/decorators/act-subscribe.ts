@@ -65,19 +65,14 @@ function objectPath(obj: any, path?: PathToData, defaultValue?: unknown) {
     const list = (path || '').split('.');
     let key;
     let i = 0;
-    for (i = 0; i < list.length; i++) {
+    for (i = 0; i < list.length && value; i++) {
       key = list[i];
-
-      if (value === undefined) {
-        return defaultValue;
-      }
-
       value = value[key];
-
-      if (value === undefined) {
-        return defaultValue;
-      }
     }
+  }
+
+  if (value === undefined) {
+    return defaultValue;
   }
 
   return value;

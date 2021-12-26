@@ -50,14 +50,14 @@ export function objectPath(
     const list = path.split('.');
     let key;
     let i = 0;
-    for (i = 0; i < list.length; i++) {
+    for (i = 0; i < list.length && value; i++) {
       key = list[i];
       value = value[key];
-      if (value === undefined) {
-        value = defaultValue;
-        break;
-      }
     }
+  }
+
+  if (value === undefined) {
+    return defaultValue;
   }
 
   return value;
