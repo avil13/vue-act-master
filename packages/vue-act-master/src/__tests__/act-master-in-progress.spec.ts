@@ -1,13 +1,12 @@
 import { ActMaster } from 'act-master';
 import { beforeEach, describe, expect, it } from 'vitest';
-import Vue from 'vue';
-import { Component } from 'vue-property-decorator';
+import { createApp } from 'vue';
 import { ActInProgress } from '../decorators';
 import { VueActMaster } from '../index';
 
 const $act = new ActMaster();
 
-describe('vue-act-master InProgress decorator', () => {
+describe.skip('vue-act-master InProgress decorator', () => {
   const ACTION_NAME = 'ACTION_NAME';
 
   beforeEach(() => {
@@ -19,7 +18,8 @@ describe('vue-act-master InProgress decorator', () => {
   });
 
   it('ActInProgress', async () => {
-    Vue.use(VueActMaster);
+    const app = createApp({});
+    app.use(VueActMaster);
 
     $act.addActions([
       {
@@ -38,8 +38,7 @@ describe('vue-act-master InProgress decorator', () => {
       },
     ]);
 
-    @Component
-    class TestClass extends Vue {
+    class TestClass {
       @ActInProgress(ACTION_NAME)
       isLoading = false;
     }

@@ -1,7 +1,8 @@
 import { ComponentOptions } from 'vue';
-import * as Vue from 'vue/types/umd';
 
-type VueClass<V> = { new (...args: any[]): V & Vue } & typeof Vue;
+type Vue = any;
+
+type VueClass<V> = { new (...args: any[]): V & Vue } & any;
 
 type DecoratedClass = VueClass<Vue> & {
   // Property, method and parameter decorators created by `createDecorator` helper
@@ -12,7 +13,7 @@ type DecoratedClass = VueClass<Vue> & {
 
 export interface VueDecorator {
   // Class decorator
-  (Ctor: typeof Vue): void;
+  (Ctor: any): void;
 
   // Property decorator
   (target: Vue, key: string): void;
@@ -24,7 +25,7 @@ export interface VueDecorator {
 export function createDecorator(
   factory: (options: ComponentOptions<Vue>, key: string, index: number) => void
 ): VueDecorator {
-  return (target: Vue | typeof Vue, key?: any, index?: any) => {
+  return (target: Vue | any, key?: any, index?: any) => {
     const Ctor =
       typeof target === 'function'
         ? (target as DecoratedClass)

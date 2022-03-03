@@ -1,7 +1,6 @@
 /* eslint-disable */
 import { ActEventName } from 'act-master';
 import { ComponentOptions } from 'vue';
-import * as Vue from 'vue/types/umd';
 import { createDecorator, VueDecorator } from './helpers';
 
 /**
