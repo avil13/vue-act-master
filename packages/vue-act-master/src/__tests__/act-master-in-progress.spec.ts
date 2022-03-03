@@ -1,8 +1,7 @@
-import { Component } from 'vue-property-decorator';
-
 import { ActMaster } from 'act-master';
+import { beforeEach, describe, expect, it } from 'vitest';
 import Vue from 'vue';
-
+import { Component } from 'vue-property-decorator';
 import { ActInProgress } from '../decorators';
 import { VueActMaster } from '../index';
 

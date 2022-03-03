@@ -1,4 +1,5 @@
 import { ActMasterAction, ActTest, Emit, emitAction } from 'act-master';
+import { describe, expect, it, vi } from 'vitest';
 
 describe('Emit return value', () => {
   it('emit same action', async () => {
@@ -18,7 +19,7 @@ describe('Emit return value', () => {
 
     $act.addAction(new Action());
 
-    const mockFn = jest.fn();
+    const mockFn = vi.fn();
 
     $act.subscribe('ACT_NAME', mockFn);
 

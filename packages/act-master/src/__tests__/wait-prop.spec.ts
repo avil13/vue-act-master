@@ -1,3 +1,4 @@
+import { beforeEach, describe, expect, it } from 'vitest';
 import { CancelledAct } from '../cancelled';
 import { ActTest } from '../test-utils';
 import { addTestActionFactory } from './test-helpers';
@@ -51,11 +52,11 @@ describe('watch-prop', () => {
     expect(execMock).not.toBeCalled();
   });
 
-  xit('watchOnce', async () => {
-    //
-  });
+  // xit('watchOnce', async () => {
+  //   //
+  // });
 
-  xit('clear watchers', async () => {
-    //
-  });
+  // xit('clear watchers', async () => {
+  //   //
+  // });
 });

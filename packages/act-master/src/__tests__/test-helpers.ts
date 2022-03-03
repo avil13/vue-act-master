@@ -1,3 +1,5 @@
+import { vi } from 'vitest';
+
 import { ActMaster } from '../act-master';
 import { ActMasterAction } from '../types';
 
@@ -5,7 +7,7 @@ export const addTestActionFactory = ($act: ActMaster) => {
   return (extendObj: Partial<ActMasterAction> = {}) => {
     const eventName = `${Math.random() * 1000}`;
     const expectMockResult = `${Math.random() * 1000}`;
-    const execMock = jest.fn(() => expectMockResult);
+    const execMock = vi.fn(() => expectMockResult);
 
     $act.addActions([
       {

@@ -1,4 +1,5 @@
 import { ActMasterAction, ActTest } from 'act-master';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 
 const $act = ActTest.getInstance();
 
@@ -18,7 +19,7 @@ describe('SinglePromise', () => {
 
     $act.addAction(action);
 
-    const mockFn = jest.fn();
+    const mockFn = vi.fn();
 
     $act.on('ACT_NAME_ONE', mockFn);
 
@@ -42,7 +43,7 @@ describe('SinglePromise', () => {
 
     $act.addAction(action);
 
-    const mockFn = jest.fn();
+    const mockFn = vi.fn();
 
     $act.on('ACT_NAME_TWO', mockFn);
 

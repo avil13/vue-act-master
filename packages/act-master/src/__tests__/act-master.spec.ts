@@ -1,3 +1,4 @@
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { ActTest } from '../test-utils';
 import { addTestActionFactory } from './test-helpers';
 
@@ -82,7 +83,7 @@ describe('ActMaster', () => {
 
     it('once method', async () => {
       const { eventName } = addTestAction();
-      const mockCallback = jest.fn();
+      const mockCallback = vi.fn();
 
       $act.once(eventName, mockCallback);
 

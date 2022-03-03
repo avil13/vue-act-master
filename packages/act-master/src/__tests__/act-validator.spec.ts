@@ -1,3 +1,4 @@
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import { ActTest } from '../test-utils';
 import { addTestActionFactory } from './test-helpers';
 
@@ -31,8 +32,8 @@ describe('Act validator', () => {
 
   it('catch exception if invalid', async () => {
     // A
-    const errMock = jest.fn();
-    const execMock = jest.fn();
+    const errMock = vi.fn();
+    const execMock = vi.fn();
 
     const $act = ActTest.getInstance({
       errorHandlerEventName: 'OnError',

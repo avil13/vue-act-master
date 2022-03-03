@@ -1,3 +1,4 @@
+import { beforeEach, describe, expect, it, SpyInstanceFn, vi } from 'vitest';
 import { ActMaster } from '../act-master';
 import { UseDI } from '../decorators';
 import { ActMasterAction } from '../types';
@@ -18,7 +19,7 @@ describe('DI', () => {
 
   it('DI same entity', async () => {
     const DATA = Math.random();
-    const mockCallback = jest.fn();
+    const mockCallback = vi.fn();
 
     $act.setDI('api', mockCallback);
 
@@ -43,13 +44,13 @@ describe('DI', () => {
   it('decorator UseDI test', async () => {
     const DATA_FOR_API = Math.random();
 
-    const mockApiCallback = jest.fn();
+    const mockApiCallback = vi.fn();
 
     class TestActionClass implements ActMasterAction {
       name = ACTION_NAME;
 
       @UseDI('api')
-      selfApi!: jest.Mock;
+      selfApi!: SpyInstanceFn<any[], any>;
 
       exec(data1: number) {
         this.selfApi(data1);

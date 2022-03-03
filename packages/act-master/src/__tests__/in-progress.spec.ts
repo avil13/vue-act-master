@@ -1,3 +1,4 @@
+import { beforeAll, describe, expect, it } from 'vitest';
 import { ActTest } from '../test-utils';
 
 const $act = ActTest.getInstance();
