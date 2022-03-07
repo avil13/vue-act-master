@@ -181,14 +181,11 @@ export class ActMaster {
   //#endregion
 
   //#region [ Executions ]
-  async exec<T = any>(
-    eventName: ActEventName,
-    ...args: any[]
-  ): Promise<T | CancelledAct> {
+  async exec<T = any>(eventName: ActEventName, ...args: any[]): Promise<T> {
     this.setProgress(eventName, true);
 
     if (this._singlePromisesStore.has(eventName)) {
-      const promise: Promise<T | CancelledAct> | undefined =
+      const promise: Promise<T> | undefined =
         this._singlePromisesStore.get(eventName);
 
       if (promise) {
@@ -216,7 +213,7 @@ export class ActMaster {
           action.errorHandlerEventName !== eventName
         ) {
           this.emit(action.errorHandlerEventName, error);
-          return new CancelledAct(error.message);
+          throw new CancelledAct(error.message);
         }
 
         if (
@@ -224,7 +221,7 @@ export class ActMaster {
           this.config.errorHandlerEventName !== eventName
         ) {
           this.emit(this.config.errorHandlerEventName, error);
-          return new CancelledAct(error.message);
+          throw new CancelledAct(error.message);
         }
 
         throw error;
@@ -239,10 +236,7 @@ export class ActMaster {
     return promise;
   }
 
-  private async emit<T2>(
-    eventName: ActEventName,
-    ...args: any[]
-  ): Promise<T2 | CancelledAct> {
+  private async emit<T2>(eventName: ActEventName, ...args: any[]): Promise<T2> {
     const action = this.getActionOrNull(eventName);
 
     if (action === null) {
@@ -265,6 +259,7 @@ export class ActMaster {
     const execResult = await action.exec(...args);
 
     if (execResult instanceof CancelledAct) {
+      //@ts-ignore
       return execResult;
     }
 
