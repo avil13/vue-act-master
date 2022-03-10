@@ -4,11 +4,22 @@ import { ActTest } from '../test-utils';
 import { emitAction } from '../types';
 import { addTestActionFactory } from './test-helpers';
 
-const $act = ActTest.getInstance();
+const $act = ActTest.getInstance({});
 
 const addTestAction = addTestActionFactory($act);
 
-describe('CancelledAct', () => {
+describe('CancelledAct as object', () => {
+  it('extend CancelledAct', () => {
+    const error = new Error('MY_ERROR');
+    const cancelledAct = new CancelledAct(error);
+
+    expect(cancelledAct.message).toBe('MY_ERROR');
+
+    expect(CancelledAct.is(cancelledAct)).toBe(true);
+  });
+});
+
+describe('CancelledAct with action', () => {
   beforeEach(() => {
     ActTest.resetAll();
   });
