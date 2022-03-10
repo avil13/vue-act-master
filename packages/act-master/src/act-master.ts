@@ -213,7 +213,7 @@ export class ActMaster {
           action.errorHandlerEventName !== eventName
         ) {
           this.emit(action.errorHandlerEventName, error);
-          throw new CancelledAct(error.message);
+          throw new CancelledAct(error);
         }
 
         if (
@@ -221,7 +221,7 @@ export class ActMaster {
           this.config.errorHandlerEventName !== eventName
         ) {
           this.emit(this.config.errorHandlerEventName, error);
-          throw new CancelledAct(error.message);
+          throw new CancelledAct(error);
         }
 
         throw error;

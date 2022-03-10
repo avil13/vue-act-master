@@ -25,6 +25,7 @@ export class CancelledAct {
     if (reason && typeof reason === 'object') {
       return Object.assign(reason, {
         _name: this._name,
+        reason: reason.message || '',
       });
     }
   }
