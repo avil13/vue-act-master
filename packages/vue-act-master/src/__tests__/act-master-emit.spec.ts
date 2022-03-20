@@ -1,4 +1,5 @@
 import { ActMaster, ActMasterAction, Emit, emitAction } from 'act-master';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 describe('EMIT', () => {
   const ACTION_NAME_1 = 'ACTION_NAME_DEFAULT';
@@ -17,7 +18,7 @@ describe('EMIT', () => {
 
   it('js emitter', async () => {
     const DATA = Math.random();
-    const mockCallback = jest.fn();
+    const mockCallback = vi.fn();
 
     class TestActionClass implements ActMasterAction {
       name = ACTION_NAME_1;
@@ -48,7 +49,7 @@ describe('EMIT', () => {
 
   it('decorator emitter', async () => {
     const DATA = Math.random();
-    const mockCallback = jest.fn();
+    const mockCallback = vi.fn();
 
     class TestActionClass implements ActMasterAction {
       name = ACTION_NAME_1;

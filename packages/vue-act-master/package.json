@@ -1,6 +1,6 @@
 {
   "name": "vue-act-master",
-  "version": "0.9.0",
+  "version": "0.15.3",
   "description": "",
   "author": "avil13",
   "main": "dist/index.common.js",
@@ -22,13 +22,13 @@
     "business logic"
   ],
   "scripts": {
-    "build": "yarn test && rm -rf ./dist && rollup -c",
+    "build": "rm -rf ./dist && rollup -c",
     "changelog": "auto-changelog && git add CHANGELOG.md",
     "lint:fix": "eslint --fix --ext .ts .",
-    "test:watch": "jest --watch",
-    "test": "jest --collect-coverage --runInBand",
+    "test:watch": "vitest dev",
+    "test": "vitest run --coverage",
     "type-check:watch": "npm run type-check -- --watch",
-    "type-check": "tsc --p ./tsconfig.prod.json --noEmit",
+    "type-check": "tsc -p ./tsconfig.prod.json --noEmit",
     "prepublishOnly": "npm run test && npm run build && npm run changelog"
   },
   "husky": {
@@ -43,28 +43,21 @@
   },
   "license": "MIT",
   "dependencies": {
-    "act-master": "^1.4.0",
-    "vue": "*"
+    "act-master": "^1.10.*"
   },
   "devDependencies": {
-    "@types/jest": "^26.0.14",
-    "@types/node": "^14.11.2",
-    "@typescript-eslint/eslint-plugin": "^4.3.0",
-    "auto-changelog": "^2.2.1",
-    "babel-jest": "^26.3.0",
-    "eslint": "^7.10.0",
-    "eslint-config-prettier": "^6.12.0",
-    "eslint-plugin-prettier": "^3.1.4",
-    "husky": "^4.3.0",
-    "jest": "^26.4.2",
-    "jest-canvas-mock": "^2.3.0",
-    "prettier": "^2.1.2",
-    "rollup": "^2.32.0",
-    "rollup-plugin-filesize": "^9.0.2",
+    "@types/node": "^16.10.1",
+    "@typescript-eslint/eslint-plugin": "^4.31.2",
+    "auto-changelog": "^2.3.0",
+    "eslint": "^7.32.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-prettier": "^4.0.0",
+    "prettier": "^2.4.1",
+    "rollup": "^2.57.0",
+    "rollup-plugin-filesize": "^9.1.1",
     "rollup-plugin-terser": "^7.0.2",
-    "rollup-plugin-typescript2": "^0.28.0",
-    "ts-jest": "^26.4.1",
-    "ts-node": "^9.0.0",
-    "typescript": "^4.0.3"
+    "rollup-plugin-typescript2": "^0.30.0",
+    "typescript": "^4.4.3",
+    "vue": "*"
   }
 }

@@ -1,6 +1,6 @@
 {
   "name": "@vue-act-master/docs",
-  "version": "1.0.0",
+  "version": "1.0.8",
   "license": "MIT",
   "private": true,
   "scripts": {
@@ -10,6 +10,6 @@
     "serve": "vitepress serve src"
   },
   "devDependencies": {
-    "vitepress": "^0.12.0"
+    "vitepress": "^0.20.1"
   }
 }

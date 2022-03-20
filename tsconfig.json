@@ -1,9 +1,9 @@
 {
   "compilerOptions": {
     /* Basic Options */
-    "target": "ESNext",
+    "target": "ES2020",
     /* Specify ECMAScript target version: 'ES3' (default), 'ES5', 'ES2015', 'ES2016', 'ES2017','ES2018' or 'ESNEXT'. */
-    "module": "ESNext",
+    "module": "ES2020",
     /* Specify module code generation: 'none', 'commonjs', 'amd', 'system', 'umd', 'es2015', or 'ESNext'. */
     "lib": ["dom", "ESNext"],
     /* Specify library files to be included in the compilation. */
@@ -51,7 +51,7 @@
       ]
     },
     // "typeRoots": [],                       /* List of folders to include type definitions from. */
-    "types": ["node", "jest"],
+    "types": ["node"],
     /* Type declaration files to be included in compilation. */
     "allowSyntheticDefaultImports": true,
     /* Allow default imports from modules with no default export. This does not affect code emit, just typechecking. */

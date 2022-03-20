@@ -5,6 +5,8 @@ export class Api {
    * @param password string
    */
   async login(login: string, password: string): Promise<boolean> {
+    await new Promise((ok) => setTimeout(ok, 2000));
+
     if (login === 'test@test.com' && password === '123') {
       localStorage.setItem('_is_logged', '1');
 

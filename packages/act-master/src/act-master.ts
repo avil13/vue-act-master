@@ -12,10 +12,12 @@ import {
   ActMasterOptions,
   devActMasterConfig,
   DIMap,
+  emitAction,
   listenerFunction,
-  listenersMap,
-  waiterMap,
 } from './types';
+
+//@ts-ignore
+import { version } from '../package.json';
 
 export * from './errors';
 export * from './types';
@@ -26,15 +28,29 @@ export { CancelledAct };
  *
  */
 export class ActMaster {
-  private readonly _actions: {
-    [eventName: string]: ActMasterAction;
-  } = {};
+  readonly version = version;
 
-  private readonly _waiters: waiterMap = new Map();
+  private readonly _actions = new Map<ActEventName, ActMasterAction>();
 
-  private readonly _listeners: listenersMap = new Map();
+  private readonly _watchers = new Map<ActEventName, ActEventName[]>();
+
+  private readonly _listeners = new Map<ActEventName, listenerFunction[]>();
+
+  private readonly _inProgressWatchers = new Map<
+    ActEventName,
+    (inProgress: boolean) => void
+  >();
+
+  private readonly _subsMap = new Map<any, (() => void)[]>();
+
+  private _lastUnsubscribe: () => any = () => false;
 
   private _DIContainer: DIMap = {};
+
+  private readonly _singlePromisesStore = new Map<
+    ActEventName,
+    Promise<any | CancelledAct>
+  >();
 
   private readonly config: devActMasterConfig = {
     errorOnReplaceAction: true,
@@ -103,33 +119,40 @@ export class ActMaster {
   addActions(actions: ActMasterAction[]): void {
     if (Array.isArray(actions)) {
       actions.forEach((action: ActMasterAction) => {
-        this.addAction(action.name, action);
+        this.addAction(action);
       });
     }
   }
 
-  addAction(eventName: ActEventName, action: ActMasterAction): ActMaster {
-    if (this.config.errorOnReplaceAction && this._actions[eventName]) {
+  addAction(action: ActMasterAction): ActMaster {
+    const eventName = action.name;
+
+    if (this.config.errorOnReplaceAction && this._actions.has(eventName)) {
       throw new ActinonAlreadyExistingError(eventName);
     }
 
     if (action.useEmit && action.name) {
-      action.useEmit(this.emit.bind(this));
+      const bindedEmitter: emitAction = async (
+        eventName: ActEventName,
+        ...args
+      ) => {
+        if (action.name === eventName) {
+          return this.notifyListeners(eventName, args[0]);
+        }
+        return this.emit(eventName, ...args);
+      };
+      action.useEmit(bindedEmitter);
     }
 
-    if (action._EMITTER_ === null) {
-      action._EMITTER_ = this.emit.bind(this);
-    }
-
-    this._actions[eventName] = action;
+    this._actions.set(eventName, action);
 
     this.emitDIProps(action);
 
-    if (action.wait) {
-      action.wait.forEach((waitEventName) => {
-        const waiters = this._waiters.get(waitEventName) || [];
-        waiters.push(eventName);
-        this._waiters.set(waitEventName, waiters);
+    if (action.watch) {
+      action.watch.forEach((watchEventName) => {
+        const watchers = this._watchers.get(watchEventName) || [];
+        watchers.push(eventName);
+        this._watchers.set(watchEventName, watchers);
       });
     }
 
@@ -137,19 +160,15 @@ export class ActMaster {
   }
 
   removeAction(eventName: ActEventName): void {
-    if (!this._actions[eventName]) {
+    if (!this._actions.has(eventName)) {
       throw new NotFoundActionError(eventName);
     }
 
-    delete this._actions[eventName];
+    this._actions.delete(eventName);
   }
 
   clearActions(): void {
-    for (const eventName in this._actions) {
-      if (Object.prototype.hasOwnProperty.call(this._actions, eventName)) {
-        delete this._actions[eventName];
-      }
-    }
+    this._actions.clear();
   }
 
   clearListeners(): void {
@@ -162,37 +181,62 @@ export class ActMaster {
   //#endregion
 
   //#region [ Executions ]
-  async exec<T = any>(
-    eventName: ActEventName,
-    ...args: any[]
-  ): Promise<T | CancelledAct> {
-    return this.emit<T>(eventName, ...args).catch((error: Error) => {
-      const action = this.getActionOrNull(eventName);
+  async exec<T = any>(eventName: ActEventName, ...args: any[]): Promise<T> {
+    this.setProgress(eventName, true);
 
-      if (
-        action?.errorHandlerEventName &&
-        action.errorHandlerEventName !== eventName
-      ) {
-        this.emit(action.errorHandlerEventName, error);
-        return new CancelledAct(error.message);
+    if (this._singlePromisesStore.has(eventName)) {
+      const promise: Promise<T> | undefined =
+        this._singlePromisesStore.get(eventName);
+
+      if (promise) {
+        return promise;
       }
+    }
 
-      if (
-        this.config.errorHandlerEventName &&
-        this.config.errorHandlerEventName !== eventName
-      ) {
-        this.emit(this.config.errorHandlerEventName, error);
-        return new CancelledAct(error.message);
-      }
+    const promise = this.emit<T>(eventName, ...args)
+      .then((data) => {
+        this.setProgress(eventName, false);
+        return data;
+      })
+      .then((result) => {
+        if (this._singlePromisesStore.has(eventName)) {
+          this._singlePromisesStore.delete(eventName);
+        }
+        return result;
+      })
+      .catch((error: Error) => {
+        this.setProgress(eventName, false);
+        const action = this.getActionOrNull(eventName);
 
-      throw error;
-    });
+        if (
+          action?.errorHandlerEventName &&
+          action.errorHandlerEventName !== eventName
+        ) {
+          this.emit(action.errorHandlerEventName, error);
+          throw new CancelledAct(error);
+        }
+
+        if (
+          this.config.errorHandlerEventName &&
+          this.config.errorHandlerEventName !== eventName
+        ) {
+          this.emit(this.config.errorHandlerEventName, error);
+          throw new CancelledAct(error);
+        }
+
+        throw error;
+      });
+
+    const action = this.getActionOrNull(eventName);
+
+    if (action && action.isSingleExec) {
+      this._singlePromisesStore.set(eventName, promise);
+    }
+
+    return promise;
   }
 
-  async emit<T2>(
-    eventName: string,
-    ...args: any[]
-  ): Promise<T2 | CancelledAct> {
+  private async emit<T2>(eventName: ActEventName, ...args: any[]): Promise<T2> {
     const action = this.getActionOrNull(eventName);
 
     if (action === null) {
@@ -204,6 +248,10 @@ export class ActMaster {
       const isValidOrError = await action.validateInput(...args);
 
       if (isValidOrError !== true) {
+        if (this.config.errorHandlerEventName) {
+          this.emit(this.config.errorHandlerEventName, isValidOrError);
+        }
+
         return isValidOrError;
       }
     }
@@ -211,12 +259,26 @@ export class ActMaster {
     const execResult = await action.exec(...args);
 
     if (execResult instanceof CancelledAct) {
+      //@ts-ignore
       return execResult;
     }
 
     const value: T2 = action.transform
       ? await action.transform(execResult)
       : execResult;
+
+    this.notifyListeners(eventName, value);
+
+    if (!(value instanceof CancelledAct) && this._watchers.has(eventName)) {
+      for (const watchingEventName of this._watchers.get(eventName) || []) {
+        await this.emit(watchingEventName, value);
+      }
+    }
+
+    return value;
+  }
+
+  private notifyListeners(eventName: ActEventName, value: any): void {
     const listeners = this._listeners.get(eventName);
 
     if (listeners) {
@@ -224,14 +286,6 @@ export class ActMaster {
         listenerCallback(value);
       });
     }
-
-    if (!(value instanceof CancelledAct) && this._waiters.has(eventName)) {
-      for (const waitingEventName of this._waiters.get(eventName) || []) {
-        await this.emit(waitingEventName, value);
-      }
-    }
-
-    return value;
   }
   //#endregion
 
@@ -254,7 +308,11 @@ export class ActMaster {
       });
     }
 
-    return () => this.unsubscribe(eventName, listener);
+    const unsubscribe = () => this.unsubscribe(eventName, listener);
+
+    this._lastUnsubscribe = unsubscribe;
+
+    return unsubscribe;
   }
 
   unsubscribe(eventName: ActEventName, listener: listenerFunction): boolean {
@@ -294,6 +352,61 @@ export class ActMaster {
   }
   //#endregion
 
+  //#region [ extends functions ]
+  inProgress(
+    key: ActEventName | ActEventName[],
+    callback: (inProgress: boolean) => void
+  ): () => any {
+    if (Array.isArray(key)) {
+      key.forEach((k) => this._inProgressWatchers.set(k, callback));
+
+      const unsubscribe = () => {
+        key.forEach((k) => {
+          this._inProgressWatchers.delete(k);
+        });
+      };
+
+      this._lastUnsubscribe = unsubscribe;
+
+      return unsubscribe;
+    }
+
+    this._inProgressWatchers.set(key, callback);
+
+    const unsubscribe = () => this._inProgressWatchers.delete(key);
+
+    this._lastUnsubscribe = unsubscribe;
+
+    return unsubscribe;
+  }
+
+  private setProgress(key: ActEventName, status: boolean) {
+    if (this._inProgressWatchers.has(key)) {
+      //@ts-ignore
+      this._inProgressWatchers.get(key)(status);
+    }
+  }
+
+  get subsList() {
+    return {
+      add: (key: any, ...fns: (() => any)[]) => {
+        if (!fns.length) {
+          fns.push(this._lastUnsubscribe);
+        }
+        const list = this._subsMap.get(key) || [];
+        list.push(...fns);
+        this._subsMap.set(key, list);
+      },
+
+      clear: (key: any) => {
+        const list = this._subsMap.get(key) || [];
+        list.forEach((unsubscribe) => unsubscribe());
+        this._subsMap.delete(key);
+      },
+    };
+  }
+  // #endregion
+
   //#region [ DI ]
   clearDI(): void {
     this._DIContainer = {};
@@ -309,19 +422,18 @@ export class ActMaster {
   }
 
   private freshEmitDI() {
-    let action: any;
-    for (const k in this._actions) {
-      if (Object.prototype.hasOwnProperty.call(this._actions, k)) {
-        action = this._actions[k];
-
+    let action: ActMasterAction | undefined;
+    Object.keys(this._actions).forEach((key: string) => {
+      action = this._actions.get(key);
+      if (action) {
         this.emitDIProps(action);
       }
-    }
+    });
   }
 
   private emitDIProps(action: ActMasterActionDevDI) {
-    if (action.__useDI__) {
-      action.__useDI__(this._DIContainer);
+    if (action._DI_CONTAINER_) {
+      action._DI_CONTAINER_ = this._DIContainer;
     }
 
     if (action.useDI) {
@@ -332,7 +444,7 @@ export class ActMaster {
 
   //#region [ helpers ]
   private getActionOrNull(eventName: ActEventName): ActMasterAction | null {
-    const action = this._actions[eventName];
+    const action = this._actions.get(eventName);
 
     if (!action && !this.config.errorOnEmptyAction) {
       return {

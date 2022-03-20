@@ -21,11 +21,6 @@ export type autoUnsubscribeArgs = {
   context?: any;
 };
 
-export type listenersMap = Map<string, listenerFunction[]>;
-
-// list of emitNames to be called after
-export type waiterMap = Map<string, string[]>;
-
 export interface DIMap {
   [key: string]: any;
 }
@@ -65,7 +60,16 @@ export interface ActMasterAction {
   /**
    * List of emitNames to be called after
    */
+  watch?: string[];
+  /**
+   * Use watch
+   * @deprecated
+   */
   wait?: string[];
+  /**
+   * An action can have only one result if several calls are made
+   */
+  isSingleExec?: boolean;
   /**
    * Validating arguments before passing them to exec
    */
@@ -92,6 +96,4 @@ export interface ActMasterActionDevDI extends ActMasterAction {
       value: null | any;
     };
   };
-  _EMITTER_?: emitAction;
-  __UseDI__?: (contexts: { [key: string]: any }) => void;
 }

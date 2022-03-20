@@ -8,6 +8,8 @@ module.exports = {
   head: getHead(),
 
   themeConfig: {
+    logo: 'assets/act-master-logo.svg',
+
     repo: 'avil13/vue-act-master',
     docsDir: 'packages/docs/src',
 
@@ -26,43 +28,74 @@ module.exports = {
 
 
 function getSidebar() {
-  return [{
+  return [
+    {
       text: 'Intro',
       link: '/',
     },
     {
       text: 'Installation',
-      link: '/action/01-installation'
+      link: '/action/01-installation',
     },
     {
       text: 'Actions',
-      children: [{
+      children: [
+        {
           text: 'Adding actions',
-          link: '/action/02-add-action'
+          link: '/action/02-add-action',
         },
         {
           text: 'Subscribe/Unsubscribe (on/off),once',
-          link: '/action/03-subscribtion'
+          link: '/action/03-subscribtion',
         },
         {
           text: 'ActMasterAction',
-          link: '/action/04-actions'
+          link: '/action/04-actions',
+        },
+        {
+          text: 'VanillaJS, React, or Composition API',
+          link: '/action/05-composition-api',
         },
       ],
     },
     {
       text: 'Tests',
-      children: [{
-        text: 'ActMaster test-utils',
-        link: '/testing/05-testing'
-      }, ],
+      children: [
+        {
+          text: 'ActMaster test-utils',
+          link: '/testing/05-testing',
+        },
+      ],
+    },
+    {
+      text: 'Advanced',
+      children: [
+        {
+          text: 'Advanced unsubscribe',
+          link: '/advanced/06-subsList',
+        },
+        {
+          text: 'Advanced single execution',
+          link: '/advanced/07-single-execution',
+        },
+        {
+          text: 'Advanced emit many results',
+          link: '/advanced/08-emit-many-results',
+        },
+        {
+          text: 'Convert function to action',
+          link: '/advanced/09-function-to-action',
+        },
+      ],
     },
     {
       text: 'Tips and tricks',
-      children: [{
-        text: 'WebSocket',
-        link: '/tips/web-socket'
-      }, ],
+      children: [
+        {
+          text: 'WebSocket',
+          link: '/tips/web-socket',
+        },
+      ],
     },
   ];
 }

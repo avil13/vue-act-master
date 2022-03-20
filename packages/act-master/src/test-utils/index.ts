@@ -13,6 +13,7 @@ export class ActTest {
 
   static getInstance(options: ActMasterOptions = {}): ActMaster {
     if (options || !ActTest.$act) {
+      ActTest.removeSingleton();
       ActTest.$act = new ActMaster(options);
     }
     return ActTest.$act;
@@ -61,21 +62,44 @@ export class ActTest {
     return ActTest.$act.subscribe(eventName, listener, context);
   }
 
-  static entityCount(key: 'actions' | 'waiters' | 'listeners' | 'di'): number {
+  static entityCount(key: 'actions' | 'watchers' | 'listeners' | 'di'): number {
+    if (key === 'di') {
+      //@ts-ignore
+      return Object.keys(ActTest.$act._DIContainer).length;
+    }
+
+    if (key === 'actions') {
+      //@ts-ignore
+      return ActTest.$act._actions.size;
+    }
+
     const map = {
-      actions: '_actions',
-      waiters: '_waiters',
+      watchers: '_watchers',
       listeners: '_listeners',
-      di: '_DIContainer',
-    };
+    } as const;
 
     const propName = map[key];
 
-    //@ts-ignore
-    return Object.keys(ActTest.$act[propName]).length;
+    let count = 0;
+
+    ActTest.$act[propName].forEach((val) => {
+      count += val.length;
+    });
+
+    return count;
   }
 
   static getLastResult(): any {
     return ActTest._lastResult;
+  }
+
+  static makeActionStub(action?: Partial<ActMasterAction>): ActMasterAction {
+    const act = {
+      name: `${Math.random()}`,
+      exec: () => null,
+      ...action,
+    };
+
+    return act;
   }
 }

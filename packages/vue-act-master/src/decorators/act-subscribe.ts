@@ -1,7 +1,7 @@
 /* eslint-disable */
 import { ActEventName } from 'act-master';
 import { ComponentOptions } from 'vue';
-import * as Vue from 'vue/types/umd';
+import { createDecorator, VueDecorator } from './helpers';
 
 /**
  * Decorator auto binning on the subscription result.
@@ -9,7 +9,11 @@ import * as Vue from 'vue/types/umd';
  * that will cause memory leak.
  *
  */
-export function ActSubscribe(eventName: ActEventName) {
+export function ActSubscribe(
+  eventName: ActEventName,
+  pathToData?: PathToData,
+  defaultValue: unknown = null
+): VueDecorator {
   return createDecorator((componentOptions, key) => {
     const subscribeHook = {
       created() {
@@ -17,8 +21,16 @@ export function ActSubscribe(eventName: ActEventName) {
         this.$act.subscribe(
           eventName,
           (data: any) => {
+            const value = objectPath(data, pathToData, defaultValue);
+
             //@ts-ignore
-            this[key] = data;
+            if (typeof this[key] === 'function') {
+              //@ts-ignore
+              this[key](value);
+            } else {
+              //@ts-ignore
+              this[key] = value;
+            }
           },
           this
         );
@@ -33,43 +45,34 @@ export function ActSubscribe(eventName: ActEventName) {
   });
 }
 
+type GetValueCallback = (value: any) => any;
 
-// helpers
+type PathToData = string | null | GetValueCallback;
 
-type VueClass<V> = { new(...args: any[]): V & Vue } & typeof Vue
+function objectPath(obj: any, path?: PathToData, defaultValue?: unknown) {
+  if (obj === undefined) {
+    return defaultValue;
+  }
 
-type DecoratedClass = VueClass<Vue> & {
-  // Property, method and parameter decorators created by `createDecorator` helper
-  // will enqueue functions that update component options for lazy processing.
-  // They will be executed just before creating component constructor.
-  __decorators__?: ((options: ComponentOptions<Vue>) => void)[]
-}
+  if (typeof path === 'function') {
+    return path(obj);
+  }
 
-interface VueDecorator {
-  // Class decorator
-  (Ctor: typeof Vue): void
+  let value = obj;
 
-  // Property decorator
-  (target: Vue, key: string): void
-
-  // Parameter decorator
-  (target: Vue, key: string, index: number): void
-}
-
-export function createDecorator(
-  factory: (options: ComponentOptions<Vue>, key: string, index: number) => void
-): VueDecorator {
-  return (target: Vue | typeof Vue, key?: any, index?: any) => {
-    const Ctor =
-      typeof target === 'function'
-        ? (target as DecoratedClass)
-        : (target.constructor as DecoratedClass);
-    if (!Ctor.__decorators__) {
-      Ctor.__decorators__ = [];
+  if (path) {
+    const list = (path || '').split('.');
+    let key;
+    let i = 0;
+    for (i = 0; i < list.length && value; i++) {
+      key = list[i];
+      value = value[key];
     }
-    if (typeof index !== 'number') {
-      index = undefined;
-    }
-    Ctor.__decorators__.push((options) => factory(options, key, index));
-  };
+  }
+
+  if (value === undefined) {
+    return defaultValue;
+  }
+
+  return value;
 }

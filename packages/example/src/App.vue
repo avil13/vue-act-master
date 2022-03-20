@@ -61,7 +61,7 @@ export default defineComponent({
 
     // Watching authorization checks.
     this.unsubscribe = this.$act.subscribe(
-      eventNames.checkAuth, // event nmae
+      eventNames.checkAuth, // event name
       (val: boolean) => {
         // handler
         this.isAuth = val;
@@ -82,3 +82,16 @@ export default defineComponent({
   },
 });
 </script>
+
+
+<style>
+.navbar {
+  box-shadow: 0 0 4px 1px #D1D1D1;
+}
+
+.navbar .container {
+  display: flex;
+  justify-content: space-between;
+}
+</style>
+

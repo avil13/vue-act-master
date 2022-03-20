@@ -21,12 +21,17 @@ jobs:
           node-version: 14
           registry-url: https://registry.npmjs.org/
 
+      - name: Set NEED_PUBLISH
+        run: echo "NEED_PUBLISH=$(./has-changes.sh)" >> $GITHUB_ENV
+
       - name: Install and Build - ⌛&🏗️
+        if: ${{ env.NEED_PUBLISH }}
         run: |
           yarn
           yarn build
 
       - name: Deploy 🚀.🚀.🚀
+        if: ${{ env.NEED_PUBLISH }}
         uses: JamesIves/github-pages-deploy-action@releases/v3
         with:
           ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}

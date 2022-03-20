@@ -1,4 +1,5 @@
 import { ActMaster } from 'act-master';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { VueActMaster } from '..';
 
 //#region [ emulate Vue install ]
@@ -20,7 +21,7 @@ describe('VueActMaster', () => {
     $act.addActions([
       {
         name,
-        exec: jest.fn(() => expectRandomValue),
+        exec: vi.fn(() => expectRandomValue),
         ...extendObj,
       },
     ]);
@@ -126,7 +127,7 @@ describe('VueActMaster', () => {
 
       addTestAction(ACTION_NAME);
 
-      const mockCallback = jest.fn();
+      const mockCallback = vi.fn();
       const vueComp = { $once: mockCallback };
 
       //@ts-ignore

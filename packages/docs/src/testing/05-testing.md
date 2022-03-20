@@ -88,6 +88,7 @@ it('Example check subscription', async () => {
 | resetAll         | Resets the ActMaster settings
 | getLastResult    | Returns the last value
 | addActions       | Adds actions
+| makeActionStub   | Create empty action for testing
 | exec             | Execute action
 | subscribe        | Subscribes to action
 | entityCount      | Returns the number of entities ('actions' \| 'waiters' \| 'listeners' \| 'di') *

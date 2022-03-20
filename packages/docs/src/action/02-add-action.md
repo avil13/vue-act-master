@@ -1,5 +1,7 @@
 # Add Actions to Vue-act-master
 
+[[toc]]
+
 You can add actions in different ways.
 
 Suppose you have a variable with an array of actions:
@@ -36,4 +38,14 @@ export default {
   },
 };
 </script>
+```
+
+## With helpers
+
+```ts
+import { act, addActions } from 'act-master';
+
+act.addActions([someAction]);
+// OR
+addActions([someAction]);
 ```

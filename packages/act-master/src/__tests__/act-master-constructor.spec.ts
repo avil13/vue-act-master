@@ -1,4 +1,5 @@
 import { ActMaster, ActMasterOptions } from 'act-master';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { ActTest } from '../test-utils';
 
 let $act: ActMaster = ActTest.getInstance();
@@ -97,7 +98,7 @@ describe('ActMaster constructor options', () => {
   });
 
   it('autoUnsubscribeCallback', () => {
-    const mockFn = jest.fn();
+    const mockFn = vi.fn();
 
     init({
       autoUnsubscribeCallback: mockFn,
@@ -110,7 +111,7 @@ describe('ActMaster constructor options', () => {
 
   it('errorHandlerEventName in constructor', async () => {
     const errorHandlerEventName = 'on_err';
-    const mockFn = jest.fn(() => true);
+    const mockFn = vi.fn(() => true);
 
     init({
       errorHandlerEventName,
@@ -133,8 +134,8 @@ describe('ActMaster constructor options', () => {
     const errorHandlerEventName1 = 'on_err_1';
     const errorHandlerEventName2 = 'on_err_2';
 
-    const mockFn1 = jest.fn(() => true);
-    const mockFn2 = jest.fn(() => true);
+    const mockFn1 = vi.fn(() => true);
+    const mockFn2 = vi.fn(() => true);
 
     init({
       errorHandlerEventName: errorHandlerEventName1,

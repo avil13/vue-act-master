@@ -1,12 +1,18 @@
 import { ActMaster } from 'act-master';
-import Vue from 'vue';
-
+import { beforeAll, beforeEach, describe, expect, it } from 'vitest';
+import { createApp } from 'vue';
 import { ActSubscribe } from '../decorators';
+import { VueActMaster } from '../index';
 
 const $act = new ActMaster();
 
-describe('vue-act-master Subscribe decorator', () => {
-  const ACTION_NAME = 'ACTION_NAME';
+describe.skip('vue-act-master Subscribe decorator', () => {
+  let DATA = Math.random();
+  let app;
+  beforeAll(() => {
+    app = createApp({});
+    app.use(VueActMaster);
+  });
 
   beforeEach(() => {
     if ($act) {
@@ -14,10 +20,11 @@ describe('vue-act-master Subscribe decorator', () => {
       $act.clearListeners();
       $act.clearDI();
     }
+    DATA = Math.random();
   });
 
-  it('ActSubscribe', async () => {
-    const DATA = Math.random();
+  it('simple', async () => {
+    const ACTION_NAME = 'simple';
 
     $act.addActions([
       {
@@ -28,7 +35,7 @@ describe('vue-act-master Subscribe decorator', () => {
       },
     ]);
 
-    class TestClass extends Vue {
+    class TestClass {
       @ActSubscribe(ACTION_NAME)
       orderData = null;
     }
@@ -37,7 +44,118 @@ describe('vue-act-master Subscribe decorator', () => {
 
     await $act.exec(ACTION_NAME, DATA);
 
-    expect('TODO: Need fix this test' || comp).toBeTruthy();
-    // expect(comp.orderData).toBe(DATA);
+    expect(comp.orderData).toBe(DATA);
+  });
+
+  it('get prop string', async () => {
+    const ACTION_NAME = 'get prop string';
+
+    $act.addActions([
+      {
+        name: ACTION_NAME,
+        exec(data) {
+          return data;
+        },
+      },
+    ]);
+
+    class TestClass {
+      @ActSubscribe(ACTION_NAME, 'value.item')
+      orderData = null;
+    }
+
+    const comp = new TestClass();
+
+    await $act.exec(ACTION_NAME, {
+      value: {
+        item: DATA,
+      },
+    });
+
+    expect(comp.orderData).toBe(DATA);
+  });
+
+  it('get prop Function', async () => {
+    const ACTION_NAME = 'get prop Function';
+
+    $act.addActions([
+      {
+        name: ACTION_NAME,
+        exec(data) {
+          return data;
+        },
+      },
+    ]);
+
+    class TestClass {
+      @ActSubscribe(ACTION_NAME, ({ value }) => value.item)
+      orderData = null;
+    }
+
+    const comp = new TestClass();
+
+    await $act.exec(ACTION_NAME, {
+      value: {
+        item: DATA,
+      },
+    });
+
+    expect(comp.orderData).toBe(DATA);
+  });
+
+  it('wrap method', async () => {
+    const ACTION_NAME = 'wrap method';
+
+    $act.addActions([
+      {
+        name: ACTION_NAME,
+        exec(data) {
+          return data;
+        },
+      },
+    ]);
+
+    class TestClass {
+      @ActSubscribe(ACTION_NAME, 'value')
+      onChange(data: any) {
+        this.orderData = data.item;
+      }
+
+      orderData = null;
+    }
+
+    const comp = new TestClass();
+
+    await $act.exec(ACTION_NAME, {
+      value: {
+        item: DATA,
+      },
+    });
+
+    expect(comp.orderData).toBe(DATA);
+  });
+
+  it('default value', async () => {
+    const ACTION_NAME = 'default value';
+
+    $act.addActions([
+      {
+        name: ACTION_NAME,
+        exec(data) {
+          return data;
+        },
+      },
+    ]);
+
+    class TestClass {
+      @ActSubscribe(ACTION_NAME, null, 101)
+      orderData = null;
+    }
+
+    const comp = new TestClass();
+
+    await $act.exec(ACTION_NAME);
+
+    expect(comp.orderData).toBe(101);
   });
 });
