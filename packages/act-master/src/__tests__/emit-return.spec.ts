@@ -1,4 +1,4 @@
-import { ActMasterAction, ActTest, Emit, emitAction } from 'act-master';
+import { ActMasterAction, ActTest, Emit, EmitAction } from '..';
 import { describe, expect, it, vi } from 'vitest';
 
 describe('Emit return value', () => {
@@ -9,7 +9,7 @@ describe('Emit return value', () => {
       name = 'ACT_NAME';
 
       @Emit()
-      emit!: emitAction;
+      emit!: EmitAction;
 
       exec() {
         this.emit('ACT_NAME', 'one');

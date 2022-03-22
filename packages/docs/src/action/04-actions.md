@@ -412,12 +412,12 @@ You can use this to [return different values](../advanced/08-emit-many-results.h
 ```ts
 // with-emit-action.ts
 
-import { ActMasterAction, emitAction } from 'vue-act-master';
+import { ActMasterAction, EmitAction } from 'vue-act-master';
 
 export class WithEmitAction implements ActMasterAction {
   name = 'login';
 
-  private emit: emitAction;
+  private emit: EmitAction;
 
   exec(loginData) {
     const result = api.login(loginData);
@@ -427,7 +427,7 @@ export class WithEmitAction implements ActMasterAction {
   }
 
   // set Emitter
-  useEmit(emit: emitAction) {
+  useEmit(emit: EmitAction) {
     this.emit = emit;
   }
 }
@@ -439,13 +439,13 @@ OR
 // with-emit-action.ts
 // with decorator
 
-import { ActMasterAction, Emit, emitAction } from 'vue-act-master';
+import { ActMasterAction, Emit, EmitAction } from 'vue-act-master';
 
 export class WithEmitAction implements ActMasterAction {
   name = 'login';
 
   @Emit()
-  private emit!: emitAction;
+  private emit!: EmitAction;
 
   exec(loginData) {
     const result = api.login(loginData);

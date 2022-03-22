@@ -1,4 +1,4 @@
-import { ActMaster, ActMasterOptions } from 'act-master';
+import { ActMaster, ActMasterOptions } from '..';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { ActTest } from '../test-utils';
 

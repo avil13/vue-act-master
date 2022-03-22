@@ -1,4 +1,4 @@
-import { ActMaster, ActMasterAction, UseDI } from 'act-master';
+import { ActMaster, ActMasterAction, UseDI } from '..';
 import { beforeEach, describe, expect, it, SpyInstanceFn, vi } from 'vitest';
 
 describe('DI', () => {

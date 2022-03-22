@@ -1,4 +1,4 @@
-import { ActMaster, ActMasterAction, Emit, emitAction } from 'act-master';
+import { ActMaster, ActMasterAction, Emit, EmitAction } from '..';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 describe('EMIT', () => {
@@ -22,8 +22,8 @@ describe('EMIT', () => {
 
     class TestActionClass implements ActMasterAction {
       name = ACTION_NAME_1;
-      emit!: emitAction;
-      useEmit(emit: emitAction) {
+      emit!: EmitAction;
+      useEmit(emit: EmitAction) {
         this.emit = emit;
       }
       async exec(data: number) {
@@ -54,7 +54,7 @@ describe('EMIT', () => {
     class TestActionClass implements ActMasterAction {
       name = ACTION_NAME_1;
       @Emit()
-      emit!: emitAction;
+      emit!: EmitAction;
       async exec(data: number) {
         await this.emit(ACTION_NAME_2, data);
       }

@@ -23,7 +23,7 @@ To work with WebSocket you will need to create two actions.
 ```ts{6}
 // ws-message-action.ts
 
-import { ActMasterAction, Emit, emitAction } from 'vue-act-master';
+import { ActMasterAction, Emit, EmitAction } from 'vue-act-master';
 
 export class WsMessageAction implements ActMasterAction {
   name = 'ws.onMessage'; // we will subscribe to this event
@@ -40,13 +40,13 @@ export class WsMessageAction implements ActMasterAction {
 ```ts{6}
 // ws-action.ts
 
-import { ActMasterAction, Emit, emitAction } from 'vue-act-master';
+import { ActMasterAction, Emit, EmitAction } from 'vue-act-master';
 
 export class WsAction implements ActMasterAction {
   name = 'ws.make';
 
   @Emit();
-  private emit!: emitAction;
+  private emit!: EmitAction;
 
   // Property is static, so as not to create multiple copies
   static socket: WebSocket;

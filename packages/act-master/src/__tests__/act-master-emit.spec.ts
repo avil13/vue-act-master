@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { Emit } from '../decorators';
 import { ActTest } from '../test-utils';
-import { ActMasterAction, emitAction } from '../types';
+import { ActMasterAction, EmitAction } from '..';
 
 const $act = ActTest.getInstance();
 
@@ -19,8 +19,8 @@ describe('EMIT', () => {
 
     class TestActionClass implements ActMasterAction {
       name = ACTION_NAME_1;
-      emit!: emitAction;
-      useEmit(emit: emitAction) {
+      emit!: EmitAction;
+      useEmit(emit: EmitAction) {
         this.emit = emit;
       }
       async exec(data: number) {
@@ -51,7 +51,7 @@ describe('EMIT', () => {
     class TestActionClass implements ActMasterAction {
       name = ACTION_NAME_1;
       @Emit()
-      emit!: emitAction;
+      emit!: EmitAction;
       async exec(data: number) {
         await this.emit(ACTION_NAME_2, data);
       }

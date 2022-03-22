@@ -41,14 +41,14 @@ It was discussed [here](../action/04-actions.html#emit-another-action-in-action)
 
 ```ts
 // with-emit-action.ts
-import { ActMasterAction, emitAction } from 'vue-act-master';
+import { ActMasterAction, EmitAction } from 'vue-act-master';
 
 import { api } from '../you/api';
 
 export class WithEmitAction implements ActMasterAction {
   name = 'GetItems';
 
-  private emit: emitAction;
+  private emit: EmitAction;
 
   exec() {
     this.emit([]); // Show empty array
@@ -57,7 +57,7 @@ export class WithEmitAction implements ActMasterAction {
   }
 
   // set Emitter
-  useEmit(emit: emitAction) {
+  useEmit(emit: EmitAction) {
     this.emit = emit;
   }
 }

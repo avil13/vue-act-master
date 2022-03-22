@@ -1,4 +1,4 @@
-import { ActMaster } from 'act-master';
+import { ActMaster } from '..';
 import { beforeAll, beforeEach, describe, expect, it } from 'vitest';
 import { createApp } from 'vue';
 import { ActSubscribe } from '../decorators';

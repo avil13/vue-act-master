@@ -1,13 +1,11 @@
+import { ActEventName, EmitAction } from './act-master';
 import { CancelledAct } from './cancelled';
 
-export type ActEventName = string;
-
-export type emitAction<T = any> = (
-  name: ActEventName,
-  ...data: any[]
-) => Promise<T>;
-
+/**
+ * @deprecated use ListenerFunction
+ */
 export type listenerFunction = (arg: any) => any;
+export type ListenerFunction = (arg: any) => any;
 
 export type TransformerFn = (value: any) => any | Promise<CancelledAct | any>;
 
@@ -48,11 +46,11 @@ export interface ActMasterAction {
   /**
    * Function executor
    */
-  exec(...args: any[]): Promise<CancelledAct | any> | CancelledAct | any;
+  exec(...args: any): Promise<CancelledAct | any> | CancelledAct | any;
   /**
    * Name of the action
    */
-  readonly name: ActEventName;
+  readonly name: string;
   /**
    * Transform data after exec
    */
@@ -81,7 +79,7 @@ export interface ActMasterAction {
   /**
    * Pass Emitter to action
    */
-  useEmit?: (emit: emitAction) => void;
+  useEmit?: (emit: EmitAction) => void;
   /**
    * Name of the action that catches the error
    */

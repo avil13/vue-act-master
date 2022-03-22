@@ -28,7 +28,7 @@
     "test:watch": "vitest dev",
     "test": "vitest run --coverage",
     "type-check:watch": "npm run type-check -- --watch",
-    "type-check": "tsc -p ./tsconfig.prod.json --noEmit",
+    "type-check": "tsc -p ./tsconfig.json --noEmit",
     "prepublishOnly": "yarn run test && yarn run build"
   },
   "husky": {
