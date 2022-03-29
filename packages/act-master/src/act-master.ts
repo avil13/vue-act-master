@@ -22,7 +22,7 @@ export * from './types';
 export * from './decorators/index';
 export { CancelledAct };
 
-export type ActEventName = Parameters<ActMaster['exec']>[0];
+export type ActEventName = string;
 
 /**
  * @deprecated use EmitAction
