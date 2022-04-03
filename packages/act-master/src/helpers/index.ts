@@ -2,9 +2,12 @@ import {
   ActEventName,
   ActMaster,
   ActMasterAction,
+  ActMasterOptions,
   EmitAction,
   ListenerFunction,
 } from '../act-master';
+
+act.init = (options: ActMasterOptions) => new ActMaster(options);
 
 // #region [ exec ]
 export const exec: EmitAction = (eventName: ActEventName, ...args: any[]) =>

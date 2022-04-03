@@ -10,12 +10,12 @@ yarn install act-master
 ```
 
 ```ts
-import { ActMaster } from 'act-master';
+import { act } from 'act-master';
 // Actions
 import { actions } from '../you/actions/path';
 
 // Init
-new ActMaster({
+act.init({
   actions
 });
 ```
@@ -34,7 +34,7 @@ Now we can program.
 import { act } from 'act-master';
 
 // This call returns an ActMaster instance in which all methods are available.
-const $act = act()
+const $act = act();
 $act.exec('get.data');
 $act.on('get.data', handler);
 ```
@@ -48,6 +48,8 @@ Fewer words, the code will be clearer.
 ```ts
 import { act, exec } from 'act-master';
 
+act().exec('get.data');
+// OR
 act.exec('get.data');
 // OR
 exec('get.data');
@@ -60,9 +62,11 @@ exec('get.data');
 import { act, actSubscribe, subscribe } from 'act-master';
 
 subscribe('get.data', handler);
+// OR
 actSubscribe('get.data', handler);
 
 act.subscribe('get.data', handler);
+// OR
 act.on('get.data', handler);
 ```
 
