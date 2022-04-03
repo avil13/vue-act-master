@@ -1,0 +1,1 @@
+import{_ as n,c as s,o as a,a as t}from"./app.2a3f081e.js";const h='{"title":"Pass many results from one action","description":"","frontmatter":{},"relativePath":"advanced/08-emit-many-results.md","lastUpdated":1648975299916}',p={},e=t("",7),o=[e];function c(u,i,l,k,r,m){return a(),s("div",null,o)}var y=n(p,[["render",c]]);export{h as __pageData,y as default};
