@@ -3,7 +3,7 @@
     "outDir": "dist/",
     "rootDir": "./src",
     "resolveJsonModule": true,
-    "target": "ES2015",
+    "target": "ES5",
     "module": "ES2015",
     /* Specify module code generation: 'none', 'commonjs', 'amd', 'system', 'umd', 'es2015', or 'ESNext'. */
     "lib": ["es2015"],
