@@ -39,15 +39,20 @@ export const generateCommand = async () => {
 
   await removeFile(ActCliConfig.generate.actionsInterface);
 
-  let prefix =
-    contentCtx.content +
-    (ActCliConfig.generate.actionsInterfaceTextPrefix || '');
+  const prefix = [];
+
+  if (contentCtx.content) {
+    prefix.push(contentCtx.content);
+  }
+  if (ActCliConfig.generate.actionsInterfaceTextPrefix) {
+    prefix.push(ActCliConfig.generate.actionsInterfaceTextPrefix);
+  }
 
   let listImportedFiles = await makeInterfaceContent(
     ActCliConfig.generate.actionsInterface,
     actionFilteredList,
     true,
-    prefix
+    prefix.join('\n')
   );
 
   indexInfo += `\nInterface: "${ActCliConfig.generate.actionsInterface}"`;
@@ -62,8 +67,12 @@ export const generateCommand = async () => {
       ActCliConfig.generate.actionsIndexFile
     );
 
-    prefix =
-      contentCtx.content + (ActCliConfig.generate.actionsIndexTextPrefix || '');
+    if (contentCtx.content) {
+      prefix.push(contentCtx.content);
+    }
+    if (ActCliConfig.generate.actionsIndexTextPrefix) {
+      prefix.push(ActCliConfig.generate.actionsIndexTextPrefix);
+    }
 
     await removeFile(ActCliConfig.generate.actionsIndexFile);
 
@@ -71,7 +80,7 @@ export const generateCommand = async () => {
       ActCliConfig.generate.actionsIndexFile,
       actionFilteredList,
       true,
-      prefix
+      prefix.join('\n')
     );
     indexInfo += `\nActions file: "${ActCliConfig.generate.actionsIndexFile}"`;
   }

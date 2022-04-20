@@ -150,12 +150,12 @@ export const makeInterfaceContent = async (
 
   sourceFile.replaceWithText(declarationText);
 
-  sourceFile.insertText(0, interfaceTextPrefix);
-
   sourceFile.addImportDeclaration({
     namedImports: [{ name: 'ActMaster' }],
     moduleSpecifier: 'act-master',
   });
+
+  sourceFile.insertText(0, interfaceTextPrefix);
 
   sourceFile.formatText({
     ensureNewLineAtEndOfFile: true,

@@ -92,13 +92,13 @@ export const makeIndexContent = async (
     ],
   });
 
-  if (interfaceTextPrefix) {
-    sourceFile.insertText(0, interfaceTextPrefix);
-  }
-
   const config = await configManager.getConfig();
 
   sourceFile.addImportDeclarations(getImportDeclarations(items, config));
+
+  if (interfaceTextPrefix) {
+    sourceFile.insertText(0, interfaceTextPrefix);
+  }
 
   sourceFile.formatText({
     ensureNewLineAtEndOfFile: true,
