@@ -6,14 +6,12 @@ import {
   NotFoundActionError,
 } from './errors';
 import {
-  ActEventName,
   ActMasterAction,
   ActMasterActionDevDI,
   ActMasterOptions,
   devActMasterConfig,
   DIMap,
-  emitAction,
-  listenerFunction,
+  ListenerFunction,
 } from './types';
 
 //@ts-ignore
@@ -24,6 +22,14 @@ export * from './types';
 export * from './decorators/index';
 export { CancelledAct };
 
+export type ActEventName = string;
+
+/**
+ * @deprecated use EmitAction
+ */
+export type emitAction = EmitAction;
+
+export type EmitAction = ActMaster['exec'];
 /**
  *
  */
@@ -34,7 +40,7 @@ export class ActMaster {
 
   private readonly _watchers = new Map<ActEventName, ActEventName[]>();
 
-  private readonly _listeners = new Map<ActEventName, listenerFunction[]>();
+  private readonly _listeners = new Map<ActEventName, ListenerFunction[]>();
 
   private readonly _inProgressWatchers = new Map<
     ActEventName,
@@ -132,12 +138,12 @@ export class ActMaster {
     }
 
     if (action.useEmit && action.name) {
-      const bindedEmitter: emitAction = async (
+      const bindedEmitter: EmitAction = async (
         eventName: ActEventName,
         ...args
       ) => {
         if (action.name === eventName) {
-          return this.notifyListeners(eventName, args[0]);
+          return this.notifyListeners(eventName, args[0]) as any; // TODO: remove any
         }
         return this.emit(eventName, ...args);
       };
@@ -181,7 +187,7 @@ export class ActMaster {
   //#endregion
 
   //#region [ Executions ]
-  async exec<T = any>(eventName: ActEventName, ...args: any[]): Promise<T> {
+  async exec<T = any>(eventName: string, ...args: any[]): Promise<T> {
     this.setProgress(eventName, true);
 
     if (this._singlePromisesStore.has(eventName)) {
@@ -289,10 +295,10 @@ export class ActMaster {
   }
   //#endregion
 
-  //#region [ Subscribtions ]
+  //#region [ Subscribing ]
   subscribe(
     eventName: ActEventName,
-    listener: listenerFunction,
+    listener: ListenerFunction,
     context?: any
   ): () => boolean {
     this._listeners.set(eventName, [
@@ -315,7 +321,7 @@ export class ActMaster {
     return unsubscribe;
   }
 
-  unsubscribe(eventName: ActEventName, listener: listenerFunction): boolean {
+  unsubscribe(eventName: ActEventName, listener: ListenerFunction): boolean {
     const listeners = this._listeners.get(eventName);
     if (!listeners) {
       return false;
@@ -331,7 +337,7 @@ export class ActMaster {
     return index > -1;
   }
 
-  once(eventName: ActEventName, listener: listenerFunction): () => boolean {
+  once(eventName: ActEventName, listener: ListenerFunction): () => boolean {
     const unsubscribe = this.subscribe(eventName, (...args) => {
       unsubscribe();
       listener(...args);
@@ -341,13 +347,13 @@ export class ActMaster {
 
   on(
     eventName: ActEventName,
-    listener: listenerFunction,
+    listener: ListenerFunction,
     context?: any
   ): () => boolean {
     return this.subscribe(eventName, listener, context);
   }
 
-  off(eventName: ActEventName, listener: listenerFunction): boolean {
+  off(eventName: ActEventName, listener: ListenerFunction): boolean {
     return this.unsubscribe(eventName, listener);
   }
   //#endregion

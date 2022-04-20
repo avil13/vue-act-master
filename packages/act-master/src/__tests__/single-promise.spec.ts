@@ -1,4 +1,4 @@
-import { ActMasterAction, ActTest } from 'act-master';
+import { ActMasterAction, ActTest } from '..';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
 const $act = ActTest.getInstance();

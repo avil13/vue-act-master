@@ -1,4 +1,4 @@
-import { act, ActMaster, actSubscribe, ActTest, addActions } from 'act-master';
+import { act, ActMaster, actSubscribe, ActTest, addActions } from '../..';
 import { beforeEach, describe, expect, it } from 'vitest';
 import { fn2act } from '../function-to-action';
 

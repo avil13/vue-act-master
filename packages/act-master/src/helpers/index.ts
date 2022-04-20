@@ -2,11 +2,15 @@ import {
   ActEventName,
   ActMaster,
   ActMasterAction,
-  listenerFunction,
+  ActMasterOptions,
+  EmitAction,
+  ListenerFunction,
 } from '../act-master';
 
+act.init = (options: ActMasterOptions) => new ActMaster(options);
+
 // #region [ exec ]
-export const exec = (eventName: ActEventName, ...args: any[]) =>
+export const exec: EmitAction = (eventName: ActEventName, ...args: any[]) =>
   act().exec(eventName, ...args);
 
 act.exec = exec;
@@ -22,7 +26,7 @@ act.addActions = addActions;
 // #region [ subscribe ]
 export const subscribe = (
   eventName: ActEventName,
-  listener: listenerFunction,
+  listener: ListenerFunction,
   destroyHookOrKey?: any
 ): (() => boolean) => {
   const off = act().subscribe(eventName, listener);

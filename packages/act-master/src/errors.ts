@@ -1,4 +1,4 @@
-import { ActEventName } from './types';
+import { ActEventName } from './act-master';
 
 export class NotFoundActionError extends Error {
   constructor(public readonly eventName: ActEventName) {

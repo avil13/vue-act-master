@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 import { CancelledAct } from '../cancelled';
 import { ActTest } from '../test-utils';
-import { emitAction } from '../types';
+import { EmitAction } from '..';
 import { addTestActionFactory } from './test-helpers';
 
 const $act = ActTest.getInstance({});
@@ -48,7 +48,7 @@ describe('CancelledAct with action', () => {
     // second action
     const { eventName } = addTestAction({
       exec() {
-        return (this.emit as emitAction)(name1, null);
+        return (this.emit as EmitAction)(name1, null);
       },
       emit: () => void 0,
       useEmit(emit) {

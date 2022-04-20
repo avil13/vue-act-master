@@ -1,11 +1,6 @@
-import { ActMaster } from '../act-master';
+import { ActEventName, ActMaster } from '../act-master';
 import { CancelledAct } from '../cancelled';
-import {
-  ActEventName,
-  ActMasterAction,
-  ActMasterOptions,
-  listenerFunction,
-} from '../types';
+import { ActMasterAction, ActMasterOptions, ListenerFunction } from '../types';
 
 export class ActTest {
   private static $act: ActMaster;
@@ -56,7 +51,7 @@ export class ActTest {
 
   static subscribe(
     eventName: ActEventName,
-    listener: listenerFunction,
+    listener: ListenerFunction,
     context?: any
   ): () => boolean {
     return ActTest.$act.subscribe(eventName, listener, context);
