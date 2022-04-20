@@ -31,7 +31,7 @@ describe('validateItem', () => {
     expect(res).toMatch(expected);
   });
 
-  it.only('getInterfaceContent WITH PREFIX', async () => {
+  it('getInterfaceContent WITH PREFIX', async () => {
     const prefix = '// IS GENERATED!\n\n';
 
     const items = getItems('../../__fixtures__/**/*ts');
@@ -67,9 +67,9 @@ export const actions: ActMasterAction[] = [
 
     const etalonImports = `
 import { ActMasterAction } from "act-master";
-import { AsyncAction } from "@/utils/__fixtures__/actions/async-action.ts";
-import { NoPromiseAction } from "@/utils/__fixtures__/actions/no-promise.ts";
-import { WithOtherTypeReturn } from "@/utils/__fixtures__/actions/with-other-type-return.ts"
+import { AsyncAction } from "@/utils/__fixtures__/actions/async-action";
+import { NoPromiseAction } from "@/utils/__fixtures__/actions/no-promise";
+import { WithOtherTypeReturn } from "@/utils/__fixtures__/actions/with-other-type-return"
 `.trim();
 
     expect(res).toContain(etalonList);
