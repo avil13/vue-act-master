@@ -1,6 +1,6 @@
 {
   "name": "act-master-cli",
-  "version": "0.2.2",
+  "version": "0.3.0",
   "author": "avil13",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",

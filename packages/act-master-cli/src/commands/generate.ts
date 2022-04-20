@@ -4,7 +4,7 @@ import { actionFilter, IFilteredItem } from '../utils/02-filter-list';
 import { validateItem } from '../utils/03-validete-item';
 import { makeIndexContent } from '../utils/04-create-interface/make-index-content';
 import { makeInterfaceContent } from '../utils/04-create-interface/make-interface-content';
-import { removeFile } from './../utils/file-helper';
+import { getStaticContentFromFile, removeFile } from './../utils/file-helper';
 
 const configManager = new ConfigManager();
 
@@ -33,12 +33,21 @@ export const generateCommand = async () => {
   });
 
   // create actions interface
+  let contentCtx = await getStaticContentFromFile(
+    ActCliConfig.generate.actionsInterface
+  );
+
   await removeFile(ActCliConfig.generate.actionsInterface);
+
+  let prefix =
+    contentCtx.content +
+    (ActCliConfig.generate.actionsInterfaceTextPrefix || '');
+
   let listImportedFiles = await makeInterfaceContent(
     ActCliConfig.generate.actionsInterface,
     actionFilteredList,
     true,
-    ActCliConfig.generate.actionsInterfaceTextPrefix || ''
+    prefix
   );
 
   indexInfo += `\nInterface: "${ActCliConfig.generate.actionsInterface}"`;
@@ -49,16 +58,26 @@ export const generateCommand = async () => {
 
   // actions index
   if (ActCliConfig.generate.actionsIndexFile) {
+    contentCtx = await getStaticContentFromFile(
+      ActCliConfig.generate.actionsIndexFile
+    );
+
+    prefix =
+      contentCtx.content + (ActCliConfig.generate.actionsIndexTextPrefix || '');
+
     await removeFile(ActCliConfig.generate.actionsIndexFile);
+
     makeIndexContent(
       ActCliConfig.generate.actionsIndexFile,
       actionFilteredList,
       true,
-      ActCliConfig.generate.actionsIndexTextPrefix || ''
+      prefix
     );
     indexInfo += `\nActions file: "${ActCliConfig.generate.actionsIndexFile}"`;
   }
 
-  indexInfo += `\n\nactions list:\n - ${[listImportedFiles.join('\n - ')]}\n`;
+  indexInfo = `\n\nactions list:\n - ${[
+    listImportedFiles.join('\n - '),
+  ]}\n\n${indexInfo}`;
   console.log(indexInfo);
 };
