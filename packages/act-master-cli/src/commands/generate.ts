@@ -33,29 +33,29 @@ export const generateCommand = async () => {
   });
 
   // create actions interface
-  let contentCtx = await getStaticContentFromFile(
+  const contentCtxInterface = await getStaticContentFromFile(
     ActCliConfig.generate.actionsInterface
   );
 
   await removeFile(ActCliConfig.generate.actionsInterface);
 
-  const prefix = [];
+  const prefixForInterface = [];
 
-  if (contentCtx.content) {
-    prefix.push(contentCtx.content);
+  if (contentCtxInterface.content) {
+    prefixForInterface.push(contentCtxInterface.content);
   }
   if (ActCliConfig.generate.actionsInterfaceTextPrefix) {
-    prefix.push(ActCliConfig.generate.actionsInterfaceTextPrefix);
+    prefixForInterface.push(ActCliConfig.generate.actionsInterfaceTextPrefix);
   }
 
   let listImportedFiles = await makeInterfaceContent(
     ActCliConfig.generate.actionsInterface,
     actionFilteredList,
     true,
-    prefix.join('\n')
+    prefixForInterface.join('\n')
   );
 
-  indexInfo += `\nInterface: "${ActCliConfig.generate.actionsInterface}"`;
+  indexInfo += `\nInterface:    "${ActCliConfig.generate.actionsInterface}"`;
 
   if (!Array.isArray(listImportedFiles)) {
     listImportedFiles = [listImportedFiles];
@@ -63,15 +63,16 @@ export const generateCommand = async () => {
 
   // actions index
   if (ActCliConfig.generate.actionsIndexFile) {
-    contentCtx = await getStaticContentFromFile(
+    const prefixForIndex = [];
+    const contentCtxIndex = await getStaticContentFromFile(
       ActCliConfig.generate.actionsIndexFile
     );
 
-    if (contentCtx.content) {
-      prefix.push(contentCtx.content);
+    if (contentCtxIndex.content) {
+      prefixForIndex.push(contentCtxIndex.content);
     }
     if (ActCliConfig.generate.actionsIndexTextPrefix) {
-      prefix.push(ActCliConfig.generate.actionsIndexTextPrefix);
+      prefixForIndex.push(ActCliConfig.generate.actionsIndexTextPrefix);
     }
 
     await removeFile(ActCliConfig.generate.actionsIndexFile);
@@ -80,7 +81,7 @@ export const generateCommand = async () => {
       ActCliConfig.generate.actionsIndexFile,
       actionFilteredList,
       true,
-      prefix.join('\n')
+      prefixForIndex.join('\n')
     );
     indexInfo += `\nActions file: "${ActCliConfig.generate.actionsIndexFile}"`;
   }
