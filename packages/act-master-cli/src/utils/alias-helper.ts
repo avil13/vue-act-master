@@ -1,4 +1,4 @@
-import path from 'path';
+import { extname } from 'path';
 import { ActCliConfig } from '../types';
 
 export const normalizePathAlias = (
@@ -10,7 +10,7 @@ export const normalizePathAlias = (
     config.config.alias
   );
 
-  const ext = path.extname(normalizedPath);
+  const ext = extname(normalizedPath);
 
   if (ext) {
     return normalizedPath.replace(new RegExp(`\\${ext}$`, 'g'), '');

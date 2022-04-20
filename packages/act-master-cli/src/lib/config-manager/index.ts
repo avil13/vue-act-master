@@ -1,9 +1,9 @@
-import { joinPath } from 'act-master-cli/src/utils/file-helper';
+import { joinPath } from '../../utils/file-helper';
 import Ajv from 'ajv';
 import { ErrorObject } from 'ajv/dist/jtd';
 import findUp from 'find-up';
 import fs from 'fs';
-import path from 'path';
+import { dirname, join } from 'path';
 import { promisify } from 'util';
 import { ActCliConfig } from './../../types';
 import { getConfigTemplate } from './get-config-template';
@@ -38,7 +38,7 @@ export class ConfigManager {
     // eslint-disable-next-line @typescript-eslint/no-var-requires
     const ActCliConfig: ActCliConfig = require(configPathForLoad);
 
-    const configSrc = path.join(process.cwd(), ActCliConfig.config.src);
+    const configSrc = join(process.cwd(), ActCliConfig.config.src);
 
     const configAlias = ActCliConfig.config.alias || '@';
 
@@ -73,9 +73,9 @@ export class ConfigManager {
     if (!filePath) {
       throw new Error('cant find root dir. Check "package.json" file path');
     }
-    const dir = path.dirname(filePath);
+    const dir = dirname(filePath);
 
-    return path.join(dir, this.ActCliConfigFileNames[0]);
+    return join(dir, this.ActCliConfigFileNames[0]);
   }
 
   async getConfigPath(): Promise<string> {
