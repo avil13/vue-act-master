@@ -47,9 +47,16 @@ describe('validateItem', () => {
   });
 
   it('getIndexContent', async () => {
+    const prefix = '// IS GENERATED!\n\n';
     const items = getItems('../../__fixtures__/**/*ts');
 
-    const res = await makeIndexContent('path/to/action.ts', items);
+    const res = await makeIndexContent(
+      'path/to/action.ts',
+      items,
+      false,
+      prefix
+    );
+
     const etalonList = `
 export const actions: ActMasterAction[] = [
   new AsyncAction(),
@@ -57,6 +64,7 @@ export const actions: ActMasterAction[] = [
   new WithOtherTypeReturn(),
 ];
 `;
+
     const etalonImports = `
 import { ActMasterAction } from "act-master";
 import { AsyncAction } from "@/utils/__fixtures__/actions/async-action.ts";
@@ -66,5 +74,6 @@ import { WithOtherTypeReturn } from "@/utils/__fixtures__/actions/with-other-typ
 
     expect(res).toContain(etalonList);
     expect(res).toContain(etalonImports);
+    expect(res).toContain(prefix);
   });
 });

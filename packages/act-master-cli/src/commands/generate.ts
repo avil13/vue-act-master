@@ -37,7 +37,8 @@ export const generateCommand = async () => {
   let listImportedFiles = await makeInterfaceContent(
     ActCliConfig.generate.actionsInterface,
     actionFilteredList,
-    true
+    true,
+    ActCliConfig.generate.actionsInterfaceTextPrefix || ''
   );
 
   indexInfo += `\nInterface: "${ActCliConfig.generate.actionsInterface}"`;
@@ -52,7 +53,8 @@ export const generateCommand = async () => {
     makeIndexContent(
       ActCliConfig.generate.actionsIndexFile,
       actionFilteredList,
-      true
+      true,
+      ActCliConfig.generate.actionsIndexTextPrefix || ''
     );
     indexInfo += `\nActions file: "${ActCliConfig.generate.actionsIndexFile}"`;
   }

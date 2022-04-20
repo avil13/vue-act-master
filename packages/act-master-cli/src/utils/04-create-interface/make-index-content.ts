@@ -65,7 +65,8 @@ export const getImportDeclarations = (
 export const makeIndexContent = async (
   filePath: string,
   items: IFilteredItem[],
-  isWrite = false
+  isWrite = false,
+  interfaceTextPrefix = ''
 ) => {
   const project = new Project();
 
@@ -90,6 +91,10 @@ export const makeIndexContent = async (
       },
     ],
   });
+
+  if (interfaceTextPrefix) {
+    sourceFile.insertText(0, interfaceTextPrefix);
+  }
 
   const config = await configManager.getConfig();
 
