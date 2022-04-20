@@ -130,6 +130,12 @@ export class ConfigManager {
           actionsIndexFile: {
             type: 'string',
           },
+          actionsIndexTextPrefix: {
+            type: 'string',
+          },
+          actionsInterfaceTextPrefix: {
+            type: 'string',
+          },
         },
       },
     },
