@@ -43,7 +43,9 @@ const getFilteredImports = (
 
     if (defaultImport && returnTypes.includes(defaultImport)) {
       const p = imp.getSourceFile().getFilePath();
-      console.log('=>', p);
+      if (process.env.MODE !== 'test') {
+        console.log('=>', p);
+      }
     }
   });
 
@@ -119,7 +121,8 @@ const getFunctionSrcData = (items: IFilteredItem[]) => {
 export const makeInterfaceContent = async (
   filePath: string,
   items: IFilteredItem[],
-  isWrite = false
+  isWrite = false,
+  interfaceTextPrefix = ''
 ) => {
   const project = new Project();
 
@@ -146,6 +149,8 @@ export const makeInterfaceContent = async (
   const declarationText = `declare module 'act-master' { ${interfaceText} }`;
 
   sourceFile.replaceWithText(declarationText);
+
+  sourceFile.insertText(0, interfaceTextPrefix);
 
   sourceFile.addImportDeclaration({
     namedImports: [{ name: 'ActMaster' }],

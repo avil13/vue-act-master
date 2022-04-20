@@ -1,3 +1,4 @@
+import { it, expect, describe } from 'vitest';
 import { getSourcesByPath } from '../../01-list-all-files/index';
 import { actionFilter, IFilteredItem } from '../../02-filter-list/index';
 import { makeIndexContent } from '../make-index-content';
@@ -16,7 +17,7 @@ const getItems = (actionPath: string): IFilteredItem[] => {
 };
 
 describe('validateItem', () => {
-  it.only.each<[string]>([
+  it.each<[string]>([
     //
     // ['export interface ActMaster'],
     [
@@ -30,23 +31,40 @@ describe('validateItem', () => {
     expect(res).toMatch(expected);
   });
 
-  it('getIndexContent', () => {
+  it.only('getInterfaceContent WITH PREFIX', async () => {
+    const prefix = '// IS GENERATED!\n\n';
+
     const items = getItems('../../__fixtures__/**/*ts');
 
-    const res = makeIndexContent('path/to/action.ts', items);
+    const res = await makeInterfaceContent(
+      'path/to/interface.d.ts',
+      items,
+      false,
+      prefix
+    );
+
+    expect(res).toContain(prefix);
+  });
+
+  it('getIndexContent', async () => {
+    const items = getItems('../../__fixtures__/**/*ts');
+
+    const res = await makeIndexContent('path/to/action.ts', items);
     const etalonList = `
 export const actions: ActMasterAction[] = [
   new AsyncAction(),
   new NoPromiseAction(),
+  new WithOtherTypeReturn(),
 ];
 `;
     const etalonImports = `
 import { ActMasterAction } from "act-master";
 import { AsyncAction } from "@/utils/__fixtures__/actions/async-action.ts";
 import { NoPromiseAction } from "@/utils/__fixtures__/actions/no-promise.ts";
+import { WithOtherTypeReturn } from "@/utils/__fixtures__/actions/with-other-type-return.ts"
 `.trim();
 
-    expect(res).toMatch(etalonList);
-    expect(res).toMatch(etalonImports);
+    expect(res).toContain(etalonList);
+    expect(res).toContain(etalonImports);
   });
 });

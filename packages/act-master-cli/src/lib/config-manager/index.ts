@@ -1,3 +1,4 @@
+import { joinPath } from 'act-master-cli/src/utils/file-helper';
 import Ajv from 'ajv';
 import { ErrorObject } from 'ajv/dist/jtd';
 import findUp from 'find-up';
@@ -38,19 +39,18 @@ export class ConfigManager {
     const ActCliConfig: ActCliConfig = require(configPathForLoad);
 
     const configSrc = path.join(process.cwd(), ActCliConfig.config.src);
+
     const configAlias = ActCliConfig.config.alias || '@';
-    const actionsInterface = path.join(
-      process.cwd(),
-      ActCliConfig.config.src,
+
+    const actionsInterface = joinPath(
+      configSrc,
       ActCliConfig.generate.actionsInterface
     );
-    const actionsIndexFile =
-      ActCliConfig.generate.actionsIndexFile &&
-      path.join(
-        process.cwd(),
-        ActCliConfig.config.src,
-        ActCliConfig.generate.actionsIndexFile
-      );
+
+    const actionsIndexFile = joinPath(
+      configSrc,
+      ActCliConfig.generate.actionsIndexFile
+    );
 
     return {
       config: {
@@ -61,6 +61,9 @@ export class ConfigManager {
       generate: {
         actionsInterface,
         actionsIndexFile,
+        actionsInterfaceTextPrefix:
+          ActCliConfig.generate.actionsInterfaceTextPrefix,
+        actionsIndexTextPrefix: ActCliConfig.generate.actionsIndexTextPrefix,
       },
     };
   }

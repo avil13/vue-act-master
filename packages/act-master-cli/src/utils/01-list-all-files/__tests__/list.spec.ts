@@ -1,3 +1,4 @@
+import { it, expect } from 'vitest';
 import { getSourcesByPath } from '..';
 
 it('all files', () => {

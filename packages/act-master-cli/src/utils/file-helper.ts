@@ -1,4 +1,5 @@
 import fs from 'fs';
+import path from 'path';
 import { promisify } from 'util';
 
 const fsStatPromises = promisify(fs.stat);
@@ -18,4 +19,11 @@ export const removeFile = async (pathToFile: string) => {
   if (isExist) {
     await fsUnlinkPromises(pathToFile);
   }
+};
+
+export const joinPath = (path1: string, path2?: string): string => {
+  if (!path2) {
+    return '';
+  }
+  return path.join(path1, path2);
 };

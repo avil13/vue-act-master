@@ -1,3 +1,4 @@
+import { it, expect, describe, beforeEach } from 'vitest';
 import { ConfigManager } from '..';
 import { ActCliConfig } from './../../../types';
 describe('ConfigManager', () => {
@@ -35,7 +36,7 @@ describe('ConfigManager', () => {
   });
 
   it('validateConfig BAD', () => {
-    const actCliConfig = ({
+    const actCliConfig = {
       config: {
         // the path to the folder with the source files relative to this file
         src: './src',
@@ -51,7 +52,7 @@ describe('ConfigManager', () => {
         // actionsInterface: 'actions-interface.d.ts',
         actionsIndexFile: 'actions.ts',
       },
-    } as unknown) as ActCliConfig;
+    } as unknown as ActCliConfig;
 
     const result = configManager.validateConfig(actCliConfig);
 
