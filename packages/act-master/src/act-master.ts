@@ -187,7 +187,7 @@ export class ActMaster {
   //#endregion
 
   //#region [ Executions ]
-  async exec<T = any>(eventName: string, ...args: any[]): Promise<T> {
+  async exec<T = any>(eventName: string, ...args: any[]): Promise<T | null> {
     this.setProgress(eventName, true);
 
     if (this._singlePromisesStore.has(eventName)) {
@@ -227,7 +227,7 @@ export class ActMaster {
           this.config.errorHandlerEventName !== eventName
         ) {
           this.emit(this.config.errorHandlerEventName, error);
-          throw new CancelledAct(error);
+          return Promise.resolve(null);
         }
 
         throw error;
