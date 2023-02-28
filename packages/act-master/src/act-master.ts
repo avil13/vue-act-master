@@ -11,6 +11,7 @@ import {
   ActMasterAction,
   ActMasterActionDevDI,
   ActMasterOptions,
+  ActSubscribe,
   devActMasterConfig,
   DIMap,
   EmitAction,
@@ -54,7 +55,6 @@ export class ActMaster {
   >();
 
   private readonly config: devActMasterConfig = {
-    errorOnReplaceAction: true,
     errorOnReplaceDI: false,
     autoUnsubscribeCallback: undefined,
     errorHandlerEventName: undefined,
@@ -70,7 +70,6 @@ export class ActMaster {
     const {
       actions,
       di,
-      errorOnReplaceAction,
       errorOnReplaceDI,
       autoUnsubscribeCallback,
       errorHandlerEventName,
@@ -93,10 +92,6 @@ export class ActMaster {
           this.setDI(k, di[k]);
         }
       }
-    }
-
-    if (typeof errorOnReplaceAction === 'boolean') {
-      this.config.errorOnReplaceAction = errorOnReplaceAction;
     }
 
     if (typeof errorOnReplaceDI === 'boolean') {
@@ -129,7 +124,7 @@ export class ActMaster {
   addAction(action: ActMasterAction): ActMaster {
     const eventName = action.name;
 
-    if (this.config.errorOnReplaceAction && this._actions.has(eventName)) {
+    if (this._actions.has(eventName)) {
       throw new ActinonAlreadyExistingError(eventName);
     }
 
@@ -207,6 +202,11 @@ export class ActMaster {
       })
       .catch((error: Error) => {
         this.setProgress(eventName, false);
+
+        if (error instanceof NotFoundActionError) {
+          throw error;
+        }
+
         const action = this.getActionOrNull(eventName);
 
         if (
@@ -291,11 +291,11 @@ export class ActMaster {
   //#endregion
 
   //#region [ Subscribing ]
-  subscribe(
+  subscribe: ActSubscribe = (
     eventName: ActEventName,
     listener: ListenerFunction,
     context?: any
-  ): () => boolean {
+  ) => {
     this._listeners.set(eventName, [
       ...(this._listeners.get(eventName) || []),
       listener,
@@ -314,7 +314,7 @@ export class ActMaster {
     this._lastUnsubscribe = unsubscribe;
 
     return unsubscribe;
-  }
+  };
 
   unsubscribe(eventName: ActEventName, listener: ListenerFunction): boolean {
     const listeners = this._listeners.get(eventName);
@@ -332,21 +332,24 @@ export class ActMaster {
     return index > -1;
   }
 
-  once(eventName: ActEventName, listener: ListenerFunction): () => boolean {
+  once: ActSubscribe = (
+    eventName: ActEventName,
+    listener: ListenerFunction
+  ) => {
     const unsubscribe = this.subscribe(eventName, (...args) => {
       unsubscribe();
       listener(...args);
     });
     return unsubscribe;
-  }
+  };
 
-  on(
+  on: ActSubscribe = (
     eventName: ActEventName,
     listener: ListenerFunction,
     context?: any
-  ): () => boolean {
+  ) => {
     return this.subscribe(eventName, listener, context);
-  }
+  };
 
   off(eventName: ActEventName, listener: ListenerFunction): boolean {
     return this.unsubscribe(eventName, listener);

@@ -26,7 +26,8 @@
     "size": "size-limit",
     "lint:fix": "eslint --fix --ext .ts .",
     "test:watch": "vitest dev",
-    "test": "vitest run --coverage",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage",
     "type-check:watch": "npm run type-check -- --watch",
     "type-check": "tsc -p ./tsconfig.json --noEmit",
     "prepublishOnly": "yarn test && yarn run build"

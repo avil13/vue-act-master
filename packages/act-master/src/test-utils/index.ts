@@ -6,11 +6,13 @@ export class ActTest {
   private static $act: ActMaster;
   private static _lastResult: any;
 
+  private constructor() {
+    //
+  }
+
   static getInstance(options: ActMasterOptions = {}): ActMaster {
-    if (options || !ActTest.$act) {
-      ActTest.removeSingleton();
-      ActTest.$act = new ActMaster(options);
-    }
+    ActTest.removeSingleton();
+    ActTest.$act = new ActMaster(options);
     return ActTest.$act;
   }
 
@@ -90,7 +92,7 @@ export class ActTest {
 
   static makeActionStub(action?: Partial<ActMasterAction>): ActMasterAction {
     const act = {
-      name: `${Math.random()}`,
+      name: `Act_${Math.random()}`,
       exec: () => null,
       ...action,
     };

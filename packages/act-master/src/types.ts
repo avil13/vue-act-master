@@ -1,7 +1,7 @@
 import { CancelledAct } from './cancelled';
 
 // TODO: Acts
-export type EmitAction = ActEventName;
+export type EmitAction = ActExec;
 
 /**
  * @deprecated use ListenerFunction
@@ -28,7 +28,6 @@ export interface DIMap {
 export interface ActMasterOptions {
   actions?: ActMasterAction[];
   di?: DIMap;
-  errorOnReplaceAction?: boolean;
   errorOnReplaceDI?: boolean;
   // method for calling auto unsubscribe
   autoUnsubscribeCallback?: (args: autoUnsubscribeArgs) => void;
@@ -36,7 +35,6 @@ export interface ActMasterOptions {
 }
 
 export type devActMasterConfig = {
-  errorOnReplaceAction: ActMasterOptions['errorOnReplaceAction'];
   errorOnReplaceDI: ActMasterOptions['errorOnReplaceDI'];
   autoUnsubscribeCallback: ActMasterOptions['autoUnsubscribeCallback'];
   errorHandlerEventName?: ActEventName;
@@ -127,6 +125,10 @@ type FuncFromAct<T extends { name: string; exec: Fn }> = T extends {
 
 export type Acts<LS extends ActMasterAction[]> = LS extends (infer A)[]
   ? UnionToIntersection<FuncFromAct<A extends ActMasterAction ? A : never>>
+  : never;
+
+export type ActSubscribe = ActExec extends (name: infer N, ...a: any) => infer R
+  ? (name: N, cb: (data: R) => any, ctx?: any) => () => boolean
   : never;
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars

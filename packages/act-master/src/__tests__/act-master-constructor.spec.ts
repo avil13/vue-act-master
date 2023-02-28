@@ -5,8 +5,6 @@ import { ActTest } from '../test-utils';
 let $act: ActMaster = ActTest.getInstance();
 
 const init = (options: ActMasterOptions = {}) => {
-  ActTest.removeSingleton();
-
   $act = ActTest.getInstance(options);
 };
 
@@ -54,7 +52,6 @@ describe('ActMaster constructor options', () => {
     const actions = [{ name: 'test-name', exec }];
 
     init({
-      errorOnReplaceAction: true,
       actions,
     });
 
@@ -63,23 +60,8 @@ describe('ActMaster constructor options', () => {
     expect(add).toThrow('Action "test-name" already existing');
   });
 
-  it('errorOnReplaceAction:[false]', () => {
-    const actions = [{ name: 'test-name', exec }];
-
-    init({
-      errorOnReplaceAction: false,
-      actions,
-    });
-
-    const add = () => $act.addActions(actions);
-
-    expect(add).not.toThrow();
-  });
-
   it('errorOnEmptyAction:[true]', async () => {
-    init({
-      errorOnEmptyAction: true,
-    });
+    init({});
 
     expect(() => $act.exec('test')).rejects.toThrow();
   });
@@ -115,7 +97,6 @@ describe('ActMaster constructor options', () => {
 
     init({
       errorHandlerEventName,
-      errorOnEmptyAction: true,
       actions: [
         {
           name: errorHandlerEventName,
@@ -127,7 +108,7 @@ describe('ActMaster constructor options', () => {
     // make error and skip the error
     await $act.exec('No_Emit_Call').catch(() => void 0);
 
-    expect(mockFn).toBeCalledTimes(1);
+    expect(mockFn).toBeCalledTimes(0);
   });
 
   it('errorHandlerEventName in constructor override by action', async () => {
@@ -139,7 +120,6 @@ describe('ActMaster constructor options', () => {
 
     init({
       errorHandlerEventName: errorHandlerEventName1,
-      errorOnEmptyAction: true,
       actions: [
         {
           name: errorHandlerEventName1,
