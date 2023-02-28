@@ -1,5 +1,7 @@
-import { ActEventName, EmitAction } from './act-master';
 import { CancelledAct } from './cancelled';
+
+// TODO: Acts
+export type EmitAction = ActEventName;
 
 /**
  * @deprecated use ListenerFunction
@@ -15,7 +17,7 @@ export type ValidateInputFn = (
 
 export type autoUnsubscribeArgs = {
   eventName: string;
-  listener: listenerFunction;
+  listener: ListenerFunction;
   context?: any;
 };
 
@@ -28,7 +30,6 @@ export interface ActMasterOptions {
   di?: DIMap;
   errorOnReplaceAction?: boolean;
   errorOnReplaceDI?: boolean;
-  errorOnEmptyAction?: boolean;
   // method for calling auto unsubscribe
   autoUnsubscribeCallback?: (args: autoUnsubscribeArgs) => void;
   errorHandlerEventName?: ActEventName;
@@ -37,7 +38,6 @@ export interface ActMasterOptions {
 export type devActMasterConfig = {
   errorOnReplaceAction: ActMasterOptions['errorOnReplaceAction'];
   errorOnReplaceDI: ActMasterOptions['errorOnReplaceDI'];
-  errorOnEmptyAction: ActMasterOptions['errorOnEmptyAction'];
   autoUnsubscribeCallback: ActMasterOptions['autoUnsubscribeCallback'];
   errorHandlerEventName?: ActEventName;
 };
@@ -46,7 +46,7 @@ export interface ActMasterAction {
   /**
    * Function executor
    */
-  exec(...args: any): Promise<CancelledAct | any> | CancelledAct | any;
+  exec: (...args: any[]) => Promise<any> | any;
   /**
    * Name of the action
    */
@@ -58,12 +58,7 @@ export interface ActMasterAction {
   /**
    * List of emitNames to be called after
    */
-  watch?: string[];
-  /**
-   * Use watch
-   * @deprecated
-   */
-  wait?: string[];
+  watch?: ActEventName[];
   /**
    * An action can have only one result if several calls are made
    */
@@ -75,7 +70,7 @@ export interface ActMasterAction {
   /**
    * Pass Dependency to action
    */
-  UseDI?: (contexts: { [key: string]: any }) => void;
+  useDI?: (contexts: { [key: string]: any }) => void;
   /**
    * Pass Emitter to action
    */
@@ -95,3 +90,53 @@ export interface ActMasterActionDevDI extends ActMasterAction {
     };
   };
 }
+
+export type ActEventName = _ExecType extends (
+  name: infer N,
+  ...args: any
+) => any
+  ? N
+  : never;
+
+export interface ActGenerated {
+  default: (name: string, ...args: any) => Promise<any>;
+  // acts?: any
+}
+
+type _ExecType<K = 'acts'> = K extends keyof ActGenerated
+  ? ActGenerated[K]
+  : ActGenerated['default'];
+
+export type ActExec = _ExecType;
+
+// List of functions for obtaining action types via generation
+type Fn = (...args: any) => any;
+declare type IsFn<T> = T extends (...args: any) => any ? T : never;
+type UnionToIntersection<U> = (U extends any ? (k: U) => void : never) extends (
+  k: infer I
+) => void
+  ? I
+  : never;
+
+type FuncFromAct<T extends { name: string; exec: Fn }> = T extends {
+  readonly name: infer N;
+  readonly exec: infer F;
+}
+  ? (name: N, ...args: Parameters<IsFn<F>>) => Awaited<ReturnType<IsFn<F>>>
+  : never;
+
+export type Acts<LS extends ActMasterAction[]> = LS extends (infer A)[]
+  ? UnionToIntersection<FuncFromAct<A extends ActMasterAction ? A : never>>
+  : never;
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+// const expectType = <T>(expression: T) => {
+//   // Do nothing, the TypeScript compiler handles this for us
+// };
+
+// type IsEqual<T1, T2> = T1 extends T2 ? (T2 extends T1 ? true : false) : false;
+
+// type FTest = (n: 'Two', v: number) => number;
+
+// // example
+// expectType<IsEqual<FTest, typeof exec>>(true);

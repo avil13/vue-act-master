@@ -6,11 +6,14 @@ import {
   NotFoundActionError,
 } from './errors';
 import {
+  ActEventName,
+  ActExec,
   ActMasterAction,
   ActMasterActionDevDI,
   ActMasterOptions,
   devActMasterConfig,
   DIMap,
+  EmitAction,
   ListenerFunction,
 } from './types';
 
@@ -22,14 +25,6 @@ export * from './types';
 export * from './decorators/index';
 export { CancelledAct };
 
-export type ActEventName = string;
-
-/**
- * @deprecated use EmitAction
- */
-export type emitAction = EmitAction;
-
-export type EmitAction = ActMaster['exec'];
 /**
  *
  */
@@ -61,7 +56,6 @@ export class ActMaster {
   private readonly config: devActMasterConfig = {
     errorOnReplaceAction: true,
     errorOnReplaceDI: false,
-    errorOnEmptyAction: true,
     autoUnsubscribeCallback: undefined,
     errorHandlerEventName: undefined,
   };
@@ -78,7 +72,6 @@ export class ActMaster {
       di,
       errorOnReplaceAction,
       errorOnReplaceDI,
-      errorOnEmptyAction,
       autoUnsubscribeCallback,
       errorHandlerEventName,
     } = options;
@@ -106,10 +99,6 @@ export class ActMaster {
       this.config.errorOnReplaceAction = errorOnReplaceAction;
     }
 
-    if (typeof errorOnEmptyAction === 'boolean') {
-      this.config.errorOnEmptyAction = errorOnEmptyAction;
-    }
-
     if (typeof errorOnReplaceDI === 'boolean') {
       this.config.errorOnReplaceDI = errorOnReplaceDI;
     }
@@ -119,6 +108,13 @@ export class ActMaster {
     }
 
     ActMaster.instance = this;
+  }
+
+  static getInstance(): ActMaster {
+    if (!ActMaster.instance) {
+      throw new Error('ActMaster not initialized');
+    }
+    return ActMaster.instance;
   }
 
   //#region [ Actions ]
@@ -187,19 +183,18 @@ export class ActMaster {
   //#endregion
 
   //#region [ Executions ]
-  async exec<T = any>(eventName: string, ...args: any[]): Promise<T | null> {
+  exec: ActExec = async (eventName, ...args) => {
     this.setProgress(eventName, true);
 
     if (this._singlePromisesStore.has(eventName)) {
-      const promise: Promise<T> | undefined =
-        this._singlePromisesStore.get(eventName);
+      const promise = this._singlePromisesStore.get(eventName);
 
       if (promise) {
         return promise;
       }
     }
 
-    const promise = this.emit<T>(eventName, ...args)
+    const promise = this.emit(eventName, ...args)
       .then((data) => {
         this.setProgress(eventName, false);
         return data;
@@ -240,7 +235,7 @@ export class ActMaster {
     }
 
     return promise;
-  }
+  };
 
   private async emit<T2>(eventName: ActEventName, ...args: any[]): Promise<T2> {
     const action = this.getActionOrNull(eventName);
@@ -450,16 +445,7 @@ export class ActMaster {
 
   //#region [ helpers ]
   private getActionOrNull(eventName: ActEventName): ActMasterAction | null {
-    const action = this._actions.get(eventName);
-
-    if (!action && !this.config.errorOnEmptyAction) {
-      return {
-        name: '',
-        exec: (data) => data,
-      };
-    }
-
-    return action || null;
+    return this._actions.get(eventName) || null;
   }
   //#endregion
 }

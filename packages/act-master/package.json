@@ -1,6 +1,6 @@
 {
   "name": "act-master",
-  "version": "1.11.5",
+  "version": "1.12.0",
   "author": "avil13",
   "main": "dist/index.common.min.js",
   "module": "dist/index.esm.min.js",
@@ -21,7 +21,7 @@
   ],
   "license": "MIT",
   "scripts": {
-    "build": "yarn test && rm -rf ./dist && rollup -c",
+    "build": "rm -rf ./dist && rollup -c",
     "changelog": "auto-changelog && git add CHANGELOG.md",
     "size": "size-limit",
     "lint:fix": "eslint --fix --ext .ts .",
@@ -29,7 +29,7 @@
     "test": "vitest run --coverage",
     "type-check:watch": "npm run type-check -- --watch",
     "type-check": "tsc -p ./tsconfig.json --noEmit",
-    "prepublishOnly": "yarn run test && yarn run build"
+    "prepublishOnly": "yarn test && yarn run build"
   },
   "husky": {
     "hooks": {
@@ -49,7 +49,7 @@
     "rollup": "^2.69.0",
     "rollup-plugin-filesize": "^9.1.2",
     "rollup-plugin-terser": "^7.0.2",
-    "rollup-plugin-typescript2": "^0.31.2",
+    "rollup-plugin-typescript2": "^0.34.1",
     "size-limit": "^7.0.8"
   }
 }
