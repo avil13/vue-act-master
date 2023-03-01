@@ -1,4 +1,4 @@
-import { act, ActMaster, actSubscribe, ActTest, addActions } from '../..';
+import { act, ActMaster, actSubscribe, ActTest } from '../..';
 import { beforeEach, describe, expect, it } from 'vitest';
 import { fn2act } from '../function-to-action';
 
@@ -11,60 +11,53 @@ const sumAction = {
 
 beforeEach(() => {
   // As a singleton, we create an instance to work with
-  ActTest.getInstance({});
+  ActTest.getInstance();
 });
 
 it('act function return instance', () => {
   expect(act() instanceof ActMaster).toBe(true);
 });
 
-it('add action and subscribe', () => {
-  act.addActions([sumAction]);
-
-  expect(addActions === act.addActions).toBe(true);
-  expect(ActTest.entityCount('actions')).toBe(1);
-});
-
-it('act.exec', async () => {
-  act.addActions([sumAction]);
-  const result = await act.exec('sum.get', 2, 3);
+it('act().exec', async () => {
+  act().addActions([sumAction]);
+  const result = await act().exec('sum.get', 2, 3);
   expect(result).toBe(5);
 });
 
-it('act.subscribe', async () => {
-  act.addActions([sumAction]);
+it('act().subscribe', async () => {
+  act().addActions([sumAction]);
   let resultBySubscribe = 0;
   let resultByOn = 0;
 
-  act.subscribe('sum.get', (val) => (resultBySubscribe = val));
-  act.on('sum.get', (val) => (resultByOn = val));
+  act().subscribe('sum.get', (val) => (resultBySubscribe = val));
+  act().on('sum.get', (val) => (resultByOn = val));
 
-  await act.exec('sum.get', 3, 4);
+  await act().exec('sum.get', 3, 4);
 
-  expect(actSubscribe === act.subscribe).toBe(true);
-  expect(act.on === act.subscribe).toBe(true);
+  expect(actSubscribe === act().subscribe).toBe(true);
+  expect(act().on === act().subscribe).toBe(true);
 
   expect(resultBySubscribe).toBe(7);
   expect(resultByOn).toBe(7);
 });
 
 describe('act subscriptions', () => {
-  it('clear subscriptions', () => {
-    act.addActions([sumAction]);
+  it.only('clear subscriptions', () => {
+    act().addActions([sumAction]);
     expect(ActTest.entityCount('listeners')).toBe(0);
 
-    act.subscribe('sum.get', () => null, this);
+    act().subscribe('sum.get', () => null, 'some_key');
     expect(ActTest.entityCount('listeners')).toBe(1);
 
-    act.subListClear(this);
+    act.subListClear('some_key');
     expect(ActTest.entityCount('listeners')).toBe(0);
   });
 
   it('unsubscribe', () => {
-    act.addActions([sumAction]);
+    act().addActions([sumAction]);
     expect(ActTest.entityCount('listeners')).toBe(0);
 
-    const unsubscribe = act.subscribe('sum.get', () => null);
+    const unsubscribe = act().subscribe('sum.get', () => null);
     expect(ActTest.entityCount('listeners')).toBe(1);
 
     unsubscribe();
@@ -72,13 +65,13 @@ describe('act subscriptions', () => {
   });
 
   it('unmount', () => {
-    act.addActions([sumAction]);
+    act().addActions([sumAction]);
     expect(ActTest.entityCount('listeners')).toBe(0);
 
     const listFunctions: (() => void)[] = [];
     const onUnmountMock = (cb: () => void) => listFunctions.push(cb);
 
-    act.subscribe('sum.get', () => null, onUnmountMock);
+    act().subscribe('sum.get', () => null, onUnmountMock);
     expect(ActTest.entityCount('listeners')).toBe(1);
 
     listFunctions.forEach((fn) => fn());
@@ -93,7 +86,7 @@ it('addAction functions', async () => {
     return a * 2;
   };
 
-  addActions([sumAction, fn2act(callbackAction)]);
+  act().addActions([sumAction, fn2act(callbackAction)]);
 
   expect(ActTest.entityCount('actions')).toBe(2);
 

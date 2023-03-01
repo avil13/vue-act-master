@@ -11,6 +11,7 @@ export class ActTest {
   }
 
   static getInstance(options: ActMasterOptions = {}): ActMaster {
+    ActTest.resetAll();
     ActTest.removeSingleton();
     ActTest.$act = new ActMaster(options);
     return ActTest.$act;

@@ -11,7 +11,7 @@ import {
   ActMasterAction,
   ActMasterActionDevDI,
   ActMasterOptions,
-  ActSubscribe,
+  ActSubscribeType,
   devActMasterConfig,
   DIMap,
   EmitAction,
@@ -291,15 +291,15 @@ export class ActMaster {
   //#endregion
 
   //#region [ Subscribing ]
-  subscribe: ActSubscribe = (
-    eventName: ActEventName,
-    listener: ListenerFunction,
-    context?: any
-  ) => {
+  subscribe: ActSubscribeType = (eventName, listener, context?: any) => {
     this._listeners.set(eventName, [
       ...(this._listeners.get(eventName) || []),
       listener,
     ]);
+
+    const unsubscribe = () => this.unsubscribe(eventName, listener);
+
+    this._lastUnsubscribe = unsubscribe;
 
     if (this.config.autoUnsubscribeCallback) {
       this.config.autoUnsubscribeCallback({
@@ -307,11 +307,9 @@ export class ActMaster {
         listener,
         eventName,
       });
+    } else {
+      this.subsList.add(context);
     }
-
-    const unsubscribe = () => this.unsubscribe(eventName, listener);
-
-    this._lastUnsubscribe = unsubscribe;
 
     return unsubscribe;
   };
@@ -332,7 +330,7 @@ export class ActMaster {
     return index > -1;
   }
 
-  once: ActSubscribe = (
+  once: ActSubscribeType = (
     eventName: ActEventName,
     listener: ListenerFunction
   ) => {
@@ -343,7 +341,7 @@ export class ActMaster {
     return unsubscribe;
   };
 
-  on: ActSubscribe = (
+  on: ActSubscribeType = (
     eventName: ActEventName,
     listener: ListenerFunction,
     context?: any
