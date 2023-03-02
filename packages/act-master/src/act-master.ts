@@ -257,20 +257,15 @@ export class ActMaster {
       }
     }
 
-    const execResult = await action.exec(...args);
+    const value: T2 = await action.exec(...args);
 
-    if (execResult instanceof CancelledAct) {
-      //@ts-ignore
-      return execResult;
+    if (value instanceof CancelledAct) {
+      return value;
     }
-
-    const value: T2 = action.transform
-      ? await action.transform(execResult)
-      : execResult;
 
     this.notifyListeners(eventName, value);
 
-    if (!(value instanceof CancelledAct) && this._watchers.has(eventName)) {
+    if (this._watchers.has(eventName)) {
       for (const watchingEventName of this._watchers.get(eventName) || []) {
         await this.emit(watchingEventName, value);
       }

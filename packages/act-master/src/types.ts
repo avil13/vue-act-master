@@ -1,15 +1,10 @@
 import { CancelledAct } from './cancelled';
 
-// TODO: Acts
-export type EmitAction = ActExec;
-
 /**
  * @deprecated use ListenerFunction
  */
 export type listenerFunction = (arg: any) => any;
 export type ListenerFunction = (arg: any) => any;
-
-export type TransformerFn = (value: any) => any | Promise<CancelledAct | any>;
 
 export type ValidateInputFn = (
   ...args: any[]
@@ -49,10 +44,6 @@ export interface ActMasterAction {
    * Function executor
    */
   exec: (...args: any[]) => Promise<any> | any;
-  /**
-   * Transform data after exec
-   */
-  transform?: TransformerFn;
   /**
    * List of emitNames to be called after
    */
@@ -182,3 +173,5 @@ export type ActExec = _ExecType;
 export type ActSubscribeType = _SubsType;
 // Names
 export type ActEventName = _NameType;
+//
+export type EmitAction = ActExec;
