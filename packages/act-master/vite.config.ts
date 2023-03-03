@@ -6,7 +6,6 @@ export default defineConfig({
     lib: {
       name: 'act-master',
       entry: 'src/index.ts',
-      formats: ['es', 'cjs', 'umd'],
     },
     minify: 'terser',
     sourcemap: true,
