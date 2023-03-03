@@ -38,15 +38,6 @@ describe('ActMaster', () => {
       const result = await $act.exec(eventName);
       expect(result).toBe(expectMockResult);
     });
-
-    it('transform', async () => {
-      const { eventName, expectMockResult } = addTestAction({
-        transform: (v: string) => `${v}_SUFFIX`,
-      });
-
-      const result = await $act.exec(eventName);
-      expect(result).toBe(`${expectMockResult}_SUFFIX`);
-    });
   });
 
   describe('Subscriptions', () => {

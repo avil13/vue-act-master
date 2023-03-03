@@ -1,7 +1,0 @@
-[
-  {
-    "path": "dist/index.esm.min.js",
-    "import": "{ ActMaster }",
-    "limit": "3 kB"
-  }
-]

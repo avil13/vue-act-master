@@ -1,23 +1,13 @@
-import { beforeEach, describe, expect, it, SpyInstanceFn, vi } from 'vitest';
-import { ActMaster } from '../act-master';
+import { ActTest } from 'src/test-utils';
+import { describe, expect, it, Mock, vi } from 'vitest';
 import { UseDI } from '../decorators';
 import { ActMasterAction } from '../types';
 
 describe('DI', () => {
   const ACTION_NAME = 'ACTION_NAME_DI';
-  let $act: ActMaster;
-
-  beforeEach(() => {
-    if ($act) {
-      $act.clearActions();
-      $act.clearListeners();
-      $act.clearDI();
-    }
-
-    $act = new ActMaster();
-  });
 
   it('DI same entity', async () => {
+    const $act = ActTest.getInstance();
     const DATA = Math.random();
     const mockCallback = vi.fn();
 
@@ -42,6 +32,7 @@ describe('DI', () => {
   });
 
   it('decorator UseDI test', async () => {
+    const $act = ActTest.getInstance();
     const DATA_FOR_API = Math.random();
 
     const mockApiCallback = vi.fn();
@@ -50,7 +41,7 @@ describe('DI', () => {
       name = ACTION_NAME;
 
       @UseDI('api')
-      selfApi!: SpyInstanceFn<any[], any>;
+      selfApi!: Mock<any[], any>;
 
       exec(data1: number) {
         this.selfApi(data1);

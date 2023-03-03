@@ -1,20 +1,11 @@
 import { ActMasterActionDevDI } from '../types';
 
 export function UseDI(diName: string) {
-  return (target: ActMasterActionDevDI, propertyKey: string) => {
-    if (!target._DI_CONTAINER_) {
-      Object.defineProperty(target, '_DI_CONTAINER_', {
-        value: {},
-        enumerable: false,
-        writable: true,
-      });
+  return function (target: ActMasterActionDevDI, propertyKey: string) {
+    if (!target._DI_MAP_) {
+      target._DI_MAP_ = {};
     }
 
-    Object.defineProperty(target, propertyKey, {
-      get() {
-        return this._DI_CONTAINER_[diName];
-      },
-      enumerable: true,
-    });
+    target._DI_MAP_[propertyKey] = diName;
   };
 }

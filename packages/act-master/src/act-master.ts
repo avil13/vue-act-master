@@ -134,7 +134,7 @@ export class ActMaster {
         ...args
       ) => {
         if (action.name === eventName) {
-          return this.notifyListeners(eventName, args[0]) as any; // TODO: remove any
+          return this.notifyListeners(eventName, args[0]);
         }
         return this.emit(eventName, ...args);
       };
@@ -429,9 +429,33 @@ export class ActMaster {
   }
 
   private emitDIProps(action: ActMasterActionDevDI) {
-    if (action._DI_CONTAINER_) {
-      action._DI_CONTAINER_ = this._DIContainer;
+    // For UseDI decorator
+    if (!action._DI_CONTAINER_) {
+      Object.defineProperty(action, '_DI_CONTAINER_', {
+        get: () => this._DIContainer,
+        enumerable: false, // Uncomment for DEBUG
+      });
     }
+
+    if (action._DI_MAP_) {
+      Object.keys(action._DI_MAP_).forEach((k) => {
+        if (action[k]) {
+          return;
+        }
+        const propKey = action._DI_MAP_?.[k];
+        if (!propKey) {
+          return;
+        }
+        Object.defineProperty(action, k, {
+          get() {
+            return this._DI_CONTAINER_[propKey];
+          },
+          enumerable: true,
+        });
+      });
+    }
+
+    // console.log('=>>', );
 
     if (action.useDI) {
       action.useDI(this._DIContainer);

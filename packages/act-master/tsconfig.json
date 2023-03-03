@@ -8,6 +8,7 @@
     /* Specify module code generation: 'none', 'commonjs', 'amd', 'system', 'umd', 'es2015', or 'ESNext'. */
     "lib": ["ESNext"],
     "declaration": true,
+    "emitDeclarationOnly": true,
     "sourceMap": true, /* Generates corresponding '.map' file. */
     "strict": true,
     /* Enable all strict type-checking options. */
@@ -20,7 +21,7 @@
     "experimentalDecorators": true,
     "baseUrl": "."
   },
-  "include": ["src"],
+  "include": ["src/*"],
   "exclude": [
     "node_modules",
     "dist"

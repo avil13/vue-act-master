@@ -72,11 +72,12 @@ export interface ActMasterAction {
 }
 
 export interface ActMasterActionDevDI extends ActMasterAction {
-  _DI_?: {
-    [DIName: string]: {
-      name: string;
-      value: null | any;
-    };
+  _DI_CONTAINER_?: {
+    readonly [DIName: string]: any;
+  };
+  // Mapping for decorator {[action.prop]: di.key}
+  _DI_MAP_?: {
+    [key: string]: string;
   };
 }
 
