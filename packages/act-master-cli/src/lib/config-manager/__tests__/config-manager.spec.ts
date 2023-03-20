@@ -90,7 +90,7 @@ describe('ConfigManager', () => {
   it('trimPath', async () => {
     const list = await configManager.trimPaths(
       ['/home/project/src/index.ts', '/home/project/src/folder/app.ts'],
-      '/home/project/.act-master.config.js'
+      '/home/project/.act-master.yaml'
     );
 
     expect(list).toEqual(['/src/index.ts', '/src/folder/app.ts']);

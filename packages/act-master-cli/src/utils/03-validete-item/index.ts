@@ -1,3 +1,4 @@
+import { formatErrorMessage } from '../../lib/log-messages/log-result';
 import { IFilteredItem } from './../02-filter-list';
 
 export enum ActValidationError {
@@ -19,7 +20,9 @@ export class ValidateError extends Error {
     this.className = item.classDeclaration.getName();
     this.type = type;
 
-    this.message = [this.className, this.type, this.filePath, ''].join('\n');
+    this.message = formatErrorMessage(
+      [this.className, this.type, this.filePath, ''].join('\n')
+    );
   }
 }
 

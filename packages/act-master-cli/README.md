@@ -22,7 +22,7 @@ npx act-master-cli help
 ```
 
 ```sh
-# create .act-master.config.js file, to set up your project
+# create ".act-master.yaml" file, to set up your project
 npx act-master-cli init
 ```
 

@@ -7,12 +7,14 @@ import path, { dirname, join } from 'path';
 import { promisify } from 'util';
 import { ActCliConfig } from './../../types';
 import { getConfigTemplate } from './get-config-template';
+import { parse } from 'yaml';
+import { readFile } from 'fs/promises';
 
 const fsWriteFilePromises = promisify(fs.writeFile);
 const ajv = new Ajv();
 
 export class ConfigManager {
-  private ActCliConfigFileNames = ['.act-master.config.js'];
+  private ActCliConfigFileNames = ['.act-master.yaml', '.act-master.yml'];
 
   async hasConfig(): Promise<boolean> {
     const configPath = await this.getConfigPath();
@@ -35,17 +37,15 @@ export class ConfigManager {
 
   async getConfig(configPath?: string): Promise<ActCliConfig> {
     const configPathForLoad = configPath || (await this.getConfigPath());
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
-    const confFile = await import(configPathForLoad);
-    const ActCliConfig: ActCliConfig = confFile.default;
+    const configYaml = await readFile(configPathForLoad);
+    const config: ActCliConfig = parse(configYaml.toString());
 
-    const configSrc = join(process.cwd(), ActCliConfig.config.src);
-
-    const configAlias = ActCliConfig.config.alias || '@';
+    const configSrc = join(process.cwd(), config.config.src);
+    const configAlias = config.config.alias || '@';
 
     const actionsIndexFile = joinPath(
       configSrc,
-      ActCliConfig.generate.actionsIndexFile
+      config.generate.actionsIndexFile
     );
 
     return {
@@ -53,10 +53,10 @@ export class ConfigManager {
         src: configSrc,
         alias: configAlias,
       },
-      actionsPatterns: ActCliConfig.actionsPatterns,
+      actionsPatterns: config.actionsPatterns,
       generate: {
         actionsIndexFile,
-        prefixText: ActCliConfig.generate.prefixText,
+        prefixText: config.generate.prefixText,
       },
     };
   }

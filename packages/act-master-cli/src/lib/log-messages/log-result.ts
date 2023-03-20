@@ -15,11 +15,22 @@ const clc = {
   _off: '\x1b[0m',
 } as const;
 
+export const formatErrorMessage = (message: string): string => {
+  return [
+    //
+    clc._red,
+    '──────────────────────────────────────────────────────────────',
+    message,
+    '──────────────────────────────────────────────────────────────',
+    clc._off,
+  ].join('\n');
+};
+
 export const logResult = (list: string[]) => {
   const message = `
-  LIST OF ACTS:
+LIST OF ACTS:
 ${list.map(getLine).join('\n')}
-  COUNT OF ACTS: ${clc._green}${list.length}${clc._off}
+COUNT OF ACTS: ${clc._green}${list.length}${clc._off}
 `;
 
   console.log(message);
@@ -30,7 +41,8 @@ function getLine(filePath: string): string {
   const name = path.basename(filePath);
 
   return [
-    //
+    clc._blue,
+    ' · ',
     clc._gray,
     dir,
     '/',

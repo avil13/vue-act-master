@@ -14,6 +14,7 @@ import { AsyncAction } from "@/utils/__fixtures__/actions/async-action";
 import { NoPromiseAction } from "@/utils/__fixtures__/actions/no-promise";
 import { WithOtherTypeReturn } from "@/utils/__fixtures__/actions/with-other-type-return";
 
+/* This is generated file */
 export const actions: ActMasterAction[] = [
   new AsyncAction(),
   new NoPromiseAction(),

@@ -1,0 +1,42 @@
+{
+  "$schema": "http://json-schema.org/schema",
+  "title": "JSON Schema for configuration npm package 'act-master-cli'",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["config", "actionsPatterns", "generate"],
+  "properties": {
+    "config": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["src", "alias"],
+      "properties": {
+        "src": {
+          "type": "string"
+        },
+        "alias": {
+          "type": "string"
+        }
+      }
+    },
+    "actionsPatterns": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string"
+      }
+    },
+    "generate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["actionsIndexFile"],
+      "properties": {
+        "actionsIndexFile": {
+          "type": "string"
+        },
+        "prefixText": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}
