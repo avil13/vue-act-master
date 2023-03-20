@@ -17,12 +17,10 @@ export class ValidateError extends Error {
   constructor(item: IFilteredItem, type: ActValidationError) {
     super();
     this.filePath = item.sourceFile.getFilePath();
-    this.className = item.classDeclaration.getName();
+    this.className = item.classDeclaration.getName() || '';
     this.type = type;
 
-    this.message = formatErrorMessage(
-      [this.className, this.type, this.filePath, ''].join('\n')
-    );
+    this.message = formatErrorMessage(this.className, this.type, this.filePath);
   }
 }
 

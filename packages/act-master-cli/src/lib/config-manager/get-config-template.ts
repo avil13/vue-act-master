@@ -8,7 +8,7 @@ config:
 actionsPatterns: # a patterns for finding action files
   - 'act/**/*.act.ts'
 generate:
-  actionsIndexFile: 'act/act-generate/actions.ts'
+  actionsIndexFile: 'act/generated/actions.ts'
   prefixText: '/* This is generated file */'
 `.trim();
 

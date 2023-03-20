@@ -93,7 +93,7 @@ export const makeIndexContent = async (
     declarations: [
       {
         name: 'actions',
-        type: 'ActMasterAction[]',
+        // type: 'ActMasterAction[]',
         initializer: getInitializerList(items),
       },
     ],
