@@ -1,4 +1,4 @@
-import { generateCommand } from './commands/generate';
+import { generateActionList } from './commands/generate-action-list';
 import { helpCommand } from './commands/help';
 import { initConfig } from './commands/init-config';
 
@@ -11,7 +11,7 @@ const run = async () => {
   }
 
   if (command === 'generate' || command === 'g') {
-    await generateCommand();
+    await generateActionList();
     return;
   }
 

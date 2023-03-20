@@ -25,7 +25,6 @@ describe('ConfigManager', () => {
       actionsPatterns: ['utils/__fixtures__/**/*.ts'],
 
       generate: {
-        actionsInterface: 'actions-interface.d.ts',
         actionsIndexFile: 'actions.ts',
       },
     };
@@ -59,16 +58,16 @@ describe('ConfigManager', () => {
     expect(result).toBe(false);
     expect(configManager.lastValidateErrors).toEqual([
       {
-        dataPath: '/config',
+        instancePath: '/config',
         keyword: 'required',
-        message: "should have required property 'alias'",
+        message: "must have required property 'alias'",
         params: {
           missingProperty: 'alias',
         },
         schemaPath: '#/properties/config/required',
       },
       // {
-      //   dataPath: '/actionsPatterns',
+      //   instancePath: '/actionsPatterns',
       //   keyword: 'minItems',
       //   message: 'should NOT have fewer than 1 items',
       //   params: {
@@ -77,7 +76,7 @@ describe('ConfigManager', () => {
       //   schemaPath: '#/properties/actionsPatterns/minItems'
       // },
       // {
-      //   dataPath: '/generate',
+      //   instancePath: '/generate',
       //   keyword: 'required',
       //   message: 'should have required property \'actionsInterface\'',
       //   params: {
@@ -86,5 +85,14 @@ describe('ConfigManager', () => {
       //   schemaPath: '#/properties/generate/required'
       // }
     ]);
+  });
+
+  it('trimPath', async () => {
+    const list = await configManager.trimPaths(
+      ['/home/project/src/index.ts', '/home/project/src/folder/app.ts'],
+      '/home/project/.act-master.config.js'
+    );
+
+    expect(list).toEqual(['/src/index.ts', '/src/folder/app.ts']);
   });
 });

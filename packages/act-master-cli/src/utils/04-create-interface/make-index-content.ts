@@ -66,7 +66,7 @@ export const makeIndexContent = async (
   filePath: string,
   items: IFilteredItem[],
   isWrite = false,
-  interfaceTextPrefix = ''
+  prefix = ''
 ) => {
   const project = new Project();
 
@@ -76,7 +76,14 @@ export const makeIndexContent = async (
     moduleSpecifier: 'act-master',
   });
 
+  if (prefix) {
+    sourceFile.addStatements(prefix + '\n\n');
+  }
+
   importDeclaration.addNamedImport('ActMasterAction');
+  importDeclaration.addNamedImport('Acts');
+  importDeclaration.addNamedImport('Names');
+  importDeclaration.addNamedImport('Subs');
 
   sourceFile.insertStatements(1, '');
 
@@ -96,9 +103,17 @@ export const makeIndexContent = async (
 
   sourceFile.addImportDeclarations(getImportDeclarations(items, config));
 
-  if (interfaceTextPrefix) {
-    sourceFile.insertText(0, interfaceTextPrefix);
-  }
+  // Add Types
+  const typeDeclarations = `
+  declare module 'act-master' {
+    export interface ActGenerated {
+      acts: Acts<typeof actions>;
+      subs: Subs<typeof actions>;
+      names: Names<typeof actions>;
+    }
+  }`;
+
+  sourceFile.addStatements(typeDeclarations);
 
   sourceFile.formatText({
     ensureNewLineAtEndOfFile: true,
@@ -106,11 +121,7 @@ export const makeIndexContent = async (
   });
 
   if (isWrite) {
-    sourceFile.save();
-
-    return getImportDeclarations(items, config).map((item) => {
-      return item.moduleSpecifier;
-    });
+    await sourceFile.save();
   }
 
   return sourceFile.getFullText();

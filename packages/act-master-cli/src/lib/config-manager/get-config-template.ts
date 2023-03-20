@@ -17,10 +17,9 @@ module.exports = {
   ],
 
   generate: {
-    // file for creating the action interface
-    actionsInterface: 'act-generate/actions-interface.d.ts',
     // file to create an array of actions
-    actionsIndexFile: 'act-generate/actions.ts',
+    actionsIndexFile: 'act/act-generate/actions.ts',
+    prefixText: '/* This is generated file */'
   }
 };
 `;

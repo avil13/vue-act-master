@@ -1,19 +1,27 @@
 {
   "extends": "../../tsconfig.json",
   "compilerOptions": {
-    "target": "ES2015",
+    "target": "ESNext",
     "module": "CommonJS",
-    "lib": ["ES2015"],
-
+    "lib": ["ESNext"],
+    "inlineSourceMap": false,
     "outDir": "dist/",
     "rootDir": "./src",
     "skipLibCheck": true,
-    "allowSyntheticDefaultImports": true
+    "allowJs": true,
+    "allowSyntheticDefaultImports": true,
+    "baseUrl": "src",
+    "declaration": true,
+    "esModuleInterop": true,
+    "listEmittedFiles": false,
+    "listFiles": false,
+    "noFallthroughCasesInSwitch": true,
+    "pretty": true,
+    "resolveJsonModule": true,
+    "strict": true,
+    "traceResolution": false,
+    "moduleResolution": "node"
   },
   "include": ["src"],
-  "exclude": [
-    "node_modules",
-    "dist",
-    "**/__fixtures__**"
-  ]
+  "exclude": ["node_modules", "dist", "**/__fixtures__**"]
 }

@@ -9,11 +9,8 @@ export interface ActCliConfig {
   actionsPatterns: string[];
 
   generate: {
-    // file for creating the action interface
-    actionsInterface: string;
-    actionsInterfaceTextPrefix?: string;
     // file to create an array of actions
-    actionsIndexFile?: string;
-    actionsIndexTextPrefix?: string;
+    actionsIndexFile: string;
+    prefixText?: string;
   };
 }

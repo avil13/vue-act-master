@@ -24,7 +24,7 @@ describe('validateItem', () => {
   it('ERR: has arg, no type', () => {
     const item = getItem('./mocks/empty-arguments-type.ts');
 
-    expect(validateItem(item)).toEqual(
+    expect(() => validateItem(item)).toThrow(
       new ValidateError(item, ActValidationError.emptyArgumentsType)
     );
   });
@@ -32,28 +32,29 @@ describe('validateItem', () => {
   it('ERR: name is string', () => {
     const item = getItem('./mocks/wrong-name-type.ts');
 
-    expect(validateItem(item)).toEqual(
+    expect(() => validateItem(item)).toThrow(
       new ValidateError(item, ActValidationError.wrongNameType)
     );
   });
 
-  it('ERR: exec retun type', () => {
+  it('ERR: exec return type', () => {
     const item = getItem('./mocks/no-exec-return-type.ts');
 
-    expect(validateItem(item)).toEqual(
+    //
+    expect(() => validateItem(item)).toThrow(
       new ValidateError(item, ActValidationError.noReturnTypeExec)
     );
   });
 
-  it('ERR: transform retun type', () => {
+  it('ERR: transform return type', () => {
     const item = getItem('./mocks/no-transform-return-type.ts');
 
-    expect(validateItem(item)).toEqual(
+    expect(() => validateItem(item)).toThrow(
       new ValidateError(item, ActValidationError.noReturnTypeTransform)
     );
   });
 
-  it('OK: transform retun type', () => {
+  it('OK: transform return type', () => {
     const item = getItem('./mocks/good-transform-return-type.ts');
 
     expect(validateItem(item)).toBe(true);

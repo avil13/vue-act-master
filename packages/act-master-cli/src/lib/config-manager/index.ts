@@ -3,7 +3,7 @@ import Ajv from 'ajv';
 import { ErrorObject } from 'ajv/dist/jtd';
 import findUp from 'find-up';
 import fs from 'fs';
-import { dirname, join } from 'path';
+import path, { dirname, join } from 'path';
 import { promisify } from 'util';
 import { ActCliConfig } from './../../types';
 import { getConfigTemplate } from './get-config-template';
@@ -36,16 +36,12 @@ export class ConfigManager {
   async getConfig(configPath?: string): Promise<ActCliConfig> {
     const configPathForLoad = configPath || (await this.getConfigPath());
     // eslint-disable-next-line @typescript-eslint/no-var-requires
-    const ActCliConfig: ActCliConfig = require(configPathForLoad);
+    const confFile = await import(configPathForLoad);
+    const ActCliConfig: ActCliConfig = confFile.default;
 
     const configSrc = join(process.cwd(), ActCliConfig.config.src);
 
     const configAlias = ActCliConfig.config.alias || '@';
-
-    const actionsInterface = joinPath(
-      configSrc,
-      ActCliConfig.generate.actionsInterface
-    );
 
     const actionsIndexFile = joinPath(
       configSrc,
@@ -59,11 +55,8 @@ export class ConfigManager {
       },
       actionsPatterns: ActCliConfig.actionsPatterns,
       generate: {
-        actionsInterface,
         actionsIndexFile,
-        actionsInterfaceTextPrefix:
-          ActCliConfig.generate.actionsInterfaceTextPrefix,
-        actionsIndexTextPrefix: ActCliConfig.generate.actionsIndexTextPrefix,
+        prefixText: ActCliConfig.generate.prefixText,
       },
     };
   }
@@ -78,7 +71,13 @@ export class ConfigManager {
     return join(dir, this.ActCliConfigFileNames[0]);
   }
 
+  private static configPath = '';
+
   async getConfigPath(): Promise<string> {
+    if (ConfigManager.configPath) {
+      return ConfigManager.configPath;
+    }
+
     let filePath: string | undefined = '';
 
     for (let i = 0; i < this.ActCliConfigFileNames.length; i++) {
@@ -86,6 +85,7 @@ export class ConfigManager {
       filePath = await findUp(file);
 
       if (filePath) {
+        ConfigManager.configPath = filePath;
         return filePath;
       }
     }
@@ -122,18 +122,12 @@ export class ConfigManager {
       generate: {
         type: 'object',
         additionalProperties: false,
-        required: ['actionsInterface'],
+        required: ['actionsIndexFile'],
         properties: {
-          actionsInterface: {
-            type: 'string',
-          },
           actionsIndexFile: {
             type: 'string',
           },
-          actionsIndexTextPrefix: {
-            type: 'string',
-          },
-          actionsInterfaceTextPrefix: {
+          prefixText: {
             type: 'string',
           },
         },
@@ -148,5 +142,14 @@ export class ConfigManager {
     const result = validate(config);
     this.lastValidateErrors = result ? null : validate.errors;
     return result;
+  }
+
+  async trimPaths(paths: string[], configPath = ''): Promise<string[]> {
+    const rootPath = configPath || (await this.getConfigPath());
+    const rootDir = path.dirname(rootPath);
+
+    return paths.map((p) => {
+      return p.replace(rootDir, '');
+    });
   }
 }

@@ -36,3 +36,11 @@ export const actionFilter = (sourceFile: SourceFile): false | IFilteredItem => {
     classDeclaration: classDeclarations[0],
   };
 };
+
+export const getFilteredSourceFiles = (
+  listFiles: SourceFile[]
+): IFilteredItem[] => {
+  return listFiles
+    .map((item) => actionFilter(item))
+    .filter((item) => item) as IFilteredItem[];
+};

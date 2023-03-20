@@ -8,15 +8,18 @@ export enum ActValidationError {
   noReturnTypeTransform = 'NO RETURN TYPE TRANSFORM',
 }
 
-export class ValidateError {
+export class ValidateError extends Error {
   readonly filePath: string;
   readonly className?: string;
   readonly type: ActValidationError;
 
   constructor(item: IFilteredItem, type: ActValidationError) {
+    super();
     this.filePath = item.sourceFile.getFilePath();
     this.className = item.classDeclaration.getName();
     this.type = type;
+
+    this.message = [this.className, this.type, this.filePath, ''].join('\n');
   }
 }
 
@@ -26,7 +29,7 @@ export const validateItem = (item: IFilteredItem): ValidateError | true => {
   const execStr = classDeclaration.getInstanceMethod('exec')?.getStructure();
 
   if (!execStr) {
-    return new ValidateError(item, ActValidationError.noExecMethod);
+    throw new ValidateError(item, ActValidationError.noExecMethod);
   }
 
   // no arg types
@@ -34,7 +37,7 @@ export const validateItem = (item: IFilteredItem): ValidateError | true => {
     execStr.parameters?.map(({ name, type }) => ({ name, type })) || [];
 
   if (params.every(({ type }) => type !== undefined) !== true) {
-    return new ValidateError(item, ActValidationError.emptyArgumentsType);
+    throw new ValidateError(item, ActValidationError.emptyArgumentsType);
   }
 
   // name === string
@@ -45,7 +48,7 @@ export const validateItem = (item: IFilteredItem): ValidateError | true => {
     .isStringLiteral();
 
   if (!isStringLiteral) {
-    return new ValidateError(item, ActValidationError.wrongNameType);
+    throw new ValidateError(item, ActValidationError.wrongNameType);
   }
 
   // return type exec !== undefined
@@ -53,7 +56,7 @@ export const validateItem = (item: IFilteredItem): ValidateError | true => {
   const execReturnType = execMethodDecl?.getStructure().returnType;
 
   if (execReturnType === undefined) {
-    return new ValidateError(item, ActValidationError.noReturnTypeExec);
+    throw new ValidateError(item, ActValidationError.noReturnTypeExec);
   }
 
   // return type transform is undefined or any
@@ -62,7 +65,7 @@ export const validateItem = (item: IFilteredItem): ValidateError | true => {
     const transformReturnType = transformMethodDecl?.getStructure().returnType;
 
     if (transformReturnType === undefined || transformReturnType === 'any') {
-      return new ValidateError(item, ActValidationError.noReturnTypeTransform);
+      throw new ValidateError(item, ActValidationError.noReturnTypeTransform);
     }
   }
 
