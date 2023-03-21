@@ -83,12 +83,12 @@ export interface ActMasterActionDevDI extends ActMasterAction {
 
 export interface ActGenerated {
   default: (name: string, ...args: any) => Promise<any>;
-  // acts?: any
   defaultSubs: (
     name: string,
     cb: (data: any) => any,
     ctx?: any
   ) => () => boolean;
+  // acts?: any
   // subs?: any
   // names?: string
 }
@@ -116,6 +116,7 @@ type UnionToIntersection<U> = (U extends any ? (k: U) => void : never) extends (
   : never;
 type UnPromise<T> = T extends Promise<infer U> ? U : T;
 type UnsubscribeFnType = () => boolean;
+type PromiseResult<T> = T extends Promise<any> ? T : Promise<T>;
 // #endregion
 
 // #region [ for generation ]
@@ -123,7 +124,10 @@ type FuncFromAct<T extends { name: string; exec: Fn }> = T extends {
   readonly name: infer N;
   readonly exec: infer F;
 }
-  ? (name: N, ...args: Parameters<IsFn<F>>) => Awaited<ReturnType<IsFn<F>>>
+  ? (
+      name: N,
+      ...args: Parameters<IsFn<F>>
+    ) => PromiseResult<ReturnType<IsFn<F>> | null>
   : never;
 //
 type SubsFromAct<T extends { name: string; exec: Fn }> = T extends {

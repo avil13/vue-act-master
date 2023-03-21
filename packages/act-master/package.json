@@ -5,6 +5,7 @@
   "main": "dist/act-master.umd.js",
   "module": "dist/act-master.mjs",
   "typings": "dist/index.d.ts",
+  "type": "module",
   "exports": {
     ".": {
       "require": "./dist/act-master.umd.js",
