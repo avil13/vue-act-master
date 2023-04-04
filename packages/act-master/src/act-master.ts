@@ -15,6 +15,7 @@ import {
   devActMasterConfig,
   DIMap,
   EmitAction,
+  IActMaster,
   ListenerFunction,
 } from './types';
 
@@ -29,7 +30,7 @@ export { CancelledAct };
 /**
  *
  */
-export class ActMaster {
+export class ActMaster implements IActMaster {
   readonly version = version;
 
   private readonly _actions = new Map<ActEventName, ActMasterAction>();
@@ -213,6 +214,7 @@ export class ActMaster {
           action?.errorHandlerEventName &&
           action.errorHandlerEventName !== eventName
         ) {
+          // Act has own error handler
           this.emit(action.errorHandlerEventName, error);
           throw new CancelledAct(error);
         }

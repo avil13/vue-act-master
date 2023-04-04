@@ -20,6 +20,10 @@ export interface DIMap {
   [key: string]: any;
 }
 
+export interface IActMaster {
+  /*#__PURE__*/ exec: ActExec;
+}
+
 export interface ActMasterOptions {
   actions?: ActMasterAction[];
   di?: DIMap;
@@ -69,6 +73,10 @@ export interface ActMasterAction {
    */
   errorHandlerEventName?: ActEventName;
   [key: string]: any;
+}
+
+export interface ActMaster {
+  exec: ActExec;
 }
 
 export interface ActMasterActionDevDI extends ActMasterAction {

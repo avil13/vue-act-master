@@ -1,15 +1,15 @@
 {
   "name": "act-master",
-  "version": "1.12.0",
+  "version": "2.0.0",
   "author": "avil13",
-  "main": "dist/act-master.umd.js",
-  "module": "dist/act-master.mjs",
+  "main": "dist/act-master.umd.cjs",
+  "module": "dist/act-master.js",
   "typings": "dist/index.d.ts",
   "type": "module",
   "exports": {
     ".": {
-      "require": "./dist/act-master.umd.js",
-      "import": "./dist/act-master.mjs",
+      "require": "./dist/act-master.umd.cjs",
+      "import": "./dist/act-master.js",
       "types": "./dist/index.d.ts"
     }
   },

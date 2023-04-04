@@ -80,7 +80,7 @@ export const makeIndexContent = async (
     sourceFile.addStatements(prefix + '\n\n');
   }
 
-  importDeclaration.addNamedImport('ActMasterAction');
+  // importDeclaration.addNamedImport('ActMasterAction');
   importDeclaration.addNamedImport('Acts');
   importDeclaration.addNamedImport('Names');
   importDeclaration.addNamedImport('Subs');
@@ -110,6 +110,9 @@ export const makeIndexContent = async (
       acts: Acts<typeof actions>;
       subs: Subs<typeof actions>;
       names: Names<typeof actions>;
+    }
+    export interface ActMaster {
+      exec: Acts<typeof actions>;
     }
   }`;
 
