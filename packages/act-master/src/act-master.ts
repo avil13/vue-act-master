@@ -216,7 +216,7 @@ export class ActMaster implements IActMaster {
         ) {
           // Act has own error handler
           this.emit(action.errorHandlerEventName, error);
-          throw new CancelledAct(error);
+          return new CancelledAct(error);
         }
 
         if (
@@ -261,7 +261,7 @@ export class ActMaster implements IActMaster {
 
     const value: T2 = await action.exec(...args);
 
-    if (value instanceof CancelledAct) {
+    if (value instanceof CancelledAct || CancelledAct.is(value)) {
       return value;
     }
 

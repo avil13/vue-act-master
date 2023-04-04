@@ -1,14 +1,19 @@
 export class CancelledAct {
   [key: string]: any;
 
-  static readonly _name = '__CancelledAct__';
-
-  static is(obj: CancelledAct | any): boolean {
-    return obj._name === CancelledAct._name;
+  static get _name() {
+    return '__CancelledAct__';
   }
 
   get _name() {
     return CancelledAct._name;
+  }
+
+  static is(obj: CancelledAct | any): boolean {
+    if (!obj || typeof obj !== 'object') {
+      return false;
+    }
+    return obj._name === CancelledAct._name;
   }
 
   readonly reason: string = '';
@@ -28,5 +33,13 @@ export class CancelledAct {
         reason: reason.message || '',
       });
     }
+  }
+
+  valueOf() {
+    return null;
+  }
+
+  toString(): string {
+    return this.reason;
   }
 }

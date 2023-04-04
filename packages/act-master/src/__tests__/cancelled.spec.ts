@@ -61,3 +61,10 @@ describe('CancelledAct with action', () => {
     expect(cancelledResult instanceof CancelledAct).toBe(true);
   });
 });
+
+it('CancelledAct is method', () => {
+  const ca = new CancelledAct('Stop');
+
+  expect(`${ca}`).toBe('Stop');
+  expect(CancelledAct.is(ca)).toBe(true);
+});
