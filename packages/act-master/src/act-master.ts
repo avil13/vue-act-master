@@ -129,16 +129,10 @@ export class ActMaster implements IActMaster {
       throw new ActinonAlreadyExistingError(eventName);
     }
 
-    if (action.useEmit && action.name) {
-      const bindedEmitter: EmitAction = async (
-        eventName: ActEventName,
-        ...args
-      ) => {
-        if (action.name === eventName) {
-          return this.notifyListeners(eventName, args[0]);
-        }
-        return this.emit(eventName, ...args);
-      };
+    if (action.useEmit) {
+      const bindedEmitter: EmitAction = (eventName: ActEventName, ...args) =>
+        this.emit(eventName, ...args);
+
       action.useEmit(bindedEmitter);
     }
 
@@ -269,7 +263,7 @@ export class ActMaster implements IActMaster {
 
     if (this._watchers.has(eventName)) {
       for (const watchingEventName of this._watchers.get(eventName) || []) {
-        await this.emit(watchingEventName, value);
+        this.emit(watchingEventName, value); // Without waiting
       }
     }
 
