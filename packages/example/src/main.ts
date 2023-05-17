@@ -1,7 +1,7 @@
 import { createApp } from 'vue';
 import { VueActMaster } from 'vue-act-master';
 
-import { actions } from './acts';
+import { actions } from './act/generated/actions';
 import { router } from './router';
 import App from './App.vue';
 

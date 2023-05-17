@@ -35,8 +35,7 @@ act.subListClear = subListClear;
  * @returns ActMaster
  */
 export function act(): ActMaster {
-  //@ts-ignore
-  const $act = ActMaster.instance;
+  const $act = ActMaster.getInstance();
   if (!$act) {
     throw new Error(
       'Instance call before initialization. Make a "new ActMaster()" first'

@@ -74,7 +74,7 @@ export class ClassAction implements ActMasterAction {
 ```
 
 ```ts
-// ../you/actions/path
+// ../act/actions
 
 export const actions: ActMasterAction[] = [
   new ClassAction(),
@@ -311,7 +311,7 @@ In the code it looks like this:
 // ...
 import { VueActMaster } from 'vue-act-master';
 
-import { actions } from '../you/actions/path';
+import { actions } from '../act/actions';
 import { SuperAPI } from '../you/api';
 
 const di = {

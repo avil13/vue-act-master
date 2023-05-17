@@ -298,7 +298,9 @@ export class ActMaster implements IActMaster {
         listener,
         eventName,
       });
-    } else {
+    }
+
+    if (context) {
       this.subsList.add(context);
     }
 
@@ -308,6 +310,7 @@ export class ActMaster implements IActMaster {
   unsubscribe(eventName: ActEventName, listener: ListenerFunction): boolean {
     const listeners = this._listeners.get(eventName);
     if (!listeners) {
+      this._subsMap.set(eventName, []);
       return false;
     }
 

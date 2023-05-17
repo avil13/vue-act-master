@@ -12,7 +12,7 @@ yarn install act-master
 ```ts
 import { act } from 'act-master';
 // Actions
-import { actions } from '../you/actions/path';
+import { actions } from '../act/actions';
 
 // Init
 act.init({

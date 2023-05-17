@@ -22,7 +22,7 @@ module.exports = defineConfig({
     logo: '/assets/act-master-logo.svg',
 
     editLink: {
-      pattern: 'https://github.com/avil13/vue-act-master/packages/docs/src:path',
+      pattern: 'https://github.com/avil13/vue-act-master/packages/docs/src/:path',
       text: 'Edit this page on GitHub'
     },
     socialLinks: [
@@ -37,10 +37,8 @@ module.exports = defineConfig({
 
     nav: [
       {
-        text: 'Guide', link: '/guide/',
-        items: [
-          { text: 'Installation', link: '/guide/installation.html' },
-        ]
+        text: 'Get Started',
+        items: getSidebar(),
       },
     ],
 
@@ -49,71 +47,14 @@ module.exports = defineConfig({
 });
 
 
-function getSidebar(filterItem = ''): DefaultTheme.SidebarItem[] {
+function getSidebar(filterItem = ''): DefaultTheme.NavItemWithLink[] {
   return [
-    { text: 'Intro', link: '/' },
+    // { text: 'Intro', link: '/' },
     { text: 'Installation', link: '/guide/installation.html' },
-
-    {
-      text: 'Actions',
-      items: [
-        {
-          text: 'Adding actions',
-          link: '/v1/action/02-add-action',
-        },
-        {
-          text: 'Subscribe/Unsubscribe (on/off),once',
-          link: '/v1/action/03-subscribtion',
-        },
-        {
-          text: 'ActMasterAction',
-          link: '/v1/action/04-actions',
-        },
-        {
-          text: 'VanillaJS, React, or Composition API',
-          link: '/v1/action/05-composition-api',
-        },
-      ],
-    },
-    {
-      text: 'Tests',
-      items: [
-        {
-          text: 'ActMaster test-utils',
-          link: '/v1/testing/05-testing',
-        },
-      ],
-    },
-    {
-      text: 'Advanced',
-      items: [
-        {
-          text: 'Advanced unsubscribe',
-          link: '/v1/advanced/06-subsList',
-        },
-        {
-          text: 'Advanced single execution',
-          link: '/v1/advanced/07-single-execution',
-        },
-        {
-          text: 'Advanced emit many results',
-          link: '/v1/advanced/08-emit-many-results',
-        },
-        {
-          text: 'Convert function to action',
-          link: '/v1/advanced/09-function-to-action',
-        },
-      ],
-    },
-    {
-      text: 'Tips and tricks',
-      items: [
-        {
-          text: 'WebSocket',
-          link: '/v1/tips/web-socket',
-        },
-      ],
-    },
+    { text: 'ActMasterAction', link: '/guide/act-master-action.html' },
+    { text: 'exec and subscribe', link: '/guide/exec-and-subscribe.html' },
+    { text: 'Testing', link: '/guide/testing.html' },
+    { text: 'Act-Master-cli', link: '/guide/cli.html' },
   ];
 }
 

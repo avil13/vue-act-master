@@ -18,7 +18,7 @@ Create instance
 import { ActMaster } from 'act-master';
 
 // Actions
-import { actions } from '../you/actions/path';
+import { actions } from '../act/actions';
 
 const $act = new ActMaster({
   actions
@@ -42,7 +42,7 @@ import App from './App.vue';
 import { VueActMaster } from 'vue-act-master';
 
 // Actions
-import { actions } from '../you/actions/path';
+import { actions } from '../act/actions';
 
 Vue.use(VueActMaster, {
   actions,

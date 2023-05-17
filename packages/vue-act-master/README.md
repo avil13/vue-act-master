@@ -42,7 +42,7 @@ import App from './App.vue';
 import { VueActMaster } from 'vue-act-master';
 
 // Actions array
-import { actions } from '../you/actions/path';
+import { actions } from '../act/actions';
 
 Vue.use(VueActMaster, {
   actions,
@@ -55,7 +55,7 @@ new Vue({
 ```
 
 ```ts
-// ../you/actions/path
+// ../act/actions
 export const actions: ActMasterAction[] = [
   new GetDataAction(),
 ];

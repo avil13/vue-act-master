@@ -1,57 +1,97 @@
 ---
 title: Install Vue-Act-Master | Guide
 ---
+# Installation
 
-# Установка
-
-Для установки достаточно просто набрать команду
+To install, simply type the command
 
 ```sh
 npm install act-master
 ```
 
-Если вы используете Vue и optional syntax то вам будет удобно установить обертку и пользоваться ее преимуществами.
+If you use Vue and optional syntax, you will be comfortable installing the wrapper and taking advantage of it.
 
 ```sh
 npm install vue-act-master
 ```
 
-Теперь ван нужно инициализировать библиотеку.
+Now you need to initialize the library.
 
-Можно использовать два варианта, один больше подходит в вашем приложении преобладает функциональный стиль, к примеру "Composition API" во Vue или функциональные компоненты в React.
-Если же вы чаще используете классы, как анпример в Angular, то можно использовать этот подход.
+You can use two options, one is more suitable in your application prevails functional style, for example "Composition API" in Vue or functional components in React.
+If you use classes more often, like in Angular, you can use constructor initialization.
 
 
 ::: code-group
 ```ts [Function Style]
-import { act } from 'act-master';
-import { actions } from '../you/actions/path';
+import { act, ActMasterOptions } from 'act-master';
+import { actions } from '../act/actions';
 
-act.init({
+const options: ActMasterOptions = {
   actions,
-});
+};
+
+act.init(options);
 ```
 ```ts [Class Style]
-import { ActMaster } from 'act-master';
-import { actions } from '../you/actions/path';
+import { ActMaster, ActMasterOptions } from 'act-master';
+import { actions } from '../act/actions';
 
-const $act = new ActMaster({
-  actions
-});
+const options: ActMasterOptions = {
+  actions,
+};
+
+const $act = new ActMaster(options);
+```
+```ts [Vue3 Composition API]
+import { createApp } from 'vue';
+
+import { act, ActMasterOptions } from 'act-master';
+import { actions } from '../act/actions';
+
+const options: ActMasterOptions = {
+  actions,
+};
+
+act.init(options);
+
+createApp(App).mount('#app');
+```
+```ts [Vue2]
+import Vue from 'vue';
+import App from './App.vue';
+
+import { VueActMaster, ActMasterOptions } from 'vue-act-master';
+import { actions } from '../act/actions';
+
+const options: ActMasterOptions = {
+  actions,
+};
+
+Vue.use(VueActMaster, options);
+
+new Vue({
+  render: h => h(App),
+}).$mount('#app');
 ```
 :::
 
-Добавляем типы tsconfig.json
-```json
-// tsconfig.json
-{
-  "compilerOptions": {
-    ...
-    "types": [
-      "vue-act-master", // Add the types in typescript
-    ],
-  }
-}
-```
 
-Описание параметров конфига
+# ActMasterOptions
+
+Description of configure parameters
+
+
+| Property                              | Default   | Description
+| --- | --- | --- |
+| actions?: ActMasterAction[];          | []        | An array of action items
+| errorHandlerEventName?: ActEventName; | undefined | Action call on error (can be used in actions too)
+| di?: DIMap;                           | {}        | DI entities
+| errorOnReplaceDI?: boolean;           | false     | Error on entity DI replacement
+| autoUnsubscribeCallback               | undefined | Method for calling auto unsubscribe
+
+
+Now all that's left to do is:
+
+- [Write `ActMasterAction`](act-master-action#actmasteraction)
+- [Subscribe to its changes](exec-and-subscribe#subscribe-unsubscribe-on-off) or [Watch for changes](act-master-action#watch)
+- [And call the action](exec-and-subscribe#exec)

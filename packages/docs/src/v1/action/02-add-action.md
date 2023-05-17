@@ -8,14 +8,14 @@ Suppose you have a variable with an array of actions:
 
 ```ts
 // actions: ActMasterAction[]
-import { actions } from '../you/actions/path';
+import { actions } from '../act/actions';
 ```
 
 You can pass it to the constructor options:
 
 ```ts
 import { VueActMaster } from 'vue-act-master';
-import { actions } from '../you/actions/path';
+import { actions } from '../act/actions';
 
 Vue.use(VueActMaster, {
   actions,
@@ -28,7 +28,7 @@ Or add it already in the component.
 // App.vue
 
 <script>
-import { actions } from '../you/actions/path';
+import { actions } from '../act/actions';
 
 export default {
   mounted() {
