@@ -14,9 +14,9 @@
     }
   },
   "files": [
-    "README.md",
+    "src/",
     "dist/",
-    "src/"
+    "README.md"
   ],
   "homepage": "https://avil13.github.io/vue-act-master/",
   "keywords": [
