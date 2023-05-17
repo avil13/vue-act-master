@@ -3,6 +3,7 @@ title: Install Vue-Act-Master | Guide
 ---
 # Installation
 
+
 To install, simply type the command
 
 ```sh

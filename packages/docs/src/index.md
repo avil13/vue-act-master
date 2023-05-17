@@ -11,15 +11,36 @@ head:
 sidebar: false
 aside: false
 ---
+<style>
+a.cta {
+  background:    #3eaf7c;
+  border-radius: 11px;
+  padding:       16px 40px;
+  color:         #ffffff;
+  display:       inline-block;
+  font:          normal bold 21px/1 "Open Sans", sans-serif;
+  text-align:    center;
+}
+.cta-wrapper {
+  display: flex;
+  justify-content: center;
+  margin: 4rem 0;
+}
+</style>
 
 <div align="center" style="padding-top:4rem; padding-bottom:8rem;">
   <img src="/assets/act-master-logo.svg" alt="vue-act-master">
 
-  <h1>Act-Master</h1>
+  <h1 style="padding-top:4rem; font-size:4rem">Act-Master</h1>
+</div>
+
+<div class="cta-wrapper">
+  <a href="guide/installation" class="cta">Get started</a>
 </div>
 
 # Act-Master: Simplifying Frontend Application Development
-Looking for a library that streamlines frontend application development and enhances scalability? Look no further than Act-Master. This JavaScript library leverages powerful patterns to create extensible and robust frontend applications.
+Looking for a library that streamlines frontend application development and enhances scalability? Pay attention to the Act-Master. This JavaScript library leverages powerful patterns to create extensible and robust frontend applications.
+
 
 ### Introducing Act-Master
 Act-Master is a JavaScript library that offers a simple and efficient approach to frontend application development. By utilizing patterns like commander and pub/sub, Act-Master creates an architecture that is easy to maintain, extend, and test. The library effectively separates the business logic from the application, ensuring a clear separation of concerns and simplifying the development and maintenance process.

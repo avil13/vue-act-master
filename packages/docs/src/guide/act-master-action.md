@@ -1,5 +1,6 @@
 # ActMasterAction
 
+
 An action is the basic logical unit of an action. In this manual it will be referred to as `act`. Unless otherwise specified, it will be referred to as an action.
 
 You can store business logic in it. Call the API. Call other actions. Subscribe to it. Perform validations. Use Dependency Injection (DI).
@@ -61,7 +62,7 @@ An act is a simple object that corresponds to the `ActMasterAction` interface.
 
 It must necessarily have the `name` property and the `exec` method.
 
-It is recommended to write act's in a class style, then code generation will be available to automatically collect all act's in the project.
+It is recommended to write act's in a class style, then [code generation](cli#act-master-cli) will be available to automatically collect all act's in the project.
 
 Example of the same act in different styles.
 
@@ -112,66 +113,6 @@ async function GetData(usr: string): Promise<unknown> {
 
 act - has additional features to help simplify the code.
 
-## Cancel Action
-
-An action can be interrupted by returning a special object "CancelledAct". This will stop the chain of events if you build it using `watch` or `emit`.
-
-```ts
-// get-data.act.ts
-import { ActMasterAction, CancelledAct } from 'act-master';
-
-export class GetData implements ActMasterAction {
-  name = 'GetData';
-
-  exec() {
-    // ...
-    return new CancelledAct('Some reason to stop action...');
-  },
-}
-```
-
-Before calling the `exec` method, you can validate the arguments that are sent to it.
-
-We add a method `validateInput` to which all arguments intended for `exec` get.
-
-If they are valid we return `true`.
-
-Otherwise an error message of your choice.
-
-```ts
-// validate-action.ts
-
-import { ActMasterAction, CancelledAct } from 'act-master';
-
-export class GetData implements ActMasterAction {
-  name = 'GetData',
-
-  validateInput(arg?: any): true | CancelledAct {
-    if (typeof arg !== 'number') {
-      return new CancelledAct('Validation error', { id: 'Must be a number' });
-    }
-
-    return true; // If everything is correct
-  }
-
-  async exec(id: number): Promise<any> {
-    const url = `https://jsonplaceholder.typicode.com/todos/${id}`;
-    const response = await fetch(url);
-    return response.json();
-  },
-};
-```
-
-And try to exec
-
-```ts
-const result = await act().exec('GetData', '101');
-
-if (CancelledAct.is(result)) {
-  // ... Handling the error
-  return;
-}
-```
 
 ## Emit another Action in Action
 
@@ -227,8 +168,6 @@ export class Login implements ActMasterAction {
 
 ## DI in Actions
 
-# !!!!!!!!!!!!!!!!!!!! добавить пример добавления в конфиг и через метод
-
 To make the act more independent, a simple Dependency injection (DI) implementation has been added.
 
 It consists of storing entities that we access from act into an internal container.
@@ -239,6 +178,26 @@ And we just use the implementation of this entity through an interface.
 
 In the code it looks like this:
 
+
+::: code-group
+```ts [add DI with config]
+import { SuperAPI } from 'path/to/api';
+
+act.init({
+  actions,
+  di: {
+    api: SuperAPI, // your API class
+  }
+})
+```
+```ts [add DI with method]
+import { SuperAPI } from 'path/to/api';
+
+act().setDI('api', SuperAPI);
+```
+:::
+
+Using DI
 
 ::: code-group
 ```ts [With decorator]
@@ -303,13 +262,15 @@ import { ActMasterAction } from 'act-master';
 export class Login implements ActMasterAction {
   name = 'Login';
 
-  errorHandlerEventName = 'OnError'; // In case of an error, 'OnError' act will contain a message
+  // In case of an error, 'OnError' act will catch error
+  errorHandlerEventName = 'OnError';
 
   async exec(loginData: any): Promise<void> {
     await api.login(loginData);
   }
 }
 ```
+
 
 ## Watch
 
@@ -347,6 +308,72 @@ export class SecondAction implements ActMasterAction {
 ```
 
 
+## Cancel Action
+
+An action can be interrupted by returning a special object `CancelledAct`. This will stop the chain of events if you build it using [watch](#watch) or [emit](#emit-another-action-in-action).
+
+```ts
+// get-data.act.ts
+import { ActMasterAction, CancelledAct } from 'act-master';
+
+export class GetData implements ActMasterAction {
+  name = 'GetData';
+
+  exec() {
+    // ...
+    return new CancelledAct('Some reason to stop action...');
+  },
+}
+```
+
+
+## Validate before call
+
+Before calling the [exec](exec-and-subscribe#exec) method, you can validate the arguments that are sent to it.
+
+We add a method `validateInput` to which all arguments intended for `exec` get.
+
+If they are valid we return `true`.
+
+Otherwise an error message of your choice.
+
+```ts
+// validate-action.ts
+
+import { ActMasterAction, CancelledAct } from 'act-master';
+
+export class GetData implements ActMasterAction {
+  name = 'GetData',
+
+  validateInput(arg?: any): true | CancelledAct {
+    if (typeof arg !== 'number') {
+      return new CancelledAct('Validation error', { id: 'Must be a number' });
+    }
+
+    return true; // If everything is correct
+  }
+
+  async exec(id: number): Promise<any> {
+    const url = `https://jsonplaceholder.typicode.com/todos/${id}`;
+    const response = await fetch(url);
+    return response.json();
+  },
+};
+```
+
+And try to exec
+
+```ts
+const result = await act().exec('GetData', '101');
+
+if (CancelledAct.is(result)) {
+  // ... Handling the error
+  return;
+}
+```
+
+
+
 ## ADVANCED: single execution
 
 ### One result with multiple calls
@@ -367,7 +394,8 @@ import { ActMasterAction } from 'act-master';
 export class CheckAuth implements ActMasterAction {
   name = 'CheckAuth';
 
-  isSingleExec = true; // At runtime, the result will be one for many parallel requests
+  // At runtime, the result will be one for many parallel requests
+  isSingleExec = true;
 
   exec() {
     return api.isAuth();
@@ -377,40 +405,40 @@ export class CheckAuth implements ActMasterAction {
 
 Now, until the query is executed, no matter how many times you call the action, only one, the first query will be made and its result will be returned.
 
-Example of a test
+Example of a testing with [ActTest](testing#actmaster-test-utils)
 
 ```ts
 // check-auth.spec.ts
 import { ActMasterAction, ActTest } from 'act-master';
 
-describe('SinglePromise', () => {
-  it('one call', async () => {
-    // test action
-    const action: ActMasterAction = {
-      isSingleExec: true, // prop for single exec
-      name: 'ACT_NAME',
-      async exec(val: number) {
-        return await new Promise((ok) => setTimeout(() => ok(val), 50));
-      },
-    };
+it('SinglePromise one call', async () => {
+  // Arrange
+  const actionMock: ActMasterAction = {
+    isSingleExec: true, // prop for single exec
+    name: 'ACT_NAME',
+    async exec(val: number) {
+      return await new Promise((ok) => setTimeout(() => ok(val), 50));
+    },
+  };
 
-    const $act = ActTest.getInstance();
-
-    $act.addAction(action);
-
-    const mockFn = jest.fn();
-
-    $act.subscribe('ACT_NAME', mockFn);
-
-    await Promise.all([
-      $act.exec('ACT_NAME', 10),
-      $act.exec('ACT_NAME', 5),
-      $act.exec('ACT_NAME', 1),
-    ]);
-
-    expect(mockFn).toBeCalledTimes(1);
-    expect(mockFn).toBeCalledWith(10);
+  const $act = ActTest.getInstance({
+    actions: [actionMock],
   });
+
+  const mockFn = jest.fn();
+
+  $act.subscribe('ACT_NAME', mockFn);
+
+  // Act
+  await Promise.all([
+    $act.exec('ACT_NAME', 10),
+    $act.exec('ACT_NAME', 5),
+    $act.exec('ACT_NAME', 1),
+  ]);
+
+  // Assert
+  expect(mockFn).toBeCalledTimes(1);
+  expect(mockFn).toBeCalledWith(10);
 });
 
 ```
