@@ -1,6 +1,6 @@
 {
   "name": "act-master",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "author": "avil13",
   "main": "dist/act-master.umd.cjs",
   "module": "dist/act-master.js",
@@ -15,8 +15,8 @@
   },
   "files": [
     "README.md",
-    "dist",
-    "src"
+    "dist/",
+    "src/"
   ],
   "homepage": "https://avil13.github.io/vue-act-master/",
   "keywords": [
