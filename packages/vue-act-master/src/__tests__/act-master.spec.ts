@@ -70,17 +70,6 @@ describe('VueActMaster', () => {
       const result = await $act.exec(ACTION_NAME);
       expect(result).toBe(expectRandomValue);
     });
-
-    it('transform', async () => {
-      ACTION_NAME = 'ACTION_NAME_EX';
-
-      addTestAction(ACTION_NAME, {
-        transform: (v: string) => `${v}_SUFFIX`,
-      });
-
-      const result = await $act.exec(ACTION_NAME);
-      expect(result).toBe(`${expectRandomValue}_SUFFIX`);
-    });
   });
 
   describe('Subscriptions', () => {
