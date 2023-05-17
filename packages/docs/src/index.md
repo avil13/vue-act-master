@@ -10,6 +10,7 @@ head:
 
 sidebar: false
 aside: false
+
 ---
 <style>
 a.cta {
