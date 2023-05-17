@@ -9,13 +9,13 @@ it('generateActionList [1]', async () => {
 
 function getContent() {
   return `
-import { ActMasterAction, Acts, Names, Subs } from "act-master";
+import { Acts, Names, Subs } from "act-master";
 import { AsyncAction } from "@/utils/__fixtures__/actions/async-action";
 import { NoPromiseAction } from "@/utils/__fixtures__/actions/no-promise";
 import { WithOtherTypeReturn } from "@/utils/__fixtures__/actions/with-other-type-return";
 
 /* This is generated file */
-export const actions: ActMasterAction[] = [
+export const actions = [
   new AsyncAction(),
   new NoPromiseAction(),
   new WithOtherTypeReturn(),
@@ -27,5 +27,9 @@ declare module 'act-master' {
     subs: Subs<typeof actions>;
     names: Names<typeof actions>;
   }
-}`.trim();
+  export interface ActMaster {
+    exec: Acts<typeof actions>;
+  }
+}
+`.trim();
 }
