@@ -49,10 +49,9 @@
     "url": "https://github.com/avil13/vue-act-master.git"
   },
   "devDependencies": {
-    "@types/node": "^18.14.5",
     "auto-changelog": "^2.4.0",
-    "typescript": "^4.9.5",
-    "vite": "^4.1.4",
-    "vitest": "^0.29.2"
+    "typescript": "^5.0.4",
+    "vite": "^4.3.7",
+    "vitest": "^0.31.0"
   }
 }
