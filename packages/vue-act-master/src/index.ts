@@ -36,6 +36,7 @@ export class VueActMaster {
   static instance: ActMaster | null = null;
 
   static install(vue: any, options?: ActMasterOptions): void {
+    debugger;
     const actMaster = new ActMaster({
       autoUnsubscribeCallback({ context, eventName, listener }) {
         if (context && typeof context === 'function') {

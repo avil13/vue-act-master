@@ -1,18 +1,9 @@
 {
-  "extends": "../../tsconfig.json",
-  "baseUrl": "./src",
-  "paths": {
-    "act-master": [
-      "../act-master/src"
-    ]
-  },
-  "include": [
-    "./src/**/*",
-  ],
+  "extends": "./tsconfig.json",
+  "include": ["src/*"],
   "exclude": [
-    "**/__tests__/*",
     "node_modules",
-    "example",
-    "dist"
+    "dist",
+    "*/__tests__/*"
   ]
 }
