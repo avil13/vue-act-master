@@ -534,10 +534,10 @@
   resolved "https://registry.yarnpkg.com/@sinclair/typebox/-/typebox-0.27.8.tgz#6667fac16c436b5434a387a34dedb013198f6e6e"
   integrity sha512-+Fj43pSMwJs4KRrH/938Uf+uAELIgVBmQzg/q1YG10djyfA3TnrU8N8XzqCh/okZdszqBQTZf96idMfE5lnwTA==
 
-"@ts-morph/common@~0.19.0":
-  version "0.19.0"
-  resolved "https://registry.yarnpkg.com/@ts-morph/common/-/common-0.19.0.tgz#927fcd81d1bbc09c89c4a310a84577fb55f3694e"
-  integrity sha512-Unz/WHmd4pGax91rdIKWi51wnVUW11QttMEPpBiBgIewnc9UQIX7UDLxr5vRlqeByXCwhkF6VabSsI0raWcyAQ==
+"@ts-morph/common@~0.20.0":
+  version "0.20.0"
+  resolved "https://registry.yarnpkg.com/@ts-morph/common/-/common-0.20.0.tgz#3f161996b085ba4519731e4d24c35f6cba5b80af"
+  integrity sha512-7uKjByfbPpwuzkstL3L5MQyuXPSKdoNG93Fmi2JoDcTf3pEP731JdRFAduRVkOs8oqxPsXKA+ScrWkdQ8t/I+Q==
   dependencies:
     fast-glob "^3.2.12"
     minimatch "^7.4.3"
@@ -586,10 +586,15 @@
   resolved "https://registry.yarnpkg.com/@types/json-schema/-/json-schema-7.0.11.tgz#d421b6c527a3037f7c84433fd2c4229e016863d3"
   integrity sha512-wOuvG1SN4Us4rez+tylwwwCV1psiNVOkJeM3AUWUNWg/jDQY2+HE/444y5gc+jBmRqASOm2Oeh5c1axHobwRKQ==
 
-"@types/node@*", "@types/node@^20.1.7":
+"@types/node@*":
   version "20.1.7"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-20.1.7.tgz#ce10c802f7731909d0a44ac9888e8b3a9125eb62"
   integrity sha512-WCuw/o4GSwDGMoonES8rcvwsig77dGCMbZDrZr2x4ZZiNW4P/gcoZXe/0twgtobcTkmg9TuKflxYL/DuwDyJzg==
+
+"@types/node@^20.4.3":
+  version "20.4.3"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-20.4.3.tgz#ca83a5a006e0d5709a3fe8966112f26436071d81"
+  integrity sha512-Yu3+r4Mn/iY6Mf0aihncZQ1qOjOUrCiodbHHY1hds5O+7BbKp9t+Li7zLO13zO8j9L2C6euz8xsYQP0rjGvVXw==
 
 "@types/semver@^7.3.12":
   version "7.5.0"
@@ -2470,12 +2475,12 @@ tr46@~0.0.3:
   resolved "https://registry.yarnpkg.com/tr46/-/tr46-0.0.3.tgz#8184fd347dac9cdc185992f3a6622e14b9d9ab6a"
   integrity sha512-N3WMsuqV66lT30CrXNbEjx4GEwlow3v6rr4mCcv6prnfwhS01rkgyFdjPNBYd9br7LpXV1+Emh01fHnq2Gdgrw==
 
-ts-morph@^18.0.0:
-  version "18.0.0"
-  resolved "https://registry.yarnpkg.com/ts-morph/-/ts-morph-18.0.0.tgz#b9e7a898ea115064585a8a775d86da6edc9c5b4e"
-  integrity sha512-Kg5u0mk19PIIe4islUI/HWRvm9bC1lHejK4S0oh1zaZ77TMZAEmQC0sHQYiu2RgCQFZKXz1fMVi/7nOOeirznA==
+ts-morph@^19.0.0:
+  version "19.0.0"
+  resolved "https://registry.yarnpkg.com/ts-morph/-/ts-morph-19.0.0.tgz#43e95fb0156c3fe3c77c814ac26b7d0be2f93169"
+  integrity sha512-D6qcpiJdn46tUqV45vr5UGM2dnIEuTGNxVhg0sk5NX11orcouwj6i1bMqZIz2mZTZB1Hcgy7C3oEVhAT+f6mbQ==
   dependencies:
-    "@ts-morph/common" "~0.19.0"
+    "@ts-morph/common" "~0.20.0"
     code-block-writer "^12.0.0"
 
 ts-node@^10.9.1:
@@ -2814,10 +2819,10 @@ yallist@^4.0.0:
   resolved "https://registry.yarnpkg.com/yallist/-/yallist-4.0.0.tgz#9bb92790d9c0effec63be73519e11a35019a3a72"
   integrity sha512-3wdGidZyq5PB084XLES5TpOSRA3wjXAlIWMhum2kRcv/41Sn2emQ0dycQW4uZXLejwKvg6EsvbdlVL+FYEct7A==
 
-yaml@^2.2.2:
-  version "2.2.2"
-  resolved "https://registry.yarnpkg.com/yaml/-/yaml-2.2.2.tgz#ec551ef37326e6d42872dad1970300f8eb83a073"
-  integrity sha512-CBKFWExMn46Foo4cldiChEzn7S7SRV+wqiluAb6xmueD/fGyRHIhX8m14vVGgeFWjN540nKCNVj6P21eQjgTuA==
+yaml@^2.3.1:
+  version "2.3.1"
+  resolved "https://registry.yarnpkg.com/yaml/-/yaml-2.3.1.tgz#02fe0975d23cd441242aa7204e09fc28ac2ac33b"
+  integrity sha512-2eHWfjaoXgTBC2jNM1LRef62VQa0umtvRiDSk6HSzW7RvS5YtkabJrwYLLEKWBc8a5U2PTSCs+dJjUTJdlHsWQ==
 
 yargs-parser@^20.2.2, yargs-parser@^20.2.9:
   version "20.2.9"

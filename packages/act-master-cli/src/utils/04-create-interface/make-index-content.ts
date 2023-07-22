@@ -81,9 +81,9 @@ export const makeIndexContent = async (
   }
 
   // importDeclaration.addNamedImport('ActMasterAction');
-  importDeclaration.addNamedImport('Acts');
-  importDeclaration.addNamedImport('Names');
-  importDeclaration.addNamedImport('Subs');
+  importDeclaration.addNamedImport({ name: 'Acts', isTypeOnly: true });
+  importDeclaration.addNamedImport({ name: 'Names', isTypeOnly: true });
+  importDeclaration.addNamedImport({ name: 'Subs', isTypeOnly: true });
 
   sourceFile.insertStatements(1, '');
 

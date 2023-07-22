@@ -9,7 +9,7 @@ it('generateActionList [1]', async () => {
 
 function getContent() {
   return `
-import { Acts, Names, Subs } from "act-master";
+import { type Acts, type Names, type Subs } from "act-master";
 import { AsyncAction } from "@/utils/__fixtures__/actions/async-action";
 import { NoPromiseAction } from "@/utils/__fixtures__/actions/no-promise";
 import { WithOtherTypeReturn } from "@/utils/__fixtures__/actions/with-other-type-return";
