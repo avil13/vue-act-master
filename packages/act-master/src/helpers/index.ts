@@ -1,4 +1,30 @@
-import { ActMaster, ActMasterOptions, ActSubscribeType } from '../act-master';
+import {
+  ActExec,
+  ActMaster,
+  ActMasterOptions,
+  ActSubscribeType,
+} from '../act-master';
+
+/**
+ * ActMaster instance and libs
+ *
+ * @returns ActMaster
+ */
+function act(): ActMaster {
+  const $act = ActMaster.getInstance();
+  if (!$act) {
+    throw new Error(
+      'Instance call before initialization. Make a "new ActMaster()" first'
+    );
+  }
+  return $act;
+}
+
+export const exec: ActExec = (...args) => {
+  return act().exec(...args);
+};
+
+act.exec = exec;
 
 act.init = (options: ActMasterOptions) => new ActMaster(options);
 
@@ -28,20 +54,5 @@ export const subListClear = (key: any) => {
 
 act.subListClear = subListClear;
 // #endregion
-
-/**
- * ActMaster instance and libs
- *
- * @returns ActMaster
- */
-function act(): ActMaster {
-  const $act = ActMaster.getInstance();
-  if (!$act) {
-    throw new Error(
-      'Instance call before initialization. Make a "new ActMaster()" first'
-    );
-  }
-  return $act;
-}
 
 export { act, actSubscribe };
