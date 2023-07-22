@@ -3,7 +3,7 @@ import { ActMaster, ActMasterOptions, ActSubscribeType } from '../act-master';
 act.init = (options: ActMasterOptions) => new ActMaster(options);
 
 // #region [ subscribe ]
-export const actSubscribe: ActSubscribeType = (
+const actSubscribe: ActSubscribeType = (
   eventName,
   listener,
   destroyHookOrKey?: any
@@ -34,7 +34,7 @@ act.subListClear = subListClear;
  *
  * @returns ActMaster
  */
-export function act(): ActMaster {
+function act(): ActMaster {
   const $act = ActMaster.getInstance();
   if (!$act) {
     throw new Error(
@@ -43,3 +43,5 @@ export function act(): ActMaster {
   }
   return $act;
 }
+
+export { act, actSubscribe };

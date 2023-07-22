@@ -1,6 +1,6 @@
 export * from './act-master';
 
-export * from './test-utils';
+export { ActTest } from './test-utils';
 
-export * from './helpers';
-export * from './helpers/function-to-action';
+export { act, actSubscribe } from './helpers';
+export { fn2act, functionToAction } from './helpers/function-to-action';
