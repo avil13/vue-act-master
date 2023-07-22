@@ -1,9 +1,4 @@
-import {
-  ActExec,
-  ActMaster,
-  ActMasterOptions,
-  ActSubscribeType,
-} from '../act-master';
+import { ActMaster, ActMasterOptions, ActSubscribeType } from '../act-master';
 
 /**
  * ActMaster instance and libs
@@ -19,12 +14,6 @@ function act(): ActMaster {
   }
   return $act;
 }
-
-export const exec: ActExec = (...args) => {
-  return act().exec(...args);
-};
-
-act.exec = exec;
 
 act.init = (options: ActMasterOptions) => new ActMaster(options);
 
