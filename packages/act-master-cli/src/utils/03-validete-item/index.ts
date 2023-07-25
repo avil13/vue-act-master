@@ -35,11 +35,17 @@ export const validateItem = (item: IFilteredItem): ValidateError | true => {
 
   // no arg types
   const params =
-    execStr.parameters?.map(({ name, type }) => ({ name, type })) || [];
+    execStr.parameters?.map(({ name, type, initializer }) => ({
+      name,
+      type,
+      initializer,
+    })) || [];
 
-  if (params.every(({ type }) => type !== undefined) !== true) {
-    throw new ValidateError(item, ActValidationError.emptyArgumentsType);
-  }
+  params.forEach((p) => {
+    if (p.type === undefined && typeof p.initializer === 'undefined') {
+      throw new ValidateError(item, ActValidationError.emptyArgumentsType);
+    }
+  });
 
   // name === string
   const nameProp = classDeclaration.getProperty('name');

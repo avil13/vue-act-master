@@ -22,6 +22,9 @@
     "traceResolution": false,
     "moduleResolution": "node"
   },
-  "include": ["src"],
+  "include": [
+    "src",
+    "src/utils/03-validete-item/__tests__/mocks/default-arguments-type.ts"
+  ],
   "exclude": ["node_modules", "dist", "**/__fixtures__**"]
 }

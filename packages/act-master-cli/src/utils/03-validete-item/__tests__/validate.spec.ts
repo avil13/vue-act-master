@@ -29,6 +29,12 @@ describe('validateItem', () => {
     );
   });
 
+  it.only('OK: has arg, default arg type', () => {
+    const item = getItem('./mocks/default-arguments-type.ts');
+
+    expect(validateItem(item)).toBe(true);
+  });
+
   it('ERR: name is string', () => {
     const item = getItem('./mocks/wrong-name-type.ts');
 
