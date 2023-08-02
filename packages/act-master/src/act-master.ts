@@ -186,7 +186,6 @@ export class ActMaster implements IActMaster {
 
     const promise = this.emit(eventName, ...args)
       .catch((err: Error) => {
-        debugger;
         return this.catchEmitException(err, eventName);
       })
       .finally(() => {
@@ -276,16 +275,16 @@ export class ActMaster implements IActMaster {
   private notifyListeners(eventName: ActEventName, value: any): void {
     const listeners = this._listeners.get(eventName);
 
-    if (this._watchers.has(eventName)) {
-      for (const watchingEventName of this._watchers.get(eventName) || []) {
-        this.exec(watchingEventName, value); // Without waiting
-      }
-    }
-
     if (listeners) {
       listeners.forEach((listenerCallback) => {
         listenerCallback(value);
       });
+    }
+
+    if (this._watchers.has(eventName)) {
+      for (const watchingEventName of this._watchers.get(eventName) || []) {
+        this.exec(watchingEventName, value); // Without waiting
+      }
     }
   }
   //#endregion
@@ -462,8 +461,6 @@ export class ActMaster implements IActMaster {
         });
       });
     }
-
-    // console.log('=>>', );
 
     if (action.useDI) {
       action.useDI(this._DIContainer);
