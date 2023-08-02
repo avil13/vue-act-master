@@ -131,7 +131,7 @@ export class ActMaster implements IActMaster {
 
     if (action.useEmit) {
       const bindedEmitter: EmitAction = (eventName: ActEventName, ...args) =>
-        this.emit(eventName, ...args);
+        this.exec(eventName, ...args);
 
       action.useEmit(bindedEmitter);
     }
@@ -185,43 +185,15 @@ export class ActMaster implements IActMaster {
     }
 
     const promise = this.emit(eventName, ...args)
-      .then((data) => {
-        this.setProgress(eventName, false);
-        return data;
+      .catch((err: Error) => {
+        debugger;
+        return this.catchEmitException(err, eventName);
       })
-      .then((result) => {
+      .finally(() => {
         if (this._singlePromisesStore.has(eventName)) {
           this._singlePromisesStore.delete(eventName);
         }
-        return result;
-      })
-      .catch((error: Error) => {
         this.setProgress(eventName, false);
-
-        if (error instanceof NotFoundActionError) {
-          throw error;
-        }
-
-        const action = this.getActionOrNull(eventName);
-
-        if (
-          action?.errorHandlerEventName &&
-          action.errorHandlerEventName !== eventName
-        ) {
-          // Act has own error handler
-          this.emit(action.errorHandlerEventName, error);
-          return new CancelledAct(error);
-        }
-
-        if (
-          this.config.errorHandlerEventName &&
-          this.config.errorHandlerEventName !== eventName
-        ) {
-          this.emit(this.config.errorHandlerEventName, error);
-          return Promise.resolve(null);
-        }
-
-        throw error;
       });
 
     const action = this.getActionOrNull(eventName);
@@ -233,7 +205,10 @@ export class ActMaster implements IActMaster {
     return promise;
   };
 
-  private async emit<T2>(eventName: ActEventName, ...args: any[]): Promise<T2> {
+  private async emit<T2>(
+    eventName: ActEventName,
+    ...args: any[]
+  ): Promise<T2 | null> {
     const action = this.getActionOrNull(eventName);
 
     if (action === null) {
@@ -248,30 +223,64 @@ export class ActMaster implements IActMaster {
         if (this.config.errorHandlerEventName) {
           this.emit(this.config.errorHandlerEventName, isValidOrError);
         }
+        if (action.errorHandlerEventName) {
+          this.emit(action.errorHandlerEventName, isValidOrError);
+        }
 
         return isValidOrError;
       }
     }
 
-    const value: T2 = await action.exec(...args);
+    try {
+      const value: T2 = await action.exec(...args);
 
-    if (value instanceof CancelledAct || CancelledAct.is(value)) {
-      return value;
-    }
-
-    this.notifyListeners(eventName, value);
-
-    if (this._watchers.has(eventName)) {
-      for (const watchingEventName of this._watchers.get(eventName) || []) {
-        this.emit(watchingEventName, value); // Without waiting
+      if (value instanceof CancelledAct || CancelledAct.is(value)) {
+        return value;
       }
+
+      this.notifyListeners(eventName, value);
+
+      return value;
+    } catch (err: any) {
+      return this.catchEmitException(err, eventName);
+    }
+  }
+
+  private catchEmitException(error: Error, eventName: ActEventName) {
+    if (error instanceof NotFoundActionError) {
+      throw error;
     }
 
-    return value;
+    const action = this.getActionOrNull(eventName);
+
+    if (
+      action?.errorHandlerEventName &&
+      action.errorHandlerEventName !== eventName
+    ) {
+      // Act has own error handler
+      this.emit(action.errorHandlerEventName, error);
+      return Promise.resolve(null);
+    }
+
+    if (
+      this.config.errorHandlerEventName &&
+      this.config.errorHandlerEventName !== eventName
+    ) {
+      this.emit(this.config.errorHandlerEventName, error);
+      return Promise.resolve(null);
+    }
+
+    return Promise.reject(error);
   }
 
   private notifyListeners(eventName: ActEventName, value: any): void {
     const listeners = this._listeners.get(eventName);
+
+    if (this._watchers.has(eventName)) {
+      for (const watchingEventName of this._watchers.get(eventName) || []) {
+        this.exec(watchingEventName, value); // Without waiting
+      }
+    }
 
     if (listeners) {
       listeners.forEach((listenerCallback) => {
