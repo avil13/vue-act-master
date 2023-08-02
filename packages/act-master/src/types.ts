@@ -50,8 +50,9 @@ export interface ActMasterAction {
   exec: (...args: any[]) => Promise<any> | any;
   /**
    * List of emitNames to be called after
+   * TODO: change to ActEventName
    */
-  watch?: ActEventName[];
+  watch?: string[];
   /**
    * An action can have only one result if several calls are made
    */
