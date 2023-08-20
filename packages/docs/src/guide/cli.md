@@ -69,7 +69,7 @@ Usually projects use their own code style, and for the created file `act/generat
 If you are using `eslint`, you can add the following command to `package.json` in the `scripts` section
 
 ```json
-"postact:gen": "eslint ./src/generated/actions.ts --fix"
+"postact:gen": "eslint ./src/act/generated/actions.ts --fix"
 ```
 
 Now, after each run of the `act:gen` command, the created file will be formatted.
