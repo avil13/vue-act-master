@@ -11,6 +11,7 @@ import {
   ActMasterAction,
   ActMasterActionDevDI,
   ActMasterOptions,
+  ActPluginEvent,
   ActSubscribeType,
   devActMasterConfig,
   DIMap,
@@ -46,6 +47,10 @@ export class ActMaster implements IActMaster {
   private _lastUnsubscribe: () => any = () => false;
 
   private _DIContainer: DIMap = {};
+
+  private _isHasPlugin = false;
+
+  private _pluginList = new Map<ActPluginEvent, (ctx: any) => any>();
 
   private readonly _singlePromisesStore = new Map<
     ActEventName,

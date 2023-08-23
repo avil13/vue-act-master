@@ -233,3 +233,35 @@ export type ActSubscribeType = _SubsType;
 export type ActEventName = _NameType;
 //
 export type EmitAction = ActExec;
+
+// #region [ plugin ]
+export type ActPluginEvent =
+  | 'init'
+  | 'error'
+  | 'validate'
+  | 'beforeExec'
+  | 'execWatcher'
+  | 'execResult'
+  | 'subscribe'
+  | 'unsubscribe';
+
+export type ActPluginContext = {
+  getActInfo(): {
+    name: ActEventName;
+    isSingleton: boolean;
+    watch: ActEventName[];
+    hasValidator: boolean;
+    subscriberCount: number;
+    onErrorName?: ActEventName;
+  }[];
+  type: ActPluginEvent;
+  name?: ActEventName;
+  args?: any[];
+  result?: any;
+  // It's only in the init event
+  addMethod?: {
+    methodName: string;
+    handler: (...data: any[]) => any;
+  };
+};
+// #endregion
