@@ -39,11 +39,6 @@ export class ActMaster implements IActMaster {
 
   private readonly _listeners = new Map<ActEventName, ListenerFunction[]>();
 
-  private readonly _inProgressWatchers = new Map<
-    ActEventName,
-    (inProgress: boolean) => void
-  >();
-
   private readonly _subsMap = new Map<any, (() => void)[]>();
 
   private _lastUnsubscribe: () => any = () => false;
@@ -174,8 +169,6 @@ export class ActMaster implements IActMaster {
 
   //#region [ Executions ]
   exec: ActExec = async (eventName, ...args) => {
-    this.setProgress(eventName, true);
-
     if (this._singlePromisesStore.has(eventName)) {
       const promise = this._singlePromisesStore.get(eventName);
 
@@ -192,7 +185,6 @@ export class ActMaster implements IActMaster {
         if (this._singlePromisesStore.has(eventName)) {
           this._singlePromisesStore.delete(eventName);
         }
-        this.setProgress(eventName, false);
       });
 
     const action = this.getActionOrNull(eventName);
@@ -357,39 +349,6 @@ export class ActMaster implements IActMaster {
   //#endregion
 
   //#region [ extends functions ]
-  inProgress(
-    key: ActEventName | ActEventName[],
-    callback: (inProgress: boolean) => void
-  ): () => any {
-    if (Array.isArray(key)) {
-      key.forEach((k) => this._inProgressWatchers.set(k, callback));
-
-      const unsubscribe = () => {
-        key.forEach((k) => {
-          this._inProgressWatchers.delete(k);
-        });
-      };
-
-      this._lastUnsubscribe = unsubscribe;
-
-      return unsubscribe;
-    }
-
-    this._inProgressWatchers.set(key, callback);
-
-    const unsubscribe = () => this._inProgressWatchers.delete(key);
-
-    this._lastUnsubscribe = unsubscribe;
-
-    return unsubscribe;
-  }
-
-  private setProgress(key: ActEventName, status: boolean) {
-    if (this._inProgressWatchers.has(key)) {
-      //@ts-ignore
-      this._inProgressWatchers.get(key)(status);
-    }
-  }
 
   get subsList() {
     return {
@@ -409,6 +368,7 @@ export class ActMaster implements IActMaster {
       },
     };
   }
+
   // #endregion
 
   //#region [ DI ]
