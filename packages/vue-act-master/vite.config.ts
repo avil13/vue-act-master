@@ -6,6 +6,7 @@ export default defineConfig({
     lib: {
       name: 'vue-act-master',
       entry: 'src/index.ts',
+      formats: ['es', 'cjs', 'umd'],
     },
   },
 });

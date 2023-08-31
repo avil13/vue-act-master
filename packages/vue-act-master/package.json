@@ -5,13 +5,14 @@
   "author": "avil13",
   "main": "dist/vue-act-master.umd.cjs",
   "module": "dist/vue-act-master.js",
-  "typings": "dist/index.d.ts",
+  "typings": "dist/types/index.d.ts",
   "type": "module",
   "exports": {
     ".": {
-      "require": "./dist/vue-act-master.umd.cjs",
+      "browser": "./dist/vue-act-master.umd.cjs",
+      "require": "./dist/vue-act-master.cjs",
       "import": "./dist/vue-act-master.js",
-      "types": "./dist/index.d.ts"
+      "types": "./dist/types/index.d.ts"
     }
   },
   "files": [

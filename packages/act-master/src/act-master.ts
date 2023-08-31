@@ -369,6 +369,14 @@ export class ActMaster implements IActMaster {
     };
   }
 
+  setAutoUnsubscribeCallback(
+    autoUnsubscribeCallback: (...args: any[]) => void
+  ) {
+    if (typeof autoUnsubscribeCallback === 'function') {
+      this.config.autoUnsubscribeCallback = autoUnsubscribeCallback;
+    }
+  }
+
   // #endregion
 
   //#region [ DI ]
