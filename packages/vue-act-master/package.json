@@ -1,6 +1,6 @@
 {
   "name": "vue-act-master",
-  "version": "2.1.2",
+  "version": "3.0.0-beta-01",
   "description": "",
   "author": "avil13",
   "main": "dist/vue-act-master.umd.cjs",
@@ -53,17 +53,17 @@
   },
   "license": "MIT",
   "dependencies": {
-    "act-master": "^2.1.2"
+    "act-master": "^3.0.0-beta-04"
   },
   "peerDependencies": {
-    "act-master": "^2.1.2"
+    "act-master": "^3"
   },
   "devDependencies": {
-    "@babel/types": "^7.22.5",
+    "@babel/types": "^7.22.11",
     "auto-changelog": "^2.4.0",
-    "typescript": "^5.0.4",
-    "vite": "^4.3.7",
-    "vitest": "^0.31.0",
+    "typescript": "^5.2.2",
+    "vite": "^4.4.9",
+    "vitest": "^0.34.3",
     "vue": "*"
   }
 }

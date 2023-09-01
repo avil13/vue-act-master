@@ -7,6 +7,5 @@ export default defineConfig({
       name: 'act-master',
       entry: 'src/index.ts',
     },
-    formats: ['es', 'cjs', 'umd'],
   },
 });

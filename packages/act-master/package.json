@@ -1,6 +1,6 @@
 {
   "name": "act-master",
-  "version": "2.1.2",
+  "version": "3.0.0-beta-04",
   "author": "avil13",
   "main": "dist/act-master.umd.cjs",
   "module": "dist/act-master.js",
@@ -8,9 +8,8 @@
   "type": "module",
   "exports": {
     ".": {
-      "browser": "./dist/vue-act-master.umd.cjs",
-      "require": "./dist/vue-act-master.cjs",
-      "import": "./dist/vue-act-master.js",
+      "require": "./dist/act-master.umd.cjs",
+      "import": "./dist/act-master.js",
       "types": "./dist/types/index.d.ts"
     }
   },
@@ -51,8 +50,8 @@
   },
   "devDependencies": {
     "auto-changelog": "^2.4.0",
-    "typescript": "^5.1.6",
-    "vite": "^4.4.6",
-    "vitest": "^0.33.0"
+    "typescript": "^5.2.2",
+    "vite": "^4.4.9",
+    "vitest": "^0.34.3"
   }
 }
