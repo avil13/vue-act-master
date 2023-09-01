@@ -27,6 +27,8 @@ export * from './types';
 export * from './decorators/index';
 export { CancelledAct };
 
+type OnAction = (evName: string, status: 'START' | 'STOP' | 'ERROR') => void;
+
 /**
  *
  */
@@ -179,9 +181,11 @@ export class ActMaster implements IActMaster {
 
     const promise = this.emit(eventName, ...args)
       .catch((err: Error) => {
+        this.onAction(eventName, 'ERROR');
         return this.catchEmitException(err, eventName);
       })
       .finally(() => {
+        this.onAction(eventName, 'STOP');
         if (this._singlePromisesStore.has(eventName)) {
           this._singlePromisesStore.delete(eventName);
         }
@@ -201,6 +205,7 @@ export class ActMaster implements IActMaster {
     ...args: any[]
   ): Promise<T2 | null> {
     const action = this.getActionOrNull(eventName);
+    this.onAction(eventName, 'START');
 
     if (action === null) {
       throw new NotFoundActionError(eventName);
@@ -369,14 +374,6 @@ export class ActMaster implements IActMaster {
     };
   }
 
-  setAutoUnsubscribeCallback(
-    autoUnsubscribeCallback: (...args: any[]) => void
-  ) {
-    if (typeof autoUnsubscribeCallback === 'function') {
-      this.config.autoUnsubscribeCallback = autoUnsubscribeCallback;
-    }
-  }
-
   // #endregion
 
   //#region [ DI ]
@@ -441,4 +438,20 @@ export class ActMaster implements IActMaster {
     return this._actions.get(eventName) || null;
   }
   //#endregion
+
+  // #region [ plugin ]
+  setAutoUnsubscribeCallback(
+    autoUnsubscribeCallback: (...args: any[]) => void
+  ) {
+    if (typeof autoUnsubscribeCallback === 'function') {
+      this.config.autoUnsubscribeCallback = autoUnsubscribeCallback;
+    }
+  }
+
+  private onAction: OnAction = () => null;
+
+  addActionWatch(cb: OnAction) {
+    this.onAction = cb;
+  }
+  // #endregion
 }

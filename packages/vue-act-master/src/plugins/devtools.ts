@@ -15,7 +15,7 @@ import {
 // const PINK_500 = 0xec4899;
 // const BLUE_600 = 0x2563eb;
 const LIME_500 = 0x84cc16;
-// const CYAN_400 = 0x22d3ee;
+const CYAN_400 = 0x22d3ee;
 const ORANGE_400 = 0xfb923c;
 // const GRAY_100 = 0xf4f4f5
 const DARK = 0x666666;
@@ -24,6 +24,7 @@ const DARK = 0x666666;
 export function addDevtools(app: App, actMaster: ActMaster) {
   const STATE_TYPE = 'ActMaster';
   const INSPECTOR_ID = 'actMaster';
+  const ACTIONS_LAYER_ID = 'actMaster:action';
 
   setupDevtoolsPlugin(
     {
@@ -37,6 +38,45 @@ export function addDevtools(app: App, actMaster: ActMaster) {
     },
     (api) => {
       // Use the API here
+
+      // #region [ timeline ]
+      api.addTimelineLayer({
+        id: ACTIONS_LAYER_ID,
+        label: `ActMaster 🥷`,
+        color: CYAN_400,
+      });
+
+      // gracefully handle errors
+      const now = typeof api.now === 'function' ? api.now.bind(api) : Date.now;
+
+      //@ts-ignore
+      console.log('=>', actMaster.onAction, now());
+
+      actMaster.addActionWatch((name, status) => {
+        // TODO: groupID
+        // const title = (status === 'START' ? '🛫 ' : '🛬 ') + name;
+        // const logType = status === 'ERROR' ? 'error' : 'default';
+        console.log('=>', name, status, now());
+
+        // api.addTimelineEvent({
+        //   layerId: ACTIONS_LAYER_ID,
+        //   event: {
+        //     title,
+        //     time: now(),
+        //     data: {
+        //       info: `${name}: ${status}`,
+        //     },
+        //     logType,
+        //   },
+        // });
+      });
+
+      //@ts-ignore
+      console.log('=>', actMaster.onAction);
+
+      // #endregion
+
+      // #region [ inspector ]
 
       api.addInspector({
         id: INSPECTOR_ID,
@@ -57,6 +97,8 @@ export function addDevtools(app: App, actMaster: ActMaster) {
           payload.state = getActInspectorState(actMaster, payload.nodeId);
         }
       });
+
+      // #endregion
     }
   );
 }

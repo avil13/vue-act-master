@@ -8,8 +8,9 @@
   "type": "module",
   "exports": {
     ".": {
-      "require": "./dist/act-master.umd.cjs",
-      "import": "./dist/act-master.js",
+      "browser": "./dist/vue-act-master.umd.cjs",
+      "require": "./dist/vue-act-master.cjs",
+      "import": "./dist/vue-act-master.js",
       "types": "./dist/types/index.d.ts"
     }
   },
