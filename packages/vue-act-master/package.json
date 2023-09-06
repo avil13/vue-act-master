@@ -5,7 +5,7 @@
   "author": "avil13",
   "main": "dist/vue-act-master.umd.cjs",
   "module": "dist/vue-act-master.js",
-  "typings": "dist/types/index.d.ts",
+  "types": "dist/types/index.d.ts",
   "type": "module",
   "exports": {
     ".": {
