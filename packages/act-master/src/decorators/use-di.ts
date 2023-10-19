@@ -1,11 +1,13 @@
-import { ActMasterActionDevDI } from '../types';
+import { ActMasterAction, ActMasterActionDevDI } from '../types';
 
 export function UseDI(diName: string) {
-  return function (target: ActMasterActionDevDI, propertyKey: string) {
-    if (!target._DI_MAP_) {
-      target._DI_MAP_ = {};
+  return function (target: ActMasterAction, propertyKey: string) {
+    const tg = target as ActMasterActionDevDI;
+
+    if (!tg._DI_MAP_) {
+      tg._DI_MAP_ = {};
     }
 
-    target._DI_MAP_[propertyKey] = diName;
+    tg._DI_MAP_[propertyKey] = diName;
   };
 }

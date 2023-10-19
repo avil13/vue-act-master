@@ -1,5 +1,5 @@
-import { ActTest } from 'src/test-utils';
-import { describe, expect, it, Mock, vi } from 'vitest';
+import { ActTest } from '../test-utils';
+import { describe, expect, it, vi } from 'vitest';
 import { UseDI } from '../decorators';
 import { ActMasterAction } from '../types';
 
@@ -41,7 +41,7 @@ describe('DI', () => {
       name = ACTION_NAME;
 
       @UseDI('api')
-      selfApi!: Mock<any[], any>;
+      selfApi!: any;
 
       exec(data1: number) {
         this.selfApi(data1);

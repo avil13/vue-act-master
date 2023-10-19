@@ -1,8 +1,8 @@
-import { ActMasterActionDevDI } from '../types';
+import { ActMasterAction, ActMasterActionDevDI } from '../types';
 
 export function Emit() {
-  return (target: ActMasterActionDevDI, propertyKey: string) => {
-    Object.defineProperty(target, 'useEmit', {
+  return (target: ActMasterAction, propertyKey: string) => {
+    Object.defineProperty(target as ActMasterActionDevDI, 'useEmit', {
       value: function (emitter: any) {
         this[propertyKey] = emitter;
       },
