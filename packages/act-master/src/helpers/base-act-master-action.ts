@@ -4,7 +4,7 @@ import { DIMap } from '../types';
 export abstract class BaseActMasterAction implements ActMasterAction {
   abstract name: string;
 
-  abstract exec: (...args: any[]) => Promise<any> | any;
+  abstract exec(...args: any[]): Promise<any> | any;
 
   $emit!: EmitAction;
 
