@@ -22,6 +22,8 @@ import {
 //@ts-ignore
 import { version } from '../package.json';
 
+import { migrationHelper } from './utils/migration-helper';
+
 export * from './errors';
 export * from './types';
 export * from './decorators/index';
@@ -44,6 +46,7 @@ export class ActMaster implements IActMaster {
     (inProgress: boolean) => void
   >();
 
+  private _subCurrentName = '';
   private readonly _subsMap = new Map<any, (() => void)[]>();
 
   private _lastUnsubscribe: () => any = () => false;
@@ -129,6 +132,7 @@ export class ActMaster implements IActMaster {
       throw new ActinonAlreadyExistingError(eventName);
     }
 
+    // TODO: remove in v3
     if (action.useEmit) {
       const bindedEmitter: EmitAction = (eventName: ActEventName, ...args) =>
         this.exec(eventName, ...args);
@@ -136,12 +140,14 @@ export class ActMaster implements IActMaster {
       action.useEmit(bindedEmitter);
     }
 
+    migrationHelper(action);
+
     this._actions.set(eventName, action);
 
     this.emitDIProps(action);
 
-    if (action.watch) {
-      action.watch.forEach((watchEventName) => {
+    if (action.$watch) {
+      action.$watch.forEach((watchEventName) => {
         const watchers = this._watchers.get(watchEventName) || [];
         watchers.push(eventName);
         this._watchers.set(watchEventName, watchers);
@@ -197,7 +203,7 @@ export class ActMaster implements IActMaster {
 
     const action = this.getActionOrNull(eventName);
 
-    if (action && action.isSingleExec) {
+    if (action && action.$isSingleton) {
       this._singlePromisesStore.set(eventName, promise);
     }
 
@@ -222,8 +228,8 @@ export class ActMaster implements IActMaster {
         if (this.config.errorHandlerEventName) {
           this.emit(this.config.errorHandlerEventName, isValidOrError);
         }
-        if (action.errorHandlerEventName) {
-          this.emit(action.errorHandlerEventName, isValidOrError);
+        if (action.$onError) {
+          this.emit(action.$onError, isValidOrError);
         }
 
         return isValidOrError;
@@ -252,12 +258,9 @@ export class ActMaster implements IActMaster {
 
     const action = this.getActionOrNull(eventName);
 
-    if (
-      action?.errorHandlerEventName &&
-      action.errorHandlerEventName !== eventName
-    ) {
+    if (action?.$onError && action.$onError !== eventName) {
       // Act has own error handler
-      this.emit(action.errorHandlerEventName, error);
+      this.emit(action.$onError, error);
       return Promise.resolve(null);
     }
 
@@ -290,13 +293,25 @@ export class ActMaster implements IActMaster {
   //#endregion
 
   //#region [ Subscribing ]
-  subscribe: ActSubscribeType = (eventName, listener, context?: any) => {
-    this._listeners.set(eventName, [
-      ...(this._listeners.get(eventName) || []),
+
+  /**
+   * Subscribe to events
+   *
+   * @param actName Name of Act
+   * @param listener Function that watches the event
+   * @param context An entity that's used for unsubscribing.
+                    If a function is passed, a callback for unsubscribe
+                    will be passed to it. Otherwise,
+                    the entity will be used as the key for "subsList.clear(context)"
+   * @returns  Function for unsubscribing
+   */
+  subscribe: ActSubscribeType = (actName, listener, context?: any) => {
+    this._listeners.set(actName, [
+      ...(this._listeners.get(actName) || []),
       listener,
     ]);
 
-    const unsubscribe = () => this.unsubscribe(eventName, listener);
+    const unsubscribe = () => this.unsubscribe(actName, listener);
 
     this._lastUnsubscribe = unsubscribe;
 
@@ -304,12 +319,18 @@ export class ActMaster implements IActMaster {
       this.config.autoUnsubscribeCallback({
         context,
         listener,
-        eventName,
+        eventName: actName,
       });
     }
 
     if (context) {
-      this.subsList.add(context);
+      if (typeof context === 'function') {
+        context(unsubscribe);
+      } else {
+        this.subsList.add(context, unsubscribe);
+      }
+    } else if (this._subCurrentName) {
+      this.subsList.add(this._subCurrentName, unsubscribe);
     }
 
     return unsubscribe;
@@ -357,6 +378,10 @@ export class ActMaster implements IActMaster {
   //#endregion
 
   //#region [ extends functions ]
+  /**
+   * @deprecated
+   *
+   */
   inProgress(
     key: ActEventName | ActEventName[],
     callback: (inProgress: boolean) => void
@@ -384,6 +409,7 @@ export class ActMaster implements IActMaster {
     return unsubscribe;
   }
 
+  // TODO: remove in v3
   private setProgress(key: ActEventName, status: boolean) {
     if (this._inProgressWatchers.has(key)) {
       //@ts-ignore
@@ -392,21 +418,32 @@ export class ActMaster implements IActMaster {
   }
 
   get subsList() {
+    const clear = (key: any) => {
+      const list = this._subsMap.get(key) || [];
+      list.forEach((unsubscribe) => unsubscribe());
+      this._subsMap.delete(key);
+    };
+
     return {
+      /**
+       * After running this method, all subscriptions will be saved,
+       * and can be cleared using the
+       * subList.clear('key') method - with the same key passed in.
+       *
+       */
       add: (key: any, ...fns: (() => any)[]) => {
-        if (!fns.length) {
-          fns.push(this._lastUnsubscribe);
-        }
+        this._subCurrentName = key;
+
         const list = this._subsMap.get(key) || [];
-        list.push(...fns);
+        if (fns.length) {
+          list.push(...fns);
+        }
         this._subsMap.set(key, list);
+
+        return clear;
       },
 
-      clear: (key: any) => {
-        const list = this._subsMap.get(key) || [];
-        list.forEach((unsubscribe) => unsubscribe());
-        this._subsMap.delete(key);
-      },
+      clear,
     };
   }
   // #endregion
@@ -462,6 +499,7 @@ export class ActMaster implements IActMaster {
       });
     }
 
+    // TODO: remove in v3
     if (action.useDI) {
       action.useDI(this._DIContainer);
     }

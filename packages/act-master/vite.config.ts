@@ -5,7 +5,7 @@ export default defineConfig({
   build: {
     lib: {
       name: 'act-master',
-      entry: 'src/index.ts',
+      entry: ['src/index.ts', 'src/vue/index.ts'],
     },
   },
 });

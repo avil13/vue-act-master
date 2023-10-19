@@ -12,11 +12,10 @@ describe('Subscribe list cleaner', () => {
     const action = ActTest.makeActionStub({ name: 'ACT_1' });
     ActTest.addActions([action]);
 
-    $act.subscribe('ACT_1', () => null);
     $act.subsList.add(this);
 
-    const un = $act.subscribe('ACT_1', () => null);
-    $act.subsList.add(this, un);
+    $act.subscribe('ACT_1', () => null);
+    $act.subscribe('ACT_1', () => null);
 
     expect(ActTest.entityCount('listeners')).toBe(2);
 

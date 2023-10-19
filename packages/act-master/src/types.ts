@@ -52,27 +52,63 @@ export interface ActMasterAction {
    * List of emitNames to be called after
    * TODO: change to ActEventName
    */
+  $watch?: string[];
+  /**
+   * @deprecated
+   * Use $watch
+   */
   watch?: string[];
+
   /**
    * An action can have only one result if several calls are made
    */
+  $isSingleton?: boolean;
+  /**
+   * @deprecated
+   *  Use $isSingleton
+   */
   isSingleExec?: boolean;
+
   /**
    * Validating arguments before passing them to exec
    */
+  $validate?: ValidateInputFn;
+  /**
+   * @deprecated
+   *  Use $validate
+   */
   validateInput?: ValidateInputFn;
+
   /**
    * Pass Dependency to action
    */
+  $di?: <T = any>(key: string) => T;
+  /**
+   * @deprecated
+   *  Use $di to inherit from the BaseActMasterAction class
+   */
   useDI?: (contexts: { [key: string]: any }) => void;
+
   /**
    * Pass Emitter to action
    */
+  $emit?: EmitAction;
+  /**
+   * @deprecated
+   *  Use $emit inherited from the BaseActMasterAction class
+   */
   useEmit?: (emit: EmitAction) => void;
+
   /**
    * Name of the action that catches the error
    */
+  $onError?: ActEventName;
+  /**
+   * @deprecated
+   *  Use $onError
+   */
   errorHandlerEventName?: ActEventName;
+
   [key: string]: any;
 }
 

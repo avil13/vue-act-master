@@ -1,5 +1,5 @@
-import { act, ActMaster, actSubscribe, ActTest } from '../..';
 import { beforeEach, describe, expect, it } from 'vitest';
+import { act, ActMaster, ActTest } from '../..';
 import { fn2act } from '../function-to-action';
 
 const sumAction = {
@@ -34,15 +34,12 @@ it('act().subscribe', async () => {
 
   await act().exec('sum.get', 3, 4);
 
-  expect(actSubscribe === act().subscribe).toBe(true);
-  expect(act().on === act().subscribe).toBe(true);
-
   expect(resultBySubscribe).toBe(7);
   expect(resultByOn).toBe(7);
 });
 
 describe('act subscriptions', () => {
-  it.only('clear subscriptions', () => {
+  it('clear subscriptions', () => {
     act().addActions([sumAction]);
     expect(ActTest.entityCount('listeners')).toBe(0);
 
@@ -50,6 +47,7 @@ describe('act subscriptions', () => {
     expect(ActTest.entityCount('listeners')).toBe(1);
 
     act.subListClear('some_key');
+
     expect(ActTest.entityCount('listeners')).toBe(0);
   });
 

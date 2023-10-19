@@ -17,6 +17,14 @@ export class ActTest {
     return ActTest.$act;
   }
 
+  static setInstance(actMaster: ActMaster) {
+    ActTest.$act = actMaster;
+  }
+
+  static checkInstance(actMaster: ActMaster) {
+    return ActTest.$act === actMaster;
+  }
+
   static resetAll(): void {
     if (ActTest.$act) {
       ActTest.$act.clearActions();

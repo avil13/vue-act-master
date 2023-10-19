@@ -21,7 +21,10 @@
     "experimentalDecorators": true,
     "baseUrl": "."
   },
-  "include": ["src/*"],
+  "include": [
+    "src/*",
+    "src/vue/*",
+  ],
   "exclude": [
     "node_modules",
     "dist"
