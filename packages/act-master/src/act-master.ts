@@ -462,6 +462,10 @@ export class ActMaster implements IActMaster {
     return this;
   }
 
+  getDI<T = any>(key: string): T {
+    return this._DIContainer[key];
+  }
+
   private freshEmitDI() {
     let action: ActMasterAction | undefined;
     Object.keys(this._actions).forEach((key: string) => {
