@@ -101,13 +101,16 @@ export interface ActMasterAction {
 
   /**
    * Name of the action that catches the error
+   * Use IsActName<name> type if you want to check the available name through types
+   * @example
+   *  $onError: IsActName<'OnError'> = 'OnError';
    */
-  $onError?: ActEventName;
+  $onError?: string;
   /**
    * @deprecated
    *  Use $onError
    */
-  errorHandlerEventName?: ActEventName;
+  errorHandlerEventName?: string;
 
   [key: string]: any;
 }
@@ -115,6 +118,11 @@ export interface ActMasterAction {
 export interface ActMaster {
   exec: ActExec;
 }
+
+/**
+ * Type to check the name of Act
+ */
+export type IsActName<N extends ActEventName> = N;
 
 export interface ActMasterActionDevDI extends ActMasterAction {
   _DI_CONTAINER_?: {
