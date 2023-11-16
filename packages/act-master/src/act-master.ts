@@ -221,8 +221,8 @@ export class ActMaster implements IActMaster {
     }
 
     // validator
-    if (action.validateInput) {
-      const isValidOrError = await action.validateInput(...args);
+    if (action.$validate) {
+      const isValidOrError = await action.$validate(...args);
 
       if (isValidOrError !== true) {
         if (this.config.errorHandlerEventName) {

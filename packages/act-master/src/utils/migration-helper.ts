@@ -9,8 +9,8 @@ export const migrationHelper = (act: ActMasterAction) => {
     act.$isSingleton = act.isSingleExec;
   }
 
-  if (act.validateInput && !act.$validate) {
-    act.$validate = act.validateInput;
+  if (typeof act.validateInput === 'function' && !act.$validate) {
+    act.$validate = act.validateInput.bind(act);
   }
 
   if (act.errorHandlerEventName && !act.$onError) {
