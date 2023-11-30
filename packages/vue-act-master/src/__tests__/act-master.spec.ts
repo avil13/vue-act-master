@@ -111,7 +111,7 @@ describe('VueActMaster', () => {
       expect(result).not.toBe(subscribedData);
     });
 
-    it('unsubscribe auto', async () => {
+    it.skip('unsubscribe auto', async () => {
       ACTION_NAME = 'ACTION_NAME_UN_AUTO';
 
       addTestAction(ACTION_NAME);

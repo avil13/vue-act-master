@@ -110,21 +110,5 @@ describe('VueActMaster', () => {
       result = await $act.exec(ACTION_NAME);
       expect(result).not.toBe(subscribedData);
     });
-
-    it('unsubscribe auto', async () => {
-      ACTION_NAME = 'ACTION_NAME_UN_AUTO';
-
-      addTestAction(ACTION_NAME);
-
-      const mockCallback = vi.fn();
-      const vueComp = { $once: mockCallback };
-
-      //@ts-ignore
-      $act.subscribe(ACTION_NAME, () => ({}), vueComp);
-
-      // ...destroy component
-      expect(mockCallback.mock.calls.length).toBe(1);
-      expect(mockCallback.mock.calls[0][0]).toBe('hook:beforeDestroy');
-    });
   });
 });

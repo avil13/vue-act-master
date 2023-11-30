@@ -1,6 +1,7 @@
-import { ActMaster, ActMasterOptions } from '../act-master';
+import { type ActMaster, type ActMasterOptions } from '../act-master';
+import { ActMaster as AM } from '../act-master';
 
-export * from './decorators';
+export { ActInProgress, ActSubscribe } from './decorators';
 
 /**
  * Declaration vue2
@@ -24,46 +25,41 @@ declare module 'vue/types/vue' {
 //@ts-ignore
 declare module '@vue/runtime-core' {
   export interface ComponentCustomProperties {
-    /**
-     * Normalized current location. See {@link RouteLocationNormalizedLoaded}.
-     */
     $act: ActMaster;
   }
 }
 
 export class VueActMaster {
-  static instance: ActMaster | null = null;
+  static actMaster: ActMaster | null = null;
 
-  static install(vue: any, options?: ActMasterOptions): void {
-    const actMaster = new ActMaster({
-      autoUnsubscribeCallback({ context, eventName, listener }) {
-        if (context && typeof context === 'function') {
-          // vue 3
-          context(function () {
-            actMaster.unsubscribe(eventName, listener);
-          });
-        } else if (context && typeof context.$once === 'function') {
-          // vue 2
-          context.$once('hook:beforeDestroy', () => {
-            actMaster.unsubscribe(eventName, listener);
-          });
-        }
-      },
-      ...options,
-    });
+  static devtools = false;
 
-    VueActMaster.instance = actMaster;
+  static setActMaster(actMaster: ActMaster) {
+    VueActMaster.actMaster = actMaster;
+  }
+
+  constructor(actMaster?: ActMaster) {
+    VueActMaster.actMaster = actMaster || null;
+  }
+
+  static install(app: any, options?: ActMasterOptions): void {
+    VueActMaster.actMaster = VueActMaster.actMaster || new AM(options);
 
     // add the instance method
-    if (vue.config?.globalProperties && !vue.config.globalProperties.$act) {
+    if (app.config?.globalProperties && !app.config.globalProperties.$act) {
       // vue 3
-      vue.config.globalProperties.$act = actMaster;
-      vue.provide('$act', actMaster);
-    } else if (!Object.prototype.hasOwnProperty.call(vue, '$act')) {
+      app.config.globalProperties.$act = VueActMaster.actMaster;
+      app.provide('$act', VueActMaster.actMaster);
+    } else if (!Object.prototype.hasOwnProperty.call(app, '$act')) {
       // vue 2
-      vue.act = actMaster;
-      vue.prototype.$act = actMaster;
+      app.act = VueActMaster.actMaster;
+      app.prototype.$act = VueActMaster.actMaster;
     }
+
+    // // devtool
+    // if (VueActMaster.devtools) {
+    //   addDevtools(app, VueActMaster.actMaster);
+    // }
   }
 
   install(vue: any, options?: ActMasterOptions): void {

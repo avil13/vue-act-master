@@ -1,6 +1,6 @@
 {
   "name": "act-master",
-  "version": "2.3.7",
+  "version": "2.3.8",
   "author": "avil13",
   "main": "dist/index.cjs",
   "module": "dist/index.js",
@@ -35,7 +35,6 @@
   "license": "MIT",
   "scripts": {
     "build": "rm -rf ./dist && vite build && tsc -p tsconfig.prod.json",
-    "changelog": "auto-changelog && git add CHANGELOG.md",
     "size": "size-limit",
     "lint:fix": "eslint --fix --ext .ts .",
     "test": "vitest run",
@@ -43,11 +42,11 @@
     "test:coverage": "vitest run --coverage",
     "type-check:watch": "npm run type-check -- --watch",
     "type-check": "tsc -p ./tsconfig.json --noEmit",
-    "prepublishOnly": "yarn test && yarn run build"
+    "prepublishOnly": "npm test && npm run build"
   },
   "husky": {
     "hooks": {
-      "pre-commit": "yarn run changelog && git update-index --again"
+      "pre-commit": "npm run changelog && git update-index --again"
     }
   },
   "repository": {
@@ -55,8 +54,7 @@
     "url": "https://github.com/avil13/vue-act-master.git"
   },
   "devDependencies": {
-    "auto-changelog": "^2.4.0",
-    "typescript": "^5.2.2",
+    "typescript": "^5.3.2",
     "vite": "^4.5.0",
     "vitest": "^0.34.6"
   }
