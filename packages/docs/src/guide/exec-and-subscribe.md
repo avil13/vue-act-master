@@ -131,8 +131,6 @@ const SUBSCRIBE_KEY = '...';
 act().subscribe('Login', loginCallback, SUBSCRIBE_KEY);
 act().subscribe('Login2', loginCallback, SUBSCRIBE_KEY);
 
-// ...
-
 // unsubscribe
 act().subsList.clear(SUBSCRIBE_KEY);
 ```
@@ -142,7 +140,30 @@ const SUBSCRIBE_KEY = '...';
 act().on('Login', loginCallback, SUBSCRIBE_KEY);
 act().on('Login2', loginCallback, SUBSCRIBE_KEY);
 
-// ...
+// unsubscribe
+act().subsList.clear(SUBSCRIBE_KEY);
+```
+:::
+
+Or indicate the key by which to unsubscribe further.
+
+::: code-group
+```ts [subscribe(...)]
+const SUBSCRIBE_KEY = '...';
+act().subsList.add(SUBSCRIBE_KEY);
+
+act().subscribe('Login', loginCallback);
+act().subscribe('Login2', loginCallback);
+
+// unsubscribe
+act().subsList.clear(SUBSCRIBE_KEY);
+```
+```ts [on(...)]
+const SUBSCRIBE_KEY = '...';
+act().subsList.add(SUBSCRIBE_KEY);
+
+act().on('Login', loginCallback);
+act().on('Login2', loginCallback);
 
 // unsubscribe
 act().subsList.clear(SUBSCRIBE_KEY);

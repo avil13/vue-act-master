@@ -25,7 +25,7 @@ If you use classes more often, like in Angular, you can use constructor initiali
 ::: code-group
 ```ts [Function Style]
 import { act, ActMasterOptions } from 'act-master';
-import { actions } from '../act/actions';
+import { actions } from '@/act/generated/actions';
 
 const options: ActMasterOptions = {
   actions,
