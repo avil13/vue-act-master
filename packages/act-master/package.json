@@ -1,6 +1,6 @@
 {
   "name": "act-master",
-  "version": "2.3.8",
+  "version": "2.3.9",
   "author": "avil13",
   "main": "dist/index.cjs",
   "module": "dist/index.js",
