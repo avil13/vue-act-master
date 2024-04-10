@@ -1,5 +1,6 @@
 import { type ActMaster, type ActMasterOptions } from '../act-master';
 import { ActMaster as AM } from '../act-master';
+import { addDevtools } from './plugins/devtools';
 
 export { ActInProgress, ActSubscribe } from './decorators';
 
@@ -56,10 +57,10 @@ export class VueActMaster {
       app.prototype.$act = VueActMaster.actMaster;
     }
 
-    // // devtool
-    // if (VueActMaster.devtools) {
-    //   addDevtools(app, VueActMaster.actMaster);
-    // }
+    // devtool
+    if (VueActMaster.devtools && VueActMaster.actMaster) {
+      addDevtools(app, VueActMaster.actMaster);
+    }
   }
 
   install(vue: any, options?: ActMasterOptions): void {
