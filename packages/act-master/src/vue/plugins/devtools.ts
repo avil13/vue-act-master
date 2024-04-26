@@ -1,4 +1,5 @@
 import {
+  StateBase,
   setupDevtoolsPlugin,
   type App,
   type CustomInspectorNode,
@@ -11,13 +12,25 @@ import {
   type ActMasterAction,
 } from '../..';
 
+import {
+  resetMonkeyWatcherState,
+  hasMonkeyState,
+  watchOnEventsByMonkey,
+  getActEventsByMonkeyWatcher,
+  isShowActionByConfig,
+  toggleSettingsShowCall,
+  useSettings,
+  sortActInspectorTree,
+} from './lib/monkey-watch';
+import { debounce, getArguments, logSettings } from './lib/utils';
+
 // #region [ colors ]
 // const PINK_500 = 0xec4899;
-// const BLUE_600 = 0x2563eb;
+const BLUE_600 = 0x2563eb;
 const LIME_500 = 0x84cc16;
-// const CYAN_400 = 0x22d3ee;
+const CYAN_400 = 0x22d3ee;
 const ORANGE_400 = 0xfb923c;
-// const GRAY_100 = 0xf4f4f5
+const GRAY_100 = 0xf4f4f5;
 const DARK = 0x666666;
 // #endregion
 
@@ -39,44 +52,38 @@ export function addDevtools(app: App, actMaster: ActMaster) {
     (api) => {
       // Use the API here
 
-      // #region [ timeline ]
-      // api.addTimelineLayer({
-      //   id: ACTIONS_LAYER_ID,
-      //   label: `ActMaster 🥷`,
-      //   color: CYAN_400,
-      // });
-
-      // // gracefully handle errors
-      // const now = typeof api.now === 'function' ? api.now.bind(api) : Date.now;
-
-      // actMaster.addActionWatch((name, status) => {
-      //   // TODO: groupID
-      //   const title = (status === 'START' ? '🛫 ' : '🛬 ') + name;
-      //   const logType = status === 'ERROR' ? 'error' : 'default';
-
-      //   api.addTimelineEvent({
-      //     layerId: ACTIONS_LAYER_ID,
-      //     event: {
-      //       title,
-      //       time: now(),
-      //       data: {
-      //         info: `${name}: ${status}`,
-      //       },
-      //       logType,
-      //     },
-      //   });
-      // });
-
-      // #endregion
-
       // #region [ inspector ]
+      const currentSettings = useSettings(api.getSettings());
+
+      logSettings('CALL_FILTER', currentSettings.isShowOnlyCalls);
 
       api.addInspector({
         id: INSPECTOR_ID,
         label: 'ActMaster 🥷',
         icon: 'gavel',
-        treeFilterPlaceholder: 'Filter acts...',
+        treeFilterPlaceholder: 'Filter acts... Change the filter type ⇒',
         stateFilterPlaceholder: ' ',
+        actions: [
+          {
+            icon: 'playlist_add_check',
+            action: () => {
+              debounce(200, () => {
+                toggleSettingsShowCall();
+                api.setSettings(currentSettings);
+
+                logSettings('CALL_FILTER', currentSettings.isShowOnlyCalls);
+              });
+            },
+            tooltip: 'Toggle show only Acts that have been called',
+          },
+          {
+            icon: 'delete',
+            action: () => {
+              resetMonkeyWatcherState();
+            },
+            tooltip: 'Clears the call-state',
+          },
+        ],
       });
 
       api.on.getInspectorTree((payload) => {
@@ -116,6 +123,10 @@ function getActInspectorTree(
   let maxLen = 0;
 
   actions.forEach((_, name) => {
+    if (!isShowActionByConfig(name)) {
+      return;
+    }
+
     if (name.length > maxLen) {
       maxLen = name.length;
     }
@@ -139,6 +150,14 @@ function getActInspectorTree(
         });
       }
 
+      if (hasMonkeyState(name)) {
+        tags.push({
+          label: `call`,
+          textColor: CYAN_400,
+          backgroundColor: DARK,
+        });
+      }
+
       list.push({
         id: name,
         label: name,
@@ -149,12 +168,10 @@ function getActInspectorTree(
 
   maxLen += 2;
 
-  return list
-    .sort((a, b) => (a.id > b.id ? 1 : -1))
-    .map((item) => ({
-      ...item,
-      label: item.label.padEnd(maxLen, ' '),
-    }));
+  return sortActInspectorTree(list).map((item) => ({
+    ...item,
+    label: item.label.padEnd(maxLen, ' '),
+  }));
 }
 
 export function getActInspectorState(
@@ -170,26 +187,17 @@ export function getActInspectorState(
 
   const subs = subsMap.get(actName) || [];
 
-  let errorHandlerName =
-    act?.errorHandlerEventName || config?.errorHandlerEventName || '❌';
+  watchOnEventsByMonkey(actMaster);
+
+  let errorHandlerName = act?.$onError || config?.errorHandlerEventName || '❌';
   if (errorHandlerName === actName) {
     errorHandlerName = '';
   }
 
-  const fnBody = act?.exec.toString();
-  const argRegExp = /[^\(]*\(([^\)]*)\)/;
-  const match = fnBody?.match(argRegExp);
-  let args: string[] = [];
-
-  if (match && match[1]) {
-    args = match[1]
-      .split(',')
-      .map((arg) => arg.trim())
-      .filter((arg) => arg.length > 0);
-  }
+  const args: string[] = getArguments(act?.exec);
 
   return {
-    [actName]: [
+    [`Act name: "${actName}"`]: [
       {
         key: 'subscribers',
         value: subs.length,
@@ -201,21 +209,23 @@ export function getActInspectorState(
       },
       {
         key: 'watch',
-        value: (act?.watch || []).join(', '),
+        value: (act?.$watch || []).join(', '),
       },
       {
         key: 'isSingleExec',
-        value: act?.isSingleExec ? 'true' : 'false',
+        value: act?.$isSingleton || false,
       },
       {
         key: 'validateInput',
-        value: act?.validateInput ? 'true' : 'false',
+        value: act?.$validate || false,
       },
       {
         key: 'arguments',
         value: `(${args.join(', ')})`,
       },
     ],
+
+    'Data passed:': getActEventsByMonkeyWatcher(actName, act),
   };
 }
 

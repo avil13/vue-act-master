@@ -55,10 +55,10 @@
     "url": "https://github.com/avil13/vue-act-master.git"
   },
   "devDependencies": {
-    "typescript": "^5.4.4",
-    "vite": "^5.2.8",
-    "vitest": "^1.4.0",
-    "vue": "^3.4.21"
+    "typescript": "^5.4.5",
+    "vite": "^5.2.10",
+    "vitest": "^1.5.2",
+    "vue": "^3.4.25"
   },
   "dependencies": {
     "@vue/devtools-api": "^6.6.1"
