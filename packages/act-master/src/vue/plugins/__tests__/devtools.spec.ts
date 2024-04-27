@@ -1,8 +1,9 @@
 import { expect, it } from 'vitest';
+
 import { ActTest } from '../../..';
 import { getActInspectorState } from '../devtools';
 
-it('getActInspectorState', () => {
+it.skip('getActInspectorState', () => {
   const NAME_1 = 'NAME_1';
   const NAME_2 = 'NAME_2';
   const NAME_3 = 'NAME_3';

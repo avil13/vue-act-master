@@ -33,8 +33,6 @@ declare module '@vue/runtime-core' {
 export class VueActMaster {
   static actMaster: ActMaster | null = null;
 
-  static devtools = false;
-
   static setActMaster(actMaster: ActMaster) {
     VueActMaster.actMaster = actMaster;
   }
@@ -58,8 +56,11 @@ export class VueActMaster {
     }
 
     // devtool
-    if (VueActMaster.devtools && VueActMaster.actMaster) {
-      addDevtools(app, VueActMaster.actMaster);
+    if (VueActMaster.actMaster) {
+      //@ts-ignore
+      if (process.env.NODE_ENV === 'development' || __VUE_PROD_DEVTOOLS__) {
+        addDevtools(app, VueActMaster.actMaster);
+      }
     }
   }
 
