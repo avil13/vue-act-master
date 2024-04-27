@@ -58,7 +58,7 @@ export class VueActMaster {
     // devtool
     if (VueActMaster.actMaster) {
       //@ts-ignore
-      if (process.env.NODE_ENV === 'development' || __VUE_PROD_DEVTOOLS__) {
+      if (process.env.NODE_ENV === 'development') {
         addDevtools(app, VueActMaster.actMaster);
       }
     }

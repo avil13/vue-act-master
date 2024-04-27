@@ -1,4 +1,4 @@
-import { ActMaster } from '..';
+import { type ActMaster } from '../..';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { VueActMaster } from '..';
 
