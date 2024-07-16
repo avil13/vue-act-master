@@ -1,6 +1,6 @@
 {
   "name": "act-master",
-  "version": "2.5.0",
+  "version": "2.5.1",
   "author": "avil13",
   "main": "dist/index.cjs",
   "module": "dist/index.js",
@@ -55,12 +55,13 @@
     "url": "https://github.com/avil13/vue-act-master.git"
   },
   "devDependencies": {
-    "typescript": "^5.4.5",
-    "vite": "^5.2.10",
-    "vitest": "^1.5.2",
-    "vue": "^3.4.25"
+    "@babel/types": "^7.24.9",
+    "typescript": "^5.5.3",
+    "vite": "^5.3.4",
+    "vitest": "^2.0.3",
+    "vue": "^3.4.31"
   },
   "dependencies": {
-    "@vue/devtools-api": "^6.6.1"
+    "@vue/devtools-api": "^6.6.3"
   }
 }

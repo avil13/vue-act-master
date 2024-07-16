@@ -27,14 +27,12 @@ export interface IActMaster {
 export interface ActMasterOptions {
   actions?: ActMasterAction[];
   di?: DIMap;
-  errorOnReplaceDI?: boolean;
   // method for calling auto unsubscribe
   autoUnsubscribeCallback?: (args: autoUnsubscribeArgs) => void;
   errorHandlerEventName?: ActEventName;
 }
 
 export type devActMasterConfig = {
-  errorOnReplaceDI: ActMasterOptions['errorOnReplaceDI'];
   autoUnsubscribeCallback: ActMasterOptions['autoUnsubscribeCallback'];
   errorHandlerEventName?: ActEventName;
 };

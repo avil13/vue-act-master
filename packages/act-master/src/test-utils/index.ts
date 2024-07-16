@@ -41,6 +41,10 @@ export class ActTest {
   }
 
   static addActions(actions: ActMasterAction[]): void {
+    if (!ActTest.$act) {
+      ActTest.getInstance();
+    }
+
     ActTest.$act.addActions(actions);
   }
 

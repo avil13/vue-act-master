@@ -59,7 +59,6 @@ export class ActMaster implements IActMaster {
   >();
 
   private readonly config: devActMasterConfig = {
-    errorOnReplaceDI: false,
     autoUnsubscribeCallback: undefined,
     errorHandlerEventName: undefined,
   };
@@ -74,7 +73,6 @@ export class ActMaster implements IActMaster {
     const {
       actions,
       di,
-      errorOnReplaceDI,
       autoUnsubscribeCallback,
       errorHandlerEventName,
     } = options;
@@ -96,10 +94,6 @@ export class ActMaster implements IActMaster {
           this.setDI(k, di[k]);
         }
       }
-    }
-
-    if (typeof errorOnReplaceDI === 'boolean') {
-      this.config.errorOnReplaceDI = errorOnReplaceDI;
     }
 
     if (typeof errorHandlerEventName === 'string') {
@@ -454,7 +448,7 @@ export class ActMaster implements IActMaster {
   }
 
   setDI(key: string, ctx: any): ActMaster {
-    if (this.config.errorOnReplaceDI && this._DIContainer[key]) {
+    if (this._DIContainer[key]) {
       throw new KeyAlreadyExistsInDIError(key);
     }
     this._DIContainer[key] = ctx;

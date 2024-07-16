@@ -1,11 +1,15 @@
-# Vue-Act-Master
+# Act-Master
 
 A way to separate business logic from application view.
 
 The easiest library to create a flexible application architecture.
 
-![npm bundle size](https://img.shields.io/bundlephobia/minzip/vue-act-master)
-![npm version](https://img.shields.io/npm/v/vue-act-master)
+
+![npm bundle size](https://img.shields.io/bundlephobia/minzip/act-master)
+![npm version](https://img.shields.io/npm/v/act-master)
+
+## To work with Vue, there are now even fewer dependencies. Just use `act-mater`.
+
 
 <div align="center">
   <img  src="https://raw.githubusercontent.com/avil13/vue-act-master/master/assets/act-master-logo.svg" alt="vue-act-master">
@@ -25,34 +29,32 @@ The easiest library to create a flexible application architecture.
 ## Installation
 
 ```bash
-npm install vue-act-master
+npm install act-master
 ```
 
 # Usage
 
 ```ts
 // main.ts
-// install vue-act-master plugin
-import Vue from 'vue';
-import App from './App.vue';
+import { act } from 'act-master';
+import { VueActMaster } from 'act-master/vue';
+import { createApp } from 'vue';
 
-import { VueActMaster } from 'vue-act-master';
+import { actions } from '@/act/actions';
 
-// Actions array
-import { actions } from '../act/actions';
-
-Vue.use(VueActMaster, {
+act.init({
   actions,
 });
 
-new Vue({
-  el: '#app',
-  render: (h) => h(App),
-});
+VueActMaster.setActMaster(act());
+
+const app = createApp(App);
+
+app.use(VueActMaster); // Installation
 ```
 
 ```ts
-// ../act/actions
+// @/act/actions
 export const actions: ActMasterAction[] = [
   new GetDataAction(),
 ];
@@ -77,24 +79,37 @@ The action is now available to you in components and you can easily highlight th
 
 This will help you test components and change the API more easily.
 
-
 ```html
 // App.vue
 
 <script>
+import { act } from 'act-master'
+
 export default {
   data() {
     return {
-      myData: null,
+      myData1: null,
+      myData2: null,
     };
   },
 
   async mounted() {
-    console.log(this.myData); // null
+    console.log(this.myData1, this.myData2); // null, null
 
-    this.myData = await this.$act.exec('GetData');
+    // Subscribe
+    act().on('GetData', (data) => {
+      this.myData2 = data;
+    });
 
-    console.log(this.myData);
+    this.myData1 = await this.$act.exec('GetData');
+
+    console.log(this.myData1, this.myData2);
+    // {
+    //   "userId": 1,
+    //   "id": 1,
+    //   "title": "delectus aut autem",
+    //   "completed": false
+    // },
     // {
     //   "userId": 1,
     //   "id": 1,

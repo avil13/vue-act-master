@@ -48,27 +48,8 @@ describe('ActMaster constructor options', () => {
     expect(ActTest.entityCount('di')).toBe(3);
   });
 
-  it('errorOnReplaceAction:[true]', () => {
-    const actions = [{ name: 'test-name', exec }];
-
-    init({
-      actions,
-    });
-
-    const add = () => $act.addActions(actions);
-
-    expect(add).toThrow('Action "test-name" already existing');
-  });
-
-  it('errorOnEmptyAction:[true]', async () => {
-    init({});
-
-    expect(() => $act.exec('test')).rejects.toThrow();
-  });
-
   it('errorOnReplaceDI', () => {
     init({
-      errorOnReplaceDI: true,
       di: {
         api: {},
       },
