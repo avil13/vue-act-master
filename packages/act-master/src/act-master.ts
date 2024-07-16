@@ -111,6 +111,7 @@ export class ActMaster implements IActMaster {
   }
 
   //#region [ Actions ]
+
   addActions(actions: ActMasterAction[]): void {
     if (Array.isArray(actions)) {
       actions.forEach((action: ActMasterAction) => {
@@ -173,6 +174,7 @@ export class ActMaster implements IActMaster {
   //#endregion
 
   //#region [ Executions ]
+
   exec: ActExec = async (eventName, ...args) => {
     this.setProgress(eventName, true);
 

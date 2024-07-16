@@ -1,6 +1,11 @@
 import { ActEventName, ActMaster } from '../act-master';
 import { CancelledAct } from '../cancelled';
-import { ActMasterAction, ActMasterOptions, ListenerFunction } from '../types';
+import {
+  ActExec,
+  ActMasterAction,
+  ActMasterOptions,
+  ListenerFunction,
+} from '../types';
 
 export class ActTest {
   private static $act: ActMaster;
@@ -48,10 +53,7 @@ export class ActTest {
     ActTest.$act.addActions(actions);
   }
 
-  static exec<T = any>(
-    eventName: ActEventName,
-    ...args: any[]
-  ): Promise<T | CancelledAct> {
+  static exec: ActExec = (eventName, ...args) => {
     return ActTest.$act
       .exec(eventName, ...args)
       .then((data) => {
@@ -62,7 +64,7 @@ export class ActTest {
         ActTest._lastResult = err;
         throw err;
       });
-  }
+  };
 
   static subscribe(
     eventName: ActEventName,
