@@ -81,9 +81,12 @@ export const makeIndexContent = async (
   }
 
   // importDeclaration.addNamedImport('ActMasterAction');
-  importDeclaration.addNamedImport({ name: 'Acts', isTypeOnly: true });
-  importDeclaration.addNamedImport({ name: 'Names', isTypeOnly: true });
-  importDeclaration.addNamedImport({ name: 'Subs', isTypeOnly: true });
+  importDeclaration.addNamedImports([
+    { name: 'Acts', isTypeOnly: true },
+    { name: 'MapAct', isTypeOnly: true },
+    { name: 'Names', isTypeOnly: true },
+    { name: 'Subs', isTypeOnly: true },
+  ]);
 
   sourceFile.insertStatements(1, '');
 
@@ -108,6 +111,7 @@ export const makeIndexContent = async (
   declare module 'act-master' {
     export interface ActGenerated {
       acts: Acts<typeof actions>;
+      map: MapAct<typeof actions>;
       subs: Subs<typeof actions>;
       names: Names<typeof actions>;
     }
