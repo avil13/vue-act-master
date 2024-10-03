@@ -1,4 +1,4 @@
-import { ActMaster, ActMasterOptions, ActSubscribeType } from '../act-master';
+import { type ActExec, ActMaster, type ActMasterOptions, type ActProxy, type ActSubscribeType } from '../act-master';
 
 /**
  * ActMaster instance and libs
@@ -44,4 +44,13 @@ export const subListClear = (key: any) => {
 act.subListClear = subListClear;
 // #endregion
 
-export { act, actSubscribe };
+const $act: ActProxy = new Proxy({} as ActProxy, {
+  get: (_target, prop) => {
+    return (...args: any[]) => {
+      return act().exec(prop as string, ...args);
+    };
+  }
+});
+
+export { $act, act, actSubscribe };
+

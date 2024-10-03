@@ -141,10 +141,15 @@ export interface ActGenerated {
   ) => () => boolean;
   // acts?: any
   // subs?: any
+  // map?: any
   // names?: string
 }
 
 type _ExecType<K = 'acts'> = K extends keyof ActGenerated
+  ? ActGenerated[K]
+  : ActGenerated['default'];
+
+type _MapType<K = 'map'> = K extends keyof ActGenerated
   ? ActGenerated[K]
   : ActGenerated['default'];
 
@@ -180,6 +185,18 @@ type FuncFromAct<T extends { name: string; exec: Fn }> = T extends {
       ...args: Parameters<IsFn<F>>
     ) => PromiseResult<ReturnType<IsFn<F>> | null>
   : never;
+
+type MapFromAct<T extends { name: string; exec: Fn }> = T extends {
+  readonly name: infer N;
+  readonly exec: infer F;
+}
+  ? Record<
+      N & string,
+      (
+        ...args: Parameters<IsFn<F>>
+      ) => PromiseResult<ReturnType<IsFn<F>> | null>
+    >
+  : never;
 //
 type SubsFromAct<T extends { name: string; exec: Fn }> = T extends {
   readonly name: infer N;
@@ -205,12 +222,17 @@ type NamesFromAct<T extends { name: string; exec: Fn }> = T extends {
  *    export interface ActGenerated {
  *      acts: Acts<typeof actions>;
  *      subs: Subs<typeof actions>;
+ *      map: MapAct<typeof actions>;
  *      names: Names<typeof actions>;
  *    }
  *  }
  */
 export type Acts<LS extends ActMasterAction[]> = LS extends (infer A)[]
   ? UnionToIntersection<FuncFromAct<A extends ActMasterAction ? A : never>>
+  : never;
+//
+export type MapAct<LS extends ActMasterAction[]> = LS extends (infer A)[]
+  ? UnionToIntersection<MapFromAct<A extends ActMasterAction ? A : never>>
   : never;
 //
 export type Subs<LS extends ActMasterAction[]> = LS extends (infer A)[]
@@ -231,3 +253,6 @@ export type ActSubscribeType = _SubsType;
 export type ActEventName = _NameType;
 //
 export type EmitAction = ActExec;
+
+//
+export type ActProxy = _MapType;

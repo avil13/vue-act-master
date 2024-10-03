@@ -1,6 +1,5 @@
-import { ActEventName, ActMaster } from '../act-master';
-import { CancelledAct } from '../cancelled';
-import {
+import { type ActEventName, ActMaster } from '../act-master';
+import type {
   ActExec,
   ActMasterAction,
   ActMasterOptions,
