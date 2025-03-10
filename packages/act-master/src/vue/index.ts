@@ -1,5 +1,9 @@
-import { type ActMaster, type ActMasterOptions } from '../act-master';
-import { ActMaster as AM } from '../act-master';
+import {
+  ActMaster as AM,
+  type ActMaster,
+  type ActMasterOptions,
+} from '../act-master';
+import { reactiveFactory, type RefSubscriptionFunction } from './composable';
 import { addDevtools } from './plugins/devtools';
 
 export { ActInProgress, ActSubscribe } from './decorators';
@@ -32,6 +36,7 @@ declare module '@vue/runtime-core' {
 
 export class VueActMaster {
   static actMaster: ActMaster | null = null;
+  static app: any | null = null;
 
   static setActMaster(actMaster: ActMaster) {
     VueActMaster.actMaster = actMaster;
@@ -43,6 +48,7 @@ export class VueActMaster {
 
   static install(app: any, options?: ActMasterOptions): void {
     VueActMaster.actMaster = VueActMaster.actMaster || new AM(options);
+    VueActMaster.app = app;
 
     // add the instance method
     if (app.config?.globalProperties && !app.config.globalProperties.$act) {
@@ -68,3 +74,9 @@ export class VueActMaster {
     VueActMaster.install(vue, options);
   }
 }
+
+// composable
+
+export type { RefSubscriptionFunction };
+
+export const useRefSubscription: RefSubscriptionFunction = reactiveFactory(VueActMaster);

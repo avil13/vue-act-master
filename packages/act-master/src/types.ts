@@ -139,6 +139,7 @@ export interface ActGenerated {
     cb: (data: any) => any,
     ctx?: any
   ) => () => boolean;
+  defaultActionList: ActMasterAction[];
   // acts?: any
   // subs?: any
   // map?: any
@@ -151,7 +152,7 @@ type _ExecType<K = 'acts'> = K extends keyof ActGenerated
 
 type _MapType<K = 'map'> = K extends keyof ActGenerated
   ? ActGenerated[K]
-  : ActGenerated['default'];
+  : Record<ActEventName, ActGenerated['default']>;
 
 type _SubsType<K = 'subs'> = K extends keyof ActGenerated
   ? ActGenerated[K]
@@ -160,6 +161,11 @@ type _SubsType<K = 'subs'> = K extends keyof ActGenerated
 type _NameType<K = 'names'> = K extends keyof ActGenerated
   ? ActGenerated[K]
   : string;
+
+// Это нужно только для Vue поэтому код вынесен туда
+// type _SubFnFromAct<K = 'subFnFromAct'> = K extends keyof ActGenerated
+//   ? ActGenerated[K]
+//   : (n: ActEventName) => any;
 
 // #region [ helpers ]
 // List of functions for obtaining action types via generation
@@ -215,6 +221,7 @@ type NamesFromAct<T extends { name: string; exec: Fn }> = T extends {
 }
   ? N
   : never;
+
 // For generator
 /**
  * @example
@@ -224,6 +231,7 @@ type NamesFromAct<T extends { name: string; exec: Fn }> = T extends {
  *      subs: Subs<typeof actions>;
  *      map: MapAct<typeof actions>;
  *      names: Names<typeof actions>;
+ *      subFnFromAct: SubFnFromAct<typeof actions>;
  *    }
  *  }
  */
