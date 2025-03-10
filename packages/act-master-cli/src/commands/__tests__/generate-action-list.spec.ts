@@ -27,6 +27,7 @@ declare module 'act-master' {
     map: MapAct<typeof actions>;
     subs: Subs<typeof actions>;
     names: Names<typeof actions>;
+    readonly actionList: typeof actions;
   }
   export interface ActMaster {
     exec: Acts<typeof actions>;
