@@ -29,7 +29,7 @@ type _SubFnFromAct<K = 'actionList'> = K extends keyof ActGenerated
 
 export type RefSubscriptionFunction = SubFnFromAct<_SubFnFromAct>;
 
-export function reactiveFactory(amContainer: {
+export function refSubscribeFactory(amContainer: {
   actMaster: ActMaster | null;
   app: App;
 }): RefSubscriptionFunction {
@@ -63,4 +63,22 @@ export function reactiveFactory(amContainer: {
   };
 
   return useRefSubscription;
+}
+
+export function autoUnsubscribeFactory(amContainer: {
+  actMaster: ActMaster | null;
+  app: App;
+}) {
+  return function useAutoUnsubscribe(key = '') {
+    const uniqueKey = key || Math.floor(Math.random() * 1000) + Date.now();
+    const { actMaster } = amContainer;
+
+    if (!actMaster) {
+      throw new Error('VueActMaster not initialized');
+    }
+
+    actMaster.subsList.add(uniqueKey);
+
+    onBeforeUnmount(() => actMaster.subsList.clear(uniqueKey));
+  };
 }

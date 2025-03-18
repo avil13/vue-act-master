@@ -3,7 +3,7 @@ import {
   type ActMaster,
   type ActMasterOptions,
 } from '../act-master';
-import { reactiveFactory, type RefSubscriptionFunction } from './composable';
+import { autoUnsubscribeFactory, refSubscribeFactory, type RefSubscriptionFunction } from './composable';
 import { addDevtools } from './plugins/devtools';
 
 export { ActInProgress, ActSubscribe } from './decorators';
@@ -79,4 +79,6 @@ export class VueActMaster {
 
 export type { RefSubscriptionFunction };
 
-export const useRefSubscription: RefSubscriptionFunction = reactiveFactory(VueActMaster);
+export const useRefSubscription: RefSubscriptionFunction = refSubscribeFactory(VueActMaster);
+
+export const useAutoUnsubscribe = autoUnsubscribeFactory(VueActMaster)
