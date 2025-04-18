@@ -20,7 +20,7 @@ export type RefFuncFromAct<T extends { name: string; exec: Fn }> = T extends {
   readonly name: infer N;
   readonly exec: infer F;
 }
-  ? (name: N) => Ref<UnPromise<ReturnType<IsFn<F>>>>
+  ? (name: N) => Ref<null | UnPromise<ReturnType<IsFn<F>>>>
   : never;
 
 type _SubFnFromAct<K = 'actionList'> = K extends keyof ActGenerated

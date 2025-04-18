@@ -332,6 +332,7 @@ export class ActMaster implements IActMaster {
     return unsubscribe;
   };
 
+
   unsubscribe(eventName: ActEventName, listener: ListenerFunction): boolean {
     const listeners = this._listeners.get(eventName);
     if (!listeners) {
