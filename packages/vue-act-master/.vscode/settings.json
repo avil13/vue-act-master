@@ -1,5 +1,4 @@
 {
-    "jest.showCoverageOnLoad": true,
     "files.exclude": {
         "**/.git": true,
         "**/.svn": true,

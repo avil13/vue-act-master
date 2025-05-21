@@ -109,6 +109,7 @@ export const makeIndexContent = async (
   // Add Types
   const typeDeclarations = `
   declare module 'act-master' {
+    // eslint-disable-next-line ts/consistent-type-definitions
     export interface ActGenerated {
       acts: Acts<typeof actions>;
       map: MapAct<typeof actions>;
@@ -116,6 +117,7 @@ export const makeIndexContent = async (
       names: Names<typeof actions>;
       readonly actionList: typeof actions;
     }
+    // eslint-disable-next-line ts/consistent-type-definitions
     export interface ActMaster {
       exec: Acts<typeof actions>;
     }

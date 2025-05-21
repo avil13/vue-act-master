@@ -4,7 +4,7 @@ const TEMPLATE = `
 config:
   # the path to the folder with the source files relative to this file
   src: './src'
-  alias: '@'
+  alias: '@/'
 actionsPatterns: # a patterns for finding action files
   - 'act/**/*.act.ts'
 generate:

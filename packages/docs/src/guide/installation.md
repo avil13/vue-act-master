@@ -87,7 +87,6 @@ Description of configure parameters
 | actions?: ActMasterAction[];          | []        | An array of action items
 | errorHandlerEventName?: ActEventName; | undefined | Action call on error (can be used in actions too)
 | di?: DIMap;                           | {}        | DI entities
-| errorOnReplaceDI?: boolean;           | false     | Error on entity DI replacement
 | autoUnsubscribeCallback               | undefined | Method for calling auto unsubscribe
 
 

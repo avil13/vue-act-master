@@ -1,6 +1,6 @@
 {
   "name": "vue-act-master",
-  "version": "2.3.9",
+  "version": "2.3.10",
   "description": "",
   "author": "avil13",
   "main": "dist/vue-act-master.umd.cjs",
@@ -52,16 +52,9 @@
   },
   "license": "MIT",
   "dependencies": {
-    "act-master": "^2.3.8"
+    "act-master": "*"
   },
   "peerDependencies": {
     "act-master": "*"
-  },
-  "devDependencies": {
-    "@babel/types": "^7.23.5",
-    "typescript": "^5.3.3",
-    "vite": "^5.1.4",
-    "vitest": "^1.3.1",
-    "vue": "*"
   }
 }

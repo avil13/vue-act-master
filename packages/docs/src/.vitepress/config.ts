@@ -1,32 +1,33 @@
-import { defineConfig, HeadConfig } from 'vitepress'
-import { DefaultTheme } from 'vitepress/types';
+import { defineConfig, type DefaultTheme, type HeadConfig } from 'vitepress';
 
 const baseUrl = process.env.DEV ? '/' : '/vue-act-master';
 
-module.exports = defineConfig({
+export default defineConfig({
   lang: 'en-US',
   title: 'Act-Master',
-  description: 'A frontend-way to separate business logic from application view.',
+  description:
+    'A frontend-way to separate business logic from application view.',
   base: baseUrl,
   head: getHead(),
   markdown: {
     headers: false,
     toc: {
       level: [1],
-      shouldAllowNested: false
+      shouldAllowNested: false,
     },
   },
-  lastUpdated: true,
+  lastUpdated: false,
   cleanUrls: true,
   themeConfig: {
     logo: '/assets/act-master-logo.svg',
 
     editLink: {
-      pattern: 'https://github.com/avil13/vue-act-master/packages/docs/src/:path',
-      text: 'Edit this page on GitHub'
+      pattern:
+        'https://github.com/avil13/vue-act-master/packages/docs/src/:path',
+      text: 'Edit this page on GitHub',
     },
     socialLinks: [
-      { icon: 'github', link: 'https://github.com/avil13/vue-act-master' }
+      { icon: 'github', link: 'https://github.com/avil13/vue-act-master' },
     ],
 
     algolia: {
@@ -37,7 +38,7 @@ module.exports = defineConfig({
 
     nav: [
       {
-        text: 'Get Started',
+        text: 'Quick Start',
         items: getSidebar(),
       },
     ],
@@ -45,7 +46,6 @@ module.exports = defineConfig({
     sidebar: getSidebar(),
   },
 });
-
 
 function getSidebar(filterItem = ''): DefaultTheme.NavItemWithLink[] {
   return [
@@ -58,28 +58,40 @@ function getSidebar(filterItem = ''): DefaultTheme.NavItemWithLink[] {
   ];
 }
 
-
-
 function getHead(): HeadConfig[] {
   return [
-    ['link', {
-      rel: 'icon',
-      href: `${baseUrl}/icon.svg`,
-      type: 'image/svg+xml',
-      sizes: 'any'
-    }],
-    ['link', {
-      rel: 'icon',
-      href: `${baseUrl}/favicon.ico`
-    }], // <!-- 32×32 -->
-    ['link', {
-      rel: 'apple-touch-icon',
-      href: `${baseUrl}/apple.png`
-    }], // <!-- 180×180 -->
-    ['link', {
-      rel: 'manifest',
-      href: `${baseUrl}/manifest.json`
-    }],
+    [
+      'link',
+      {
+        rel: 'icon',
+        href: `${baseUrl}/icon.svg`,
+        type: 'image/svg+xml',
+        sizes: 'any',
+      },
+    ],
+    [
+      'link',
+      {
+        rel: 'icon',
+        href: `${baseUrl}/favicon.ico`,
+      },
+    ], // <!-- 32×32 -->
+    [
+      'link',
+      {
+        rel: 'apple-touch-icon',
+        href: `${baseUrl}/apple.png`,
+      },
+    ], // <!-- 180×180 -->
+    [
+      'link',
+      {
+        rel: 'manifest',
+        href: `${baseUrl}/manifest.json`,
+      },
+    ],
     ['meta', { name: 'theme-color', content: '#3c8772' }],
+
+    ['meta', { property: 'og:type', content: 'website' }],
   ];
 }

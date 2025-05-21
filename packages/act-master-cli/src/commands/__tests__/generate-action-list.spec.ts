@@ -22,6 +22,7 @@ export const actions = [
 ];
 
 declare module 'act-master' {
+  // eslint-disable-next-line ts/consistent-type-definitions
   export interface ActGenerated {
     acts: Acts<typeof actions>;
     map: MapAct<typeof actions>;
@@ -29,6 +30,7 @@ declare module 'act-master' {
     names: Names<typeof actions>;
     readonly actionList: typeof actions;
   }
+  // eslint-disable-next-line ts/consistent-type-definitions
   export interface ActMaster {
     exec: Acts<typeof actions>;
   }

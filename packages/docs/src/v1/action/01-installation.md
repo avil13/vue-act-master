@@ -82,9 +82,6 @@ import { VueActMaster, ActMasterOptions } from 'vue-act-master';
 | ------------------------------------- | --------- | ------------------------------------------------- |
 | actions?: ActMasterAction[];          | []        | An array of action items
 | di?: DIMap;                           | {}        | DI entities
-| errorOnReplaceAction?: boolean;       | true      | Error on action change
-| errorOnReplaceDI?: boolean;           | false     | Error on entity DI replacement
-| errorOnEmptyAction?: boolean;         | true      | Error on empty action.
 | errorHandlerEventName?: ActEventName; | undefined | Action call on error (can be used in actions too)
 
 
