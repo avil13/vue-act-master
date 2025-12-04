@@ -1,10 +1,5 @@
-import {
-  StateBase,
-  setupDevtoolsPlugin,
-  type App,
-  type CustomInspectorNode,
-  type CustomInspectorState,
-} from '@vue/devtools-api';
+import { setupDevtoolsPlugin } from '@vue/devtools-api';
+import type { App } from 'vue';
 
 import {
   type ActMaster,
@@ -23,6 +18,10 @@ import {
   sortActInspectorTree,
 } from './lib/monkey-watch';
 import { debounce, getArguments, logSettings } from './lib/utils';
+import type {
+  CustomInspectorNode,
+  CustomInspectorState,
+} from './dev-tools-types';
 
 // #region [ colors ]
 // const PINK_500 = 0xec4899;
@@ -69,7 +68,8 @@ export function addDevtools(app: App, actMaster: ActMaster) {
             action: () => {
               debounce(200, () => {
                 toggleSettingsShowCall();
-                api.setSettings(currentSettings);
+                // Settings are managed internally via useSettings
+                // No need to call setSettings as it doesn't exist in the API
 
                 logSettings('CALL_FILTER', currentSettings.isShowOnlyCalls);
               });

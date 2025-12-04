@@ -1,6 +1,6 @@
 {
   "name": "act-master",
-  "version": "2.7.3",
+  "version": "2.7.4",
   "author": "avil13",
   "main": "dist/index.cjs",
   "module": "dist/index.js",
@@ -9,14 +9,14 @@
   "sideEffects": false,
   "exports": {
     ".": {
+      "types": "./dist/types/index.d.ts",
       "require": "./dist/index.cjs",
-      "import": "./dist/index.js",
-      "types": "./dist/types/index.d.ts"
+      "import": "./dist/index.js"
     },
     "./vue": {
+      "types": "./dist/types/vue/index.d.ts",
       "require": "./dist/index2.cjs",
-      "import": "./dist/index2.js",
-      "types": "./dist/types/vue/index.d.ts"
+      "import": "./dist/index2.js"
     }
   },
   "files": [
@@ -55,16 +55,17 @@
     "url": "https://github.com/avil13/vue-act-master.git"
   },
   "devDependencies": {
-    "@babel/types": "^7.27.1",
-    "typescript": "^5.8.3",
-    "vite": "^6.3.5",
-    "vitest": "^3.1.4"
+    "@babel/types": "^7.28.5",
+    "typescript": "^5.9.3",
+    "vite": "^7.2.6",
+    "vitest": "^4.0.15",
+    "vue-router": "^4.6.3"
   },
   "optionalDependencies": {
     "vue": "^3.3"
   },
   "dependencies": {
-    "@vue/devtools-api": "^7.7.6",
+    "@vue/devtools-api": "^8.0.5",
     "act-master-cli": "^1.2.1"
   }
 }

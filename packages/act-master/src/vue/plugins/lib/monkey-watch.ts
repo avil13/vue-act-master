@@ -1,6 +1,6 @@
-import { CustomInspectorNode, StateBase } from '@vue/devtools-api';
-import { getArguments, getCurrentTime } from './utils';
 import { type ActMaster, type ActMasterAction } from '../../..';
+import type { CustomInspectorNode, StateBase } from '../dev-tools-types';
+import { getArguments, getCurrentTime } from './utils';
 
 const eventMonkeyState = new Map<string, StateBase[]>();
 const eventMonkeyStateSort = new Set<string>();
