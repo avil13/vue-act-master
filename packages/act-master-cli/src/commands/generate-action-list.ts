@@ -6,7 +6,7 @@ import { validateItem } from '../utils/03-validete-item';
 import { makeIndexContent } from '../utils/04-create-interface/make-index-content';
 import { getStaticContentFromFile, removeFile } from '../utils/file-helper';
 
-export const generateActionList = async () => {
+export const generateActionList = async (): Promise<string> => {
   const configManager = new ConfigManager();
   await configManager.hasConfig();
   const ActCliConfig = await configManager.getConfig();

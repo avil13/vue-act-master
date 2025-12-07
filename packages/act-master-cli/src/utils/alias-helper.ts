@@ -6,11 +6,9 @@ export const normalizePathAlias = (
   config: ActCliConfig
 ): string => {
   const normalizedPath = normalize(filePath)
-    .replace(
-      config.config.src,
-      config.config.alias
-    )
-    .replace(/\\/g, '/');
+    .replace(config.config.src, config.config.alias)
+    .replace(/\\/g, '/')
+    .replace(/\/\//g, '/');
 
   const ext = extname(normalizedPath);
 

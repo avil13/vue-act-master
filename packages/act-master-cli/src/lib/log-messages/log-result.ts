@@ -1,4 +1,5 @@
 import path from 'path';
+import { version } from '../../../package.json';
 
 const clc = {
   _red: '\x1b[31m',
@@ -16,28 +17,27 @@ const clc = {
   _off: '\x1b[0m',
 } as const;
 
+const g = (s: string): string => `${clc._green}${s}${clc._off}`;
+const y = (s: string): string => `${clc._yellow}${s}${clc._off}`;
+const c = (s: string): string => `${clc._cyan}${s}${clc._off}`;
+const u = (s: string): string => `${clc._u}${s}${clc._off}`;
+
 /**
  * message output help
  *
  */
 export const logHelp = () => {
-  const g = (s: string): string => `${clc._green}${s}${clc._off}`;
-  const y = (s: string): string => `${clc._yellow}${s}${clc._off}`;
-  const c = (s: string): string => `${clc._cyan}${s}${clc._off}`;
-  const u = (s: string): string => `${clc._u}${s}${clc._off}`;
-
   const helpText = `
 ┌──────────────────────────────────────────────────────────────┐
 │ ${g('act-master-cli')}                                               │
 └──────────────────────────────────────────────────────────────┘
+ version: ${version}
  commands:
    ${y('init')}         │ Generate init file
    ${y('generate')}, ${y('g')}  │ Generate interface and index actions files
    ${y('help')}         │ Show current message
 
-${c('Tip:')}
- Add ${g(u('"act:gen":"act-master-cli g"'))}
- to scripts in package.json for fast update actions
+${getTipMessage()}
 `;
   console.log(helpText);
 };
@@ -90,4 +90,22 @@ function getLine(filePath: string): string {
     name,
     clc._off,
   ].join('');
+}
+
+export function logInitMessage(configPath: string, isShowTip: boolean) {
+  const message = `
+${g('Config created in path:')}
+${configPath}
+${isShowTip ? getTipMessage() : ''}
+`;
+
+  console.log(message);
+}
+
+function getTipMessage() {
+  return `
+${c('Tip:')}
+  Add ${g(u('"act:gen":"act-master-cli g"'))}
+  to scripts in package.json for fast update actions
+`;
 }

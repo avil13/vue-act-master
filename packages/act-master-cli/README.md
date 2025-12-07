@@ -1,6 +1,6 @@
 # Act-Master-CLI
 
-CLI for act-master
+CLI for [act-master](https://www.npmjs.com/package/act-master)
 
 # About
 
@@ -34,8 +34,4 @@ npx act-master-cli generate
 npx act-master-cli g
 ```
 
-`act-master-cli generate` - creates two files.
-
-With the interfaces of your actions.
-
-And with an array to be embedded in the library.
+`act-master-cli generate` - creates files with the interfaces of your actions and with an array to be embedded in the library.
