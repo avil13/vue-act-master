@@ -4,4 +4,7 @@ export default defineConfig({
   entry: ['./src/index.ts'],
   dts: true,
   tsconfig: true,
+  platform: 'node',
+  format: ['commonjs'],
+  clean: true,
 });

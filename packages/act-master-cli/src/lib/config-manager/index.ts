@@ -1,7 +1,7 @@
 import { joinPath } from '../../utils/file-helper';
 import Ajv from 'ajv';
 import { ErrorObject } from 'ajv/dist/jtd';
-import findUp from 'find-up';
+import { findUp } from 'find-up';
 import fs from 'fs';
 import path, { dirname, join } from 'path';
 import { promisify } from 'util';

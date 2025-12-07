@@ -7,15 +7,15 @@ export const normalizePathAlias = (
 ): string => {
   const normalizedPath = normalize(filePath)
     .replace(config.config.src, config.config.alias)
-    .replace(/\\/g, '/')
-    .replace(/\/\//g, '/');
+    .replace(/\\/g, '/');
 
   const ext = extname(normalizedPath);
 
   if (ext) {
-    return normalizedPath.replace(new RegExp(`\\${ext}$`, 'g'), '');
+    return normalizedPath
+      .replace(new RegExp(`\\${ext}$`, 'g'), '')
+      .replace(/\/\//g, '/');
   }
-
 
   return normalizedPath;
 };
