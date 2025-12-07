@@ -2,3 +2,4 @@
 
 act-generate/*
 test-act-generate/*
+src/act/common/*

@@ -17,10 +17,43 @@ const clc = {
   _off: '\x1b[0m',
 } as const;
 
+// green
 const g = (s: string): string => `${clc._green}${s}${clc._off}`;
+// yellow
 const y = (s: string): string => `${clc._yellow}${s}${clc._off}`;
+// cyan
 const c = (s: string): string => `${clc._cyan}${s}${clc._off}`;
+// red
+const r = (s: string): string => `${clc._red}${s}${clc._off}`;
 const u = (s: string): string => `${clc._u}${s}${clc._off}`;
+
+export const color = {
+  g,
+  y,
+  c,
+  r,
+  u,
+} as const;
+
+export const msg = {
+  getAddScriptText() {
+    return `
+${y('?')} Would you like to add the ${g(
+      '"act:gen"'
+    )} script to package.json? ${y('(y/N)')}: `;
+  },
+
+  getAddExampleAct(rootPath: string, fileAbsolutePath: string) {
+    const file = fileAbsolutePath.replace(rootPath, '');
+
+    return `Would you like to add a demo act file for error handling? ${y(
+      '(y/N)'
+    )}:
+${u(file)} `;
+  },
+
+  logInitMessage,
+} as const;
 
 /**
  * message output help
@@ -92,7 +125,7 @@ function getLine(filePath: string): string {
   ].join('');
 }
 
-export function logInitMessage(configPath: string, isShowTip: boolean) {
+function logInitMessage(configPath: string, isShowTip: boolean) {
   const message = `
 ${g('Config created in path:')}
 ${configPath}
