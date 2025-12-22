@@ -9,20 +9,20 @@ it('generateActionList [1]', async () => {
 
 function getContent() {
   return `
+// eslint-disable ts/consistent-type-definitions
+/* This is generated file */
 import { type Acts, type MapAct, type Names, type Subs } from "act-master";
 import { AsyncAction } from "@/utils/__fixtures__/actions/async-action";
 import { NoPromiseAction } from "@/utils/__fixtures__/actions/no-promise";
 import { WithOtherTypeReturn } from "@/utils/__fixtures__/actions/with-other-type-return";
 
-/* This is generated file */
 export const actions = [
   new AsyncAction(),
   new NoPromiseAction(),
-  new WithOtherTypeReturn(),
+  new WithOtherTypeReturn()
 ];
 
 declare module 'act-master' {
-  // eslint-disable-next-line ts/consistent-type-definitions
   export interface ActGenerated {
     acts: Acts<typeof actions>;
     map: MapAct<typeof actions>;
@@ -30,7 +30,7 @@ declare module 'act-master' {
     names: Names<typeof actions>;
     readonly actionList: typeof actions;
   }
-  // eslint-disable-next-line ts/consistent-type-definitions
+
   export interface ActMaster {
     exec: Acts<typeof actions>;
   }

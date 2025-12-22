@@ -8,4 +8,4 @@ actionsPatterns: # a patterns for finding action files
   - 'utils/__fixtures__/**/*.ts'
 generate:
   actionsIndexFile: 'act/act-generate/actions.ts'
-  prefixText: '/* This is generated file */'
+  prefixText: "// eslint-disable ts/consistent-type-definitions\n/* This is generated file */"

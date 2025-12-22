@@ -30,7 +30,7 @@ const getInitializer = (item: IFilteredItem): string => {
 
 const getInitializerList = (items: IFilteredItem[]) => {
   const str = items.map((item) => getInitializer(item)).join(',\n ');
-  return `[\n ${str},\n]`;
+  return `[\n ${str}\n]`;
 };
 
 export const getImportDeclarations = (
@@ -77,7 +77,7 @@ export const makeIndexContent = async (
   });
 
   if (prefix) {
-    sourceFile.addStatements(prefix + '\n\n');
+    sourceFile.insertStatements(0, prefix);
   }
 
   // importDeclaration.addNamedImport('ActMasterAction');
@@ -108,20 +108,19 @@ export const makeIndexContent = async (
 
   // Add Types
   const typeDeclarations = `
-  declare module 'act-master' {
-    // eslint-disable-next-line ts/consistent-type-definitions
-    export interface ActGenerated {
-      acts: Acts<typeof actions>;
-      map: MapAct<typeof actions>;
-      subs: Subs<typeof actions>;
-      names: Names<typeof actions>;
-      readonly actionList: typeof actions;
-    }
-    // eslint-disable-next-line ts/consistent-type-definitions
-    export interface ActMaster {
-      exec: Acts<typeof actions>;
-    }
-  }`;
+declare module 'act-master' {
+  export interface ActGenerated {
+    acts: Acts<typeof actions>;
+    map: MapAct<typeof actions>;
+    subs: Subs<typeof actions>;
+    names: Names<typeof actions>;
+    readonly actionList: typeof actions;
+  }
+
+  export interface ActMaster {
+    exec: Acts<typeof actions>;
+  }
+}`;
 
   sourceFile.addStatements(typeDeclarations);
 

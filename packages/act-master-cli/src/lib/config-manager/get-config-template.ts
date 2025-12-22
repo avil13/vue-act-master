@@ -3,13 +3,13 @@ const TEMPLATE = `
 
 config:
   # the path to the folder with the source files relative to this file
-  src: './src'
-  alias: '@/'
+  src: "./src"
+  alias: "@/"
 actionsPatterns: # a patterns for finding action files
-  - 'act/**/*.act.ts'
+  - "act/**/*.act.ts"
 generate:
-  actionsIndexFile: 'act/generated/actions.ts'
-  prefixText: '/* This is generated file */'
+  actionsIndexFile: "act/generated/actions.ts"
+  prefixText: "// eslint-disable ts/consistent-type-definitions\\n/* This is generated file */"
 `.trim();
 
 export const getConfigTemplate = (): string => {
